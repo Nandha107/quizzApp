@@ -152,6 +152,41 @@ body {
 	color: #319795; /* Hover text color */
 }
 
+  /* Custom styles for the range picker dropdown */
+.custom-range-picker-dropdown {
+	width: 83% !important;
+	display: grid;
+	grid-column: 2;
+	/* Default styles for larger screens - no border, overflow, or shadow */
+}
+
+@media (max-width: 640px) {
+	/* Styles only for xs, sm screens (below 640px) */
+	.custom-range-picker-dropdown {
+		overflow-x: auto;
+		border: 1px solid #0d9488;
+		border-radius: 10px;
+		box-shadow: none;
+	}
+
+	.custom-range-picker-dropdown .ant-picker-dropdown {
+		width: 100vw !important; /* Full viewport width on mobile */
+		left: 0 !important;      /* Align the popup to the left */
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 :root {
 	--primary-color: #0d9488;
 	--secondary-color: #4b5563;

@@ -14,22 +14,14 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
 	return (
 		<div className="absolute right-0 top-14 w-[17rem] overflow-hidden bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-[10000]">
 			<div className="px-3 py-3 border-b border-gray-200">
-				{/* <div className="flex items-center gap-3 border border-red-800"> */}
-				{/* <div className="flex items-center justify-center w-12 h-12 text-gray-500 bg-gray-200 rounded-full ">
-						<span className="text-lg font-semibold">
-							{userDetails?.name?.charAt(0) || 'U'}
-						</span>
-					</div> */}
 				<div className="flex flex-col justify-start text-start">
 					<p className="font-medium text-primary">
 						User name
-						{/* {userDetails?.name || 'User'} */}
 					</p>
 					<p className="text-md text-black font-semibold ">
 						{userDetails?.name || 'User'}
 					</p>
 				</div>
-				{/* </div> */}
 			</div>
 			<div className="px-4 py-3 border-b border-gray-200">
 				<div className="flex flex-col justify-start text-start">

@@ -14,7 +14,7 @@ const Header: React.FC = () => {
 
 	const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
-	const getDept = localStorage.getItem(Config.localStorageKeys.dept);
+	// const getDept = localStorage.getItem(Config.localStorageKeys.dept);
 
 	const handleLogout = () => {
 		localStorage.removeItem(Config.localStorageKeys.access_token);
@@ -60,16 +60,6 @@ const Header: React.FC = () => {
 				{dept ? (
 					<div className="hidden md:flex rounded-lg justify-center items-center">
 						<PrimaryButton text="Create Assessment" icon={<PlusIcon />} onClick={()=>navigate('/create-assessment')}/>
-						{/* <div className="hidden rounded-lg md:flex w-[20%] md:w-[40%] lg:w-[20%] justify-center items-center "> */}
-						{/* <button
-							className="w-full py-2 text-lg font-medium text-white rounded-lg bg-gradient-to-br from-teal-700 to-teal-500 hover:from-teal-800 hover:to-teal-500"
-							onClick={() => {
-								navigate(`/create-assessment`);
-							}}
-						>
-							<span className="text-2xl">+ </span>
-							Create Test
-						</button> */}
 					</div>
 				) : null}
 

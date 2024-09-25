@@ -4,10 +4,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	label?: string;
 	isRequired?: boolean;
 	htmlFor?: string;
+	InputClassName?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-	({ className, isRequired, label, htmlFor, ...rest }, ref) => {
+	({ className, InputClassName, isRequired, label, htmlFor, ...rest }, ref) => {
 		return (
 			<div className={`flex flex-col gap-y-2 w-full ${className}`}>
 				{label && (
@@ -22,7 +23,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 				<div className="relative w-full">
 					<input
 						ref={ref}
-						className={`w-full px-5 py-3 md:py-4 text-sm border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-600 `}
+						className={`w-full px-5 py-3 md:py-4 text-sm border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-600 ${InputClassName}`}
 						{...rest}
 						required={isRequired}
 					/>
