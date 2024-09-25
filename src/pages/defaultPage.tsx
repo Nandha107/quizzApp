@@ -14,7 +14,7 @@ const DefaultPage = () => {
 		if (isTokenThere) {
 			const userDetails: User.userDetails = jwtDecode(isTokenThere);
 			if (userDetails.role === 'ADMIN') {
-				navigate('staff-dashboard/courses');
+				navigate('/staff-dashboard/courses');
 				return;
 			}
 		}
