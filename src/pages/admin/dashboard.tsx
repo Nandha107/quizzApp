@@ -4,7 +4,7 @@ import Skeleton from 'react-loading-skeleton';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAssessments } from '../../hooks/useAssessment';
 import { FaEllipsisV } from 'react-icons/fa';
-import { Config } from '../../config';
+// import { Config } from '../../config';
 import { PrimaryButton } from '../../component/buttons/primaryButton';
 import AnalyticPage from '../../component/pageComponents/admin/reportDepartment';
 
@@ -21,7 +21,7 @@ const StaffDashboard = () => {
 
 	const paramValue = searchParams.get('tab');
 
-	const getDept = localStorage.getItem(Config.localStorageKeys.dept);
+	// const getDept = localStorage.getItem(Config.localStorageKeys.dept);
 
 	const setTabParams = (value: string) => {
 		// const urls = ['?tab=assessments', '?tab=completed', '?tab=report'];
@@ -31,9 +31,9 @@ const StaffDashboard = () => {
 		});
 	};
 
-	const handleTestClick = (testId: string) => {
-		navigate(`/assessment-analytics/${testId}`);
-	};
+	// const handleTestClick = (testId: string) => {
+	// 	navigate(`/assessment-analytics/${testId}`);
+	// };
 
 	return (
 		<div className="relative flex flex-col w-full h-full gap-3 p-5">

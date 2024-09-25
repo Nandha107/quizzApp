@@ -29,13 +29,13 @@ const Header: React.FC = () => {
 	};
 
 	const token = localStorage.getItem(Config.localStorageKeys.access_token);
-	let userRole = '';
+	// let userRole = '';
 	let userDetails = null;
 
 	if (token) {
 		try {
 			const decodedToken: User.userDetails = jwtDecode(token);
-			userRole = decodedToken.role;
+			// userRole = decodedToken.role;
 			userDetails = decodedToken; // Adjust as per your token structure
 		} catch (error) {
 			console.error('Error decoding token:', error);

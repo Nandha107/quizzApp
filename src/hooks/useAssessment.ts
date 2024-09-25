@@ -33,7 +33,7 @@ export const useAssessments = ({
 	const createAssessment = useMutation({
 		mutationFn: (body: Assessments.CreateAssessmentPayload) =>
 			AssessmentClient.createAssessment(body),
-		onSettled: (res) => {
+		onSettled: () => {
 			toast.success('Assessment has successfully Created...');
 		},
 		onError: (error) => {

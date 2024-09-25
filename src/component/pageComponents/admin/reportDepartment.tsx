@@ -1,90 +1,57 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableColumnsType, TableProps } from 'antd';
-import axios from 'axios';
+// import axios from 'axios';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx';
+// import { saveAs } from 'file-saver';
+// import * as XLSX from 'xlsx';
 import { CoursesData } from '../../../utils/courses';
 import { PrimaryButton } from '../../buttons/primaryButton';
 import { useReportDepartment } from '../../../hooks/useReportDepartment';
-
-// Define types for the department analytics and student details
-interface TestResult {
-	testName: string;
-	pass: boolean;
-	timeTaken: number;
-	marks: number;
-}
-
-interface StudentDetails {
-	studentName: string;
-	registrationNumber: number;
-	department: string;
-	collegeName: string;
-	testsTaken: number;
-	testResults: TestResult[];
-}
-
-interface DepartmentAnalytics {
-	department: string;
-	totalStudents: number;
-	totalTestsTaken: number;
-	passedCount: number;
-	failedCount: number;
-	studentDetails: StudentDetails[];
-	currentPage: number;
-	totalPages: number;
-}
-
-interface TestResult {
-	testName: string;
-	pass: boolean;
-	timeTaken: number;
-	marks: number;
-	levelScores: LevelScore[];
-}
-
-interface LevelScore {
-	levelId: string;
-	score: number;
-	totalQuestions: number;
-	percentage: number;
-}
 
 interface Props {
 	department: string;
 }
 
 const AnalyticPage: React.FC<Props> = ({ department }) => {
-	const [analytics, setAnalytics] = useState<DepartmentAnalytics | null>(null);
-	const [testTaken, setTestTaken] = useState<number>(0);
+	// const [analytics, setAnalytics] = useState<DepartmentAnalytics | null>(null);
+	// const [testTaken, setTestTaken] = useState<number>(0);
 
-	const [pagination, setPagination] = useState({
+	let testTaken: number;
+
+	// const [pagination, setPagination] = useState({
+	// 	current: 1,
+	// 	pageSize: 10,
+	// 	total: 0,
+	// });
+	const pagination = {
 		current: 1,
 		pageSize: 10,
 		total: 0,
-	});
+	};
 
 	// const [page, setPage] = useState<string | number>(1);
 	// const [limit, setLimit] = useState<string | number>(25);
-	const [status, setStatus] = useState<string | null>(null);
+	// const [status, setStatus] = useState<string | null>(null);
 
-	const [studentDetails, setStudentDetails] = useState<StudentDetails[] | []>([]);
-	const [loading, setLoading] = useState<boolean>(true);
-	const token = localStorage.getItem('token');
-	const headers = { Authorization: `Bearer ${token}` };
+	const [studentDetails, setStudentDetails] = useState<
+		ReportDepartment.StudentDetails[] | []
+	>([]);
+	// const [loading, setLoading] = useState<boolean>(true);
+	// const token = localStorage.getItem('token');
+	// const headers = { Authorization: `Bearer ${token}` };
 
 	const { getReportDepartment } = useReportDepartment({
 		course: department.toUpperCase(),
 		page: pagination.current,
 		limit: pagination.pageSize,
-		status: status as string,
+		status: '',
+		// status: status as string,
 	});
 
 	const findDepartment = CoursesData.find((course) => course.path === department);
 
-	const columns: TableColumnsType<StudentDetails> = [
+	const columns: TableColumnsType<ReportDepartment.StudentDetails> = [
 		{
 			title: 'Student Name',
 			dataIndex: 'studentName',
@@ -114,7 +81,7 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 			title: 'Passed',
 			dataIndex: 'testResults',
 			key: 'testResults',
-			render: (testResults: TestResult[]) => (
+			render: (testResults: ReportDepartment.TestResult[]) => (
 				<p>{testResults.filter((res) => res.pass).length}</p>
 			),
 		},
@@ -122,14 +89,14 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 			title: 'Failed',
 			dataIndex: 'testResults',
 			key: 'testResults',
-			render: (testResults: TestResult[]) => (
+			render: (testResults: ReportDepartment.TestResult[]) => (
 				<p>{testTaken - testResults.filter((res) => res.pass).length}</p>
 			),
 		},
 		{
 			title: 'Actions',
 			key: 'actions',
-			render: (student: StudentDetails) => (
+			render: (student: ReportDepartment.StudentDetails) => (
 				<button
 					className="py-2 px-3 w-full font-medium text-white rounded-md text-xs lg:text-base bg-gradient-to-br from-teal-700 to-teal-500 hover:from-teal-800 hover:to-teal-500"
 					onClick={() => exportStudentAsPDF(student)}
@@ -140,7 +107,7 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 		},
 	];
 
-	const exportStudentAsPDF = (student: StudentDetails) => {
+	const exportStudentAsPDF = (student: ReportDepartment.StudentDetails) => {
 		const doc = new jsPDF();
 		doc.text(`Student: ${student.studentName}`, 10, 10);
 		doc.text(`Department: ${student.department}`, 10, 20);
@@ -163,101 +130,106 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 		doc.save(`${student.studentName}-details.pdf`);
 	};
 
-	const exportAllAsCSV = () => {
-		if (!analytics) return;
+	// const exportAllAsCSV = () => {
+	// 	if (!analytics) return;
 
-		const csvData = analytics.studentDetails.map((student) => {
-			return {
-				studentName: student.studentName,
-				department: student.department,
-				registrationNumber: student.registrationNumber,
-				collegeName: student.collegeName,
-				testsTaken: student.testsTaken,
-				passedCount: student.testResults.filter((res) => res.pass).length,
-				failedCount:
-					student.testsTaken - student.testResults.filter((res) => res.pass).length,
-				testDetails: student.testResults
-					.map(
-						(res) =>
-							`${res.testName}: ${res.pass ? 'Pass' : 'Fail'} (Marks: ${
-								res.marks
-							}, Time: ${res.timeTaken})`,
-					)
-					.join(', '),
-			};
-		});
+	// 	const csvData = analytics.studentDetails.map((student) => {
+	// 		return {
+	// 			studentName: student.studentName,
+	// 			department: student.department,
+	// 			registrationNumber: student.registrationNumber,
+	// 			collegeName: student.collegeName,
+	// 			testsTaken: student.testsTaken,
+	// 			passedCount: student.testResults.filter((res) => res.pass).length,
+	// 			failedCount:
+	// 				student.testsTaken - student.testResults.filter((res) => res.pass).length,
+	// 			testDetails: student.testResults
+	// 				.map(
+	// 					(res) =>
+	// 						`${res.testName}: ${res.pass ? 'Pass' : 'Fail'} (Marks: ${
+	// 							res.marks
+	// 						}, Time: ${res.timeTaken})`,
+	// 				)
+	// 				.join(', '),
+	// 		};
+	// 	});
 
-		const csvRows = [
-			[
-				'Student Name',
-				'Department',
-				'Registration Number',
-				'College Name',
-				'Tests Taken',
-				'Passed',
-				'Failed',
-				'Test Details',
-			],
-			...csvData.map((row) => [
-				row.studentName,
-				row.department,
-				row.registrationNumber,
-				row.collegeName,
-				row.testsTaken,
-				row.passedCount,
-				row.failedCount,
-				row.testDetails,
-			]),
-		];
+	// 	const csvRows = [
+	// 		[
+	// 			'Student Name',
+	// 			'Department',
+	// 			'Registration Number',
+	// 			'College Name',
+	// 			'Tests Taken',
+	// 			'Passed',
+	// 			'Failed',
+	// 			'Test Details',
+	// 		],
+	// 		...csvData.map((row) => [
+	// 			row.studentName,
+	// 			row.department,
+	// 			row.registrationNumber,
+	// 			row.collegeName,
+	// 			row.testsTaken,
+	// 			row.passedCount,
+	// 			row.failedCount,
+	// 			row.testDetails,
+	// 		]),
+	// 	];
 
-		const csvContent = csvRows.map((row) => row.join(',')).join('\n');
-		const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-		saveAs(blob, 'department-analytics.csv');
-	};
+	// 	const csvContent = csvRows.map((row) => row.join(',')).join('\n');
+	// 	const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+	// 	saveAs(blob, 'department-analytics.csv');
+	// };
 
-	const exportAllAsXLSX = () => {
-		if (!analytics) return;
+	// const exportAllAsXLSX = () => {
+	// 	if (!analytics) return;
 
-		const sheetData = analytics.studentDetails.map((student) => {
-			return {
-				'Student Name': student.studentName,
-				Department: student.department,
-				'Registration Number': student.registrationNumber,
-				College: student.collegeName,
-				'Tests Taken': student.testsTaken,
-				'Passed Count': student.testResults.filter((res) => res.pass).length,
-				'Failed Count':
-					student.testsTaken - student.testResults.filter((res) => res.pass).length,
-				'Test Details': student.testResults
-					.map(
-						(res) =>
-							`${res.testName}: ${res.pass ? 'Pass' : 'Fail'} (Marks: ${
-								res.marks
-							}, Time: ${res.timeTaken})`,
-					)
-					.join(', '),
-			};
-		});
+	// 	const sheetData = analytics.studentDetails.map((student) => {
+	// 		return {
+	// 			'Student Name': student.studentName,
+	// 			Department: student.department,
+	// 			'Registration Number': student.registrationNumber,
+	// 			College: student.collegeName,
+	// 			'Tests Taken': student.testsTaken,
+	// 			'Passed Count': student.testResults.filter((res) => res.pass).length,
+	// 			'Failed Count':
+	// 				student.testsTaken - student.testResults.filter((res) => res.pass).length,
+	// 			'Test Details': student.testResults
+	// 				.map(
+	// 					(res) =>
+	// 						`${res.testName}: ${res.pass ? 'Pass' : 'Fail'} (Marks: ${
+	// 							res.marks
+	// 						}, Time: ${res.timeTaken})`,
+	// 				)
+	// 				.join(', '),
+	// 		};
+	// 	});
 
-		const ws = XLSX.utils.json_to_sheet(sheetData);
-		const wb = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, 'Department Analytics');
-		XLSX.writeFile(wb, 'department-analytics.xlsx');
-	};
+	// 	const ws = XLSX.utils.json_to_sheet(sheetData);
+	// 	const wb = XLSX.utils.book_new();
+	// 	XLSX.utils.book_append_sheet(wb, ws, 'Department Analytics');
+	// 	XLSX.writeFile(wb, 'department-analytics.xlsx');
+	// };
 
 	// rowSelection object indicates the need for row selection
-	const rowSelection: TableProps<StudentDetails>['rowSelection'] = {
-		onChange: (selectedRowKeys: React.Key[], selectedRows: StudentDetails[]) => {
+	const rowSelection: TableProps<ReportDepartment.StudentDetails>['rowSelection'] = {
+		onChange: (
+			selectedRowKeys: React.Key[],
+			selectedRows: ReportDepartment.StudentDetails[],
+		) => {
 			console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
 		},
-		getCheckboxProps: (record: StudentDetails) => ({
+		getCheckboxProps: (record: ReportDepartment.StudentDetails) => ({
 			disabled: record.studentName === 'Disabled User', // Column configuration not to be checked
 			name: record.studentName,
 		}),
 	};
 
 	useEffect(() => {
-		setStudentDetails(getReportDepartment.data?.studentDetails as StudentDetails[]);
+		setStudentDetails(
+			getReportDepartment.data?.studentDetails as ReportDepartment.StudentDetails[],
+		);
 	}, [getReportDepartment.data, pagination]);
 	// useEffect(() => {
 	// 	axios
