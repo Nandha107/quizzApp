@@ -59,7 +59,11 @@ const Header: React.FC = () => {
 			<div className="w-[50%] flex justify-end items-center gap-5">
 				{dept ? (
 					<div className="hidden md:flex rounded-lg justify-center items-center">
-						<PrimaryButton text="Create Assessment" icon={<PlusIcon />} onClick={()=>navigate('/create-assessment')}/>
+						<PrimaryButton
+							text="Create Assessment"
+							icon={<PlusIcon />}
+							onClick={() => navigate('/create-assessment')}
+						/>
 					</div>
 				) : null}
 

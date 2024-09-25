@@ -24,7 +24,7 @@ const AssessmentCreateModal = () => {
 
 	// const {createAssessment} = useAssessments({});
 
-	console.log(assessmentStartDate,assessmentEndDate, assessmentTimeDuration)
+	console.log(assessmentStartDate, assessmentEndDate, assessmentTimeDuration);
 
 	const modalStyles = {
 		header: {
@@ -77,16 +77,16 @@ const AssessmentCreateModal = () => {
 	};
 
 	// const handleCreateAssessment = () => {
-		// createAssessment.mutateAsync({
-		// 	name: assessmentName,
-		// 	timerForWholeTest: isTimerForWholeAssessment,
-		// 	duration: 0,
-		// 	startTime: 0,
-		// 	endTime: 0,
-		// 	instructions: '',
-		// 	category: '',
-		// 	levelsCount: 0
-		// })
+	// createAssessment.mutateAsync({
+	// 	name: assessmentName,
+	// 	timerForWholeTest: isTimerForWholeAssessment,
+	// 	duration: 0,
+	// 	startTime: 0,
+	// 	endTime: 0,
+	// 	instructions: '',
+	// 	category: '',
+	// 	levelsCount: 0
+	// })
 	// };
 
 	return (

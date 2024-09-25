@@ -87,7 +87,7 @@ const AssessmentDetails = () => {
 					</div>
 					<p className="text-2xl font-bold">Analytics</p>
 				</div>
-				<div className='w-[20%] flex justify-end items-center'>
+				<div className="w-[20%] flex justify-end items-center">
 					<PrimaryButton text="Export to Excel" onClick={() => {}} />
 				</div>
 			</div>

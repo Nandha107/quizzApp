@@ -152,7 +152,7 @@ body {
 	color: #319795; /* Hover text color */
 }
 
-  /* Custom styles for the range picker dropdown */
+/* Custom styles for the range picker dropdown */
 .custom-range-picker-dropdown {
 	width: 83% !important;
 	display: grid;
@@ -171,21 +171,9 @@ body {
 
 	.custom-range-picker-dropdown .ant-picker-dropdown {
 		width: 100vw !important; /* Full viewport width on mobile */
-		left: 0 !important;      /* Align the popup to the left */
+		left: 0 !important; /* Align the popup to the left */
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 :root {
 	--primary-color: #0d9488;

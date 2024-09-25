@@ -74,7 +74,7 @@ const SignUp: React.FC = () => {
 		}
 	};
 
-	console.log({error})
+	console.log({ error });
 
 	const handleLoginRedirect = () => {
 		navigate('/student-login'); // Redirect to login page

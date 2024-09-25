@@ -15,9 +15,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
 		<div className="absolute right-0 top-14 w-[17rem] overflow-hidden bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-[10000]">
 			<div className="px-3 py-3 border-b border-gray-200">
 				<div className="flex flex-col justify-start text-start">
-					<p className="font-medium text-primary">
-						User name
-					</p>
+					<p className="font-medium text-primary">User name</p>
 					<p className="text-md text-black font-semibold ">
 						{userDetails?.name || 'User'}
 					</p>
