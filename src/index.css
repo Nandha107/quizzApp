@@ -1,0 +1,173 @@
+/* @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Inter:wght@200;300;400;500;600;700;800;900&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+	@variants responsive {
+		/* Hide scrollbar for Chrome, Safari and Opera */
+		.no-scrollbar::-webkit-scrollbar {
+			display: none;
+		}
+		/* Hide scrollbar for IE, Edge and Firefox */
+		.no-scrollbar {
+			-ms-overflow-style: none; /* IE and Edge */
+			scrollbar-width: none; /* Firefox */
+		}
+	}
+}
+
+/* daisy overrided */
+* {
+	outline: none;
+}
+
+body {
+	margin: 0;
+	font-family: 'Poppins';
+	/* font-family: 'Poppins','DM Sans', sans-serif; */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	overflow: hidden;
+}
+
+/* Antd overrided */
+p {
+	margin: 0 !important;
+}
+
+/* daisy overrided */
+* {
+	outline: none;
+}
+
+.btn {
+	height: 2.3rem;
+	min-height: 2.3rem;
+	/* @apply text-sm 2xl:text-lg; */
+	/* @apply text-base md:text-lg; */
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+html,
+body {
+	@apply text-sm 2xl:text-base;
+}
+
+/* antd segmented tab customized*/
+.custom-segmented .ant-segmented-item-selected {
+	background-color: #0d9488 !important; /* Active segment background color (green) */
+	color: white !important; /* Active segment text color */
+}
+
+.custom-segmented .ant-segmented-item {
+	background-color: #0d948833; /* Background color for inactive segments */
+	height: 40px; /* Set the height */
+	width: 50%; /* Set the width */
+	display: flex; /* Use flexbox for centering */
+	justify-content: center; /* Center text horizontally */
+	align-items: center; /* Center text vertically */
+}
+
+.custom-segmented .ant-segmented-item:hover {
+	background-color: #0d94884d !important; /* Hover effect */
+}
+
+.custom-segmented .ant-segmented-item-selected:hover {
+	background-color: #0d9488 !important; /* Active segment background color (green) */
+	color: white !important; /* Active segment text color */
+}
+
+/* antd Select customized */
+.ant-select-selector {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	color: rgba(0, 0, 0, 0.88);
+	font-size: 0.875rem !important;
+	line-height: 1.5714285714285714;
+	list-style: none;
+	font-family: inherit;
+	display: flex;
+	border-radius: 2rem !important;
+}
+
+.ant-select-selection-placeholder {
+	color: #9ca3af !important; /* Change the placeholder color */
+	font-size: 0.875rem !important;
+	font-family: 'Poppins' !important;
+	padding: 0.5rem !important;
+}
+
+.ant-select-selector:focus {
+	outline: none !important;
+	box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.5) !important; /* Matches focus:ring-teal-600 */
+	border-color: #0d9488 !important; /* Set to teal-600 */
+}
+
+.ant-select-selector:hover {
+	outline: none !important;
+	box-shadow: 0 0 0 0px rgba(13, 148, 136, 0.5) !important; /* Matches focus:ring-teal-600 */
+	border-color: #0d9488 !important; /* Set to teal-600 */
+}
+
+.ant-select-focused .ant-select-selector {
+	outline: none !important;
+	box-shadow: 0 0 0 0px rgba(13, 148, 136, 0.5) !important; /* Focus ring */
+	border-color: #0d9488 !important; /* Matches teal-600 */
+}
+
+.ant-select-item-option-selected {
+	background-color: #0f766e33 !important; /* Change to your preferred color */
+}
+
+/* Custom select box for page size changer */
+.custom-pagination .ant-select-selector {
+	background-color: #edf2f7; /* Select box background color */
+	border-radius: 0.5em !important; /* Rounded corners */
+	border: 1px solid #e2e8f0; /* Select box border color */
+	color: #2d3748; /* Text color */
+	padding: 1.1em !important;
+	height: 2rem !important;
+}
+
+.ant-select-arrow {
+	top: 1.5em !important;
+}
+.custom-pagination {
+	color: #38b2ac; /* Custom arrow color */
+}
+
+.custom-pagination .ant-select-selection-item {
+	color: #2d3748; /* Select text color */
+}
+
+.custom-pagination .ant-select-selection-item:hover {
+	color: #319795; /* Hover text color */
+}
+
+:root {
+	--primary-color: #0d9488;
+	--secondary-color: #4b5563;
+	--danger-color: #dc2626;
+	--text-heading-color: #333335;
+	--text-para-primary-color: #1d1d1d;
+	--text-para-secondary-color: #878484;
+	--btn-gradient: linear-gradient(to bottom right, #0e4b4b, #38b2a5);
+	/* --btn-gradient: linear-gradient(128.13deg, #0D9488 9.46%, rgba(13, 148, 136, 0.6) 100%); */
+	/* --btn-gradient: linear-gradient(128.13deg, #0D9488 9.46%, rgba(13, 148, 136, 0.4) 100%); */
+	--card-gradient: linear-gradient(
+		to bottom right,
+		rgba(13, 148, 136, 0.5),
+		rgba(13, 148, 136, 0.2),
+		rgba(13, 148, 136, 0.5)
+	);
+	--text-gradient: linear-gradient(to bottom right, #0e4b4b, #38b2a5);
+	--hover: #0d948833;
+}
