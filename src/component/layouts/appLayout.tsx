@@ -5,7 +5,7 @@ interface AppLayout {}
 
 export const AppLayout: React.FC<AppLayout> = ({}) => {
 	return (
-		<div className="h-[90vh] md:h-screen w-screen border-4 border-red-900 bg-gray-100">
+		<div className="h-screen w-screen bg-gray-100">
 			<Toast />
 			<Outlet />
 		</div>
