@@ -50,8 +50,8 @@ const LandingPage = () => {
               need to succeed.
             </p>
             <button
-              onClick={() => alert("pp")}
-              className="bg-gradient-to-r absolute  z-50 transition hover:scale-105 cursor-pointer from-emerald-500 to-emerald-900 text-white px-6 py-2"
+            onClick={() => navigate("/student-signup")}
+            className="bg-gradient-to-r absolute  z-50 transition hover:scale-105 cursor-pointer from-emerald-500 to-emerald-900 text-white px-6 py-2"
             >
               Get Started <i className="fas fa-arrow-right ml-2"></i>
             </button>
