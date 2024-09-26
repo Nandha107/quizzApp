@@ -50,7 +50,7 @@ const StudentLogin: React.FC = () => {
 		}
 
 		try {
-			const response = await axios
+			await axios
 				.post('https://quiz-server-sigma.vercel.app/auth/login', { phone, password })
 				.then((res) => {
 					toast.success('Student login successfully...');
