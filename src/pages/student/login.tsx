@@ -5,6 +5,8 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { LoginImg } from '../../assets/icons/login';
 import { PrimaryButton } from '../../component/buttons/primaryButton';
 import { LoadingSpinner } from '../../component/spinner/loadingSpinner';
+import toast from 'react-hot-toast';
+import { Config } from '../../config';
 
 // Function to parse JWT
 function parseJwt(token: any) {
@@ -24,6 +26,7 @@ function parseJwt(token: any) {
 }
 
 const StudentLogin: React.FC = () => {
+	const [registerNo, setRegisterNo] = useState('');
 	const [phone, setPhone] = useState('');
 	const [password, setPassword] = useState('');
 	const [loading, setLoading] = useState(false);
@@ -47,23 +50,22 @@ const StudentLogin: React.FC = () => {
 		}
 
 		try {
-			const response = await axios.post(
-				'https://quiz-server-sigma.vercel.app/auth/login',
-				{ phone, password },
-			);
-			const token = response.data.access_token;
+			const response = await axios
+				.post('https://quiz-server-sigma.vercel.app/auth/login', { phone, password })
+				.then((res) => {
+					toast.success('Student login successfully...');
+					// Store token in localStorage
+					localStorage.setItem(
+						Config.localStorageKeys.access_token,
+						res.data.access_token,
+					);
+					const decodedToken = parseJwt(res.data.access_token);
+					console.log('Decoded token:', decodedToken);
 
-			// Store token in localStorage
-			localStorage.setItem('token', token);
-			const decodedToken = parseJwt(token);
-			console.log('Decoded token:', decodedToken);
-
-			// Navigate based on the user role from the decoded token
-			navigate(
-				decodedToken.role === 'STUDENT'
-					? '/student-dashboard/course'
-					: '/teacher-dashboard/course',
-			);
+					// Navigate based on the user role from the decoded token
+					navigate('/student-dashboard/course');
+				})
+				.catch((err) => toast.error(err));
 		} catch (error) {
 			setError('Login failed. Please check your credentials and try again.');
 			console.error('Login error:', error);
@@ -118,8 +120,8 @@ const StudentLogin: React.FC = () => {
 									minLength={10}
 									maxLength={10}
 									placeholder="Enter Register Number"
-									value={phone}
-									onChange={(e) => setPhone(e.target.value)}
+									value={registerNo}
+									onChange={(e) => setRegisterNo(e.target.value)}
 									className="w-full px-5 py-3 md:py-4 text-sm border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-600"
 									required
 								/>

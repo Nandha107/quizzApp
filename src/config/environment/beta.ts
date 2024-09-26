@@ -3,5 +3,5 @@ export const betaConfig: ApplicationConfiguration.environment = {
 
 	API_ENDPOINT: 'https://dev-quizz-api.vercel.app',
 
-	APP_URL: 'https://app.dev.notify.gozen.io/',
+	APP_URL: '',
 };
