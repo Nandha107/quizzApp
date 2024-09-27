@@ -95,7 +95,7 @@ const ResultPage = () => {
 							<p>Taken Time: {formatTime(Result.data?.timeTaken)}</p>
 						</span>
 						<div className="bg-emerald-50 border text-start border-emerald-100 rounded-xl p-5">
-							SCORE : {Result.data?.overallPercentage}
+							SCORE : {Result.data?.overallPercentage}%
 						</div>
 					</div>
 				</div>
