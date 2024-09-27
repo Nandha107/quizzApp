@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BsArrowLeft } from 'react-icons/bs';
 import { FaSpinner } from 'react-icons/fa';
@@ -42,7 +42,7 @@ const QuestionPage = () => {
 	const [tabSwitchCount, setTabSwitchCount] = useState(0);
 	const [isTabFocused, setIsTabFocused] = useState(true);
 	const [termsAccepted, setTermsAccepted] = useState(false);
-    const [submittedPage, setSubmitted] = useState(false);
+	const [submittedPage, setSubmitted] = useState(false);
 	const navigate = useNavigate();
 	const currentLevel = Test.data?.levels[currentLevelIndex];
 	const questions = currentLevel?.questions;
@@ -55,33 +55,36 @@ const QuestionPage = () => {
 
 	const levelResult = getResultByLevel((currentLevel as any)?.id, studentId);
 
+	
+	const isFirstRun = useRef(true);
+
 	useEffect(() => {
-		if (timerType === true && totalTestTime) {
-			if (timeRemaining === 0) return;
-
-			setTimeRemaining(totalTestTime);
-
-			const testTimer = setInterval(() => {
-				if (!showResult && !instruction && !Test.data?.completed) {
-					setTimeRemaining((prevTime) => {
-						if (prevTime && prevTime > 0) {
-							return prevTime - 1;
-						} else {
-							setTriggerTotalTimer(true);
-							// Time's up! Navigate to results page
-							// handleSubmitResponse(); // Ensure responses are submitted
-							return 0;
-						}
-					});
-				}
-			}, 1000);
-
-			return () => clearInterval(testTimer);
+	  if (timerType === true && totalTestTime) {
+		if (timeRemaining === 0) return;
+  
+		if (isFirstRun.current) {
+		  setTimeRemaining(totalTestTime);
+		  isFirstRun.current = false;
 		}
-	}, [showResult != true, instruction != true, totalTestTime, timerType]);
+  
+		const testTimer = setInterval(() => {
+		  if (!showResult && !instruction && !Test.data?.completed) {
+			setTimeRemaining((prevTime) => {
+			  if (prevTime && prevTime > 0) {
+				return prevTime - 1;
+			  } else {
+				setTriggerTotalTimer(true);
+				return 0;
+			  }
+			});
+		  }
+		}, 1000);
+  
+		return () => clearInterval(testTimer);
+	  }
+	}, [showResult, instruction, totalTestTime, timerType]);
 
 	useEffect(() => {
-	    console.log("running")
 		handleSubmitResponse();
 	}, [triggerSubmitForTotalTimer, !Test.data?.completed]);
 
@@ -230,7 +233,7 @@ const QuestionPage = () => {
 							responses: allLevelResponses as any,
 						}).then(() => {
 							alert('successfully submitted the responses');
-                            setSubmitted(true)
+							setSubmitted(true);
 							toast.success('successfully submitted the responses');
 							// navigate(`/result/${res.userMarksId}`);
 						})
@@ -269,7 +272,7 @@ const QuestionPage = () => {
 				) {
 					alert('successfully submitted the responses');
 					toast.success('successfully submitted the responses');
-                    setSubmitted(true)
+					setSubmitted(true);
 					// navigate(`/result/${res.updatedUserMarks.id}`);
 				}
 			} catch (error) {
@@ -323,7 +326,7 @@ const QuestionPage = () => {
 
 	if (!Test.data) return <div>Loading...</div>;
 
-	if (submittedPage||(Test as any).data?.completed) {
+	if (submittedPage || (Test as any).data?.completed) {
 		return (
 			<ResultSubmittedPage
 				onClick={() => {
@@ -447,7 +450,6 @@ const QuestionPage = () => {
 			</div>
 		);
 	}
-	
 
 	return (
 		<div className="justify-center items-center w-full flex flex-col gap-3 ">

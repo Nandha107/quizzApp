@@ -13,7 +13,7 @@ const formatTime = (seconds: any) => {
 };
 const ResultPage = () => {
 	const { userMarksId } = useParams() as { userMarksId: string };
-const navigate =  useNavigate()
+	const navigate = useNavigate();
 	const [PassResult, setPassResult] = useState(false);
 
 	const { useUserMarks } = useStudents();
@@ -35,14 +35,13 @@ const navigate =  useNavigate()
 		}));
 	};
 
-
-    if (Result.isLoading) {
+	if (Result.isLoading) {
 		return <SkeletonLoader />;
 	}
 	if (PassResult) {
 		return (
 			<div className="flex flex-col justify-center items-center ">
-			{Result.data?.pass?<ConfettiComponent />:null}	
+				{Result.data?.pass ? <ConfettiComponent /> : null}
 				<div className="flex justify-center items-center flex-col gap-3 p-16">
 					<span>This is your approximate level for {Result.data?.testName}.</span>
 
@@ -55,15 +54,18 @@ const navigate =  useNavigate()
 						{Result.data?.pass ? 'PASS' : 'FAIL'}
 					</span>
 					<span className="font-bold text-xl">
-                    {Result.data?.pass?<img src="https://i.imghippo.com/files/P9UBo1727262425.png" />:<img src="https://i.ibb.co/cKBMD9H/OBJECTS.png" alt="OBJECTS"  />}
-
-                    </span>
+						{Result.data?.pass ? (
+							<img src="https://i.imghippo.com/files/P9UBo1727262425.png" />
+						) : (
+							<img src="https://i.ibb.co/cKBMD9H/OBJECTS.png" alt="OBJECTS" />
+						)}
+					</span>
 				</div>
 				<div className="bg-emerald-50 w-full py-5 flex justify-end  px-24">
 					<button
-                    onClick={() =>{
-                        navigate("/studen-dasboard")
-                    }}
+						onClick={() => {
+							navigate('/student-dashboard');
+						}}
 						className={`bg-gradient-to-r from-emerald-500 to-emerald-900 text-white py-2 px-9 rounded-lg `}
 					>
 						Done
@@ -87,7 +89,8 @@ const navigate =  useNavigate()
 						</span>
 						<span className="flex justify-between w-full text-sm md:text-base">
 							<p>
-								Given Time: {formatTime(Result.data?.givenTime?.overAllSeconds)}
+								Given Time:{' '}
+								{formatTime(Result.data?.givenTime?.overAllSeconds)}
 							</p>
 							<p>Taken Time: {formatTime(Result.data?.timeTaken)}</p>
 						</span>
