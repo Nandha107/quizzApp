@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { BsArrowLeft } from 'react-icons/bs';
+import { BsArrowLeft, BsClockHistory } from 'react-icons/bs';
 import { FaSpinner } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import LevelBar from '../../component/pageComponents/student/levelBar';
@@ -8,6 +8,7 @@ import { useStudents } from '../../hooks/user/students/useStudents';
 import { parseJwt } from '../../utils/parseJWT';
 import ResultSubmittedPage from '../../component/pageComponents/student/resultSubmittedPage';
 import { Config } from '../../config';
+import QuizReminderPopup from './reminderPopup';
 const formatTime = (seconds: number): string => {
 	const minutes = Math.floor(seconds / 60);
 	const remainingSeconds = seconds % 60;
@@ -23,6 +24,7 @@ const QuestionPage = () => {
 	const [instruction, setInstruction] = useState(true);
 	const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
 	const [questionTimeRemaining, setQuestionTimeRemaining] = useState<number | null>(null);
+	const [showPopup, setShowPopup] = useState<boolean>(false);
 	const token = localStorage.getItem('token');
 	let studentId: any;
 
@@ -43,7 +45,11 @@ const QuestionPage = () => {
 	const [isTabFocused, setIsTabFocused] = useState(true);
 	const [termsAccepted, setTermsAccepted] = useState(false);
 	const [submittedPage, setSubmitted] = useState(false);
+
+
 	const navigate = useNavigate();
+
+
 	const currentLevel = Test.data?.levels[currentLevelIndex];
 	const questions = currentLevel?.questions;
 	const currentQuestion = questions?.[currentQuestionIndex];
@@ -53,9 +59,10 @@ const QuestionPage = () => {
 	const totalTestTime = 10000;
 	const questionTime = currentQuestion?.timer;
 
+
 	const levelResult = getResultByLevel((currentLevel as any)?.id, studentId);
 
-	
+
 	const isFirstRun = useRef(true);
 
 	useEffect(() => {
@@ -140,6 +147,8 @@ const QuestionPage = () => {
 	}, [showResult != true, instruction != true, tabSwitchCount]);
 	useEffect(() => {
 		if (!showResult && !instruction && !isTabFocused && tabSwitchCount < 3) {
+
+			setShowPopup(true);
 			alert("'Don't forget to return to the quiz!");
 			// Notify user when tab is not focused
 			if (Notification.permission === 'granted') {
@@ -149,6 +158,12 @@ const QuestionPage = () => {
 			}
 		}
 	}, [isTabFocused, showResult != true, instruction != true]);
+
+
+	const handleClosePopup = () => {
+		setShowPopup(false);
+	  };
+
 	const handleNext = () => {
 		if (questions && currentQuestionIndex < questions.length - 1) {
 			setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
@@ -463,10 +478,11 @@ const QuestionPage = () => {
 						{<BsArrowLeft className="h-5 w-8 cursor-pointer font-bold" />}
 						{Test.data.name}
 					</span>
-					<span className="flex gap-2 items-center">
+					<span className="flex gap-2  items-center">
 						{timerType === true && timeRemaining !== null && (
-							<div className="font-bold ">
-								Time Remaining (Test): {Math.floor(timeRemaining / 60)}:
+							<div className="font-bold flex  items-center justify-center  gap-2 ">
+<BsClockHistory className='h-6 w-6'/>
+Time Remaining (Test): {Math.floor(timeRemaining / 60)}:
 								{timeRemaining % 60 < 10 ? '0' : ''}
 								{timeRemaining % 60}
 							</div>
@@ -570,6 +586,7 @@ const QuestionPage = () => {
 					)}
 				</button>
 			</div>
+			<QuizReminderPopup showPopup={showPopup} onClose={handleClosePopup} />
 		</div>
 	);
 };
