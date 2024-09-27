@@ -20,14 +20,14 @@ export const useAssessments = ({
 		queryKey: ['getAssessment', assessmentId!],
 		queryFn: () => AssessmentClient.getAssessment(assessmentId!),
 		staleTime: 600000,
-		enabled: Boolean(assessmentId && course),
+		enabled: Boolean(assessmentId),
 	});
 
 	const getAssessmentAnalytics = useQuery({
 		queryKey: ['getAssessmentAnalytics', assessmentId!],
 		queryFn: () => AssessmentClient.getAssessmentAnalytics(assessmentId!),
 		staleTime: 600000,
-		enabled: Boolean(assessmentId),
+		enabled: Boolean(assessmentId) && Boolean(course),
 	});
 
 	const createAssessment = useMutation({

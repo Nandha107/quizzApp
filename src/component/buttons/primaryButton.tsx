@@ -16,7 +16,7 @@ export const PrimaryButton: React.FunctionComponent<ButtonProps> = ({
 		<button
 			className={`btn btn-primary ${
 				icon ? 'flex items-center gap-2' : ''
-			}  bg-btn-gradient border-teal-800 hover:border-primary outline-none text-white gap-x-2 ${className}`}
+			}  bg-btn-gradient border border-teal-600 hover:border-teal-800 outline-none text-white gap-x-2 ${className}`}
 			{...rest}
 		>
 			{icon}

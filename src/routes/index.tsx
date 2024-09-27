@@ -28,19 +28,13 @@ export const router = createBrowserRouter([
 						element: <StaffDashboard />,
 					},
 					{
-						path: 'create-assessment',
+						path: 'create-assessment/:dept',
 						element: <AssessmentCreateModal />,
-						children: [
-							{
-								path: 'level/:assessmentId',
-								element: <CreateTestPage />,
-							},
-						],
 					},
-					// {
-					// 	path: 'staff-dashboard/:dept/create-assessment/:assessmentId',
-					// 	element: <CreateTestPage />,
-					// },
+					{
+						path: 'staff-dashboard/:dept/:assessmentId/create-level',
+						element: <CreateTestPage />,
+					},
 					{
 						path: 'assessment-analytics/:assessmentId',
 						element: <AssessmentDetails />,

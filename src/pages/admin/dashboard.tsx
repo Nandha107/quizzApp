@@ -1,10 +1,8 @@
 import { Segmented } from 'antd';
-// import { useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAssessments } from '../../hooks/useAssessment';
 import { FaEllipsisV } from 'react-icons/fa';
-// import { Config } from '../../config';
 import { PrimaryButton } from '../../component/buttons/primaryButton';
 import AnalyticPage from '../../component/pageComponents/admin/reportDepartment';
 
@@ -21,8 +19,6 @@ const StaffDashboard = () => {
 
 	const paramValue = searchParams.get('tab');
 
-	// const getDept = localStorage.getItem(Config.localStorageKeys.dept);
-
 	const setTabParams = (value: string) => {
 		// const urls = ['?tab=assessments', '?tab=completed', '?tab=report'];
 		const urls = ['?tab=assessments', '?tab=report'];
@@ -30,10 +26,6 @@ const StaffDashboard = () => {
 			url.split('=')?.[1] === value ? setSearchParams(url) : null;
 		});
 	};
-
-	// const handleTestClick = (testId: string) => {
-	// 	navigate(`/assessment-analytics/${testId}`);
-	// };
 
 	return (
 		<div className="relative flex flex-col w-full h-full gap-3 p-5">
@@ -171,7 +163,7 @@ const StaffDashboard = () => {
 				<button
 					className="w-16 h-16 flex gap-2 items-center justify-center text-xl font-medium text-white rounded-full bg-btn-gradient shadow-lg"
 					onClick={() => {
-						navigate(`/create-assessment`);
+						navigate(`/staff-dashboard/${dept}/create-assessment`);
 					}}
 				>
 					<span className="text-3xl">+</span>
@@ -182,90 +174,3 @@ const StaffDashboard = () => {
 };
 
 export default StaffDashboard;
-
-{
-	/* <div className="grid p-5 2xl:gap-y-5 gap-5 row md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 md:px-5">
-	{getAllAssessments.isLoading || getAllAssessments.isFetching
-		? [...Array(106)].map((_, index) => (
-				<div
-					key={index}
-					className="relative min-h-[179px] max-h-[180px] md:min-h-[239px] md:max-h-[240px] rounded-lg"
-				>
-					<Skeleton
-						key={index}
-						className="absolute w-full h-full"
-						style={{
-							borderRadius: '0.8rem',
-						}}
-					/>
-				</div>
-			))
-		: getAllAssessments.data?.length
-			? getAllAssessments.data.map((test) => {
-					// Convert ISO string to Date object
-					const date = new Date(test.createdAt);
-
-					// Format the date into human-readable form
-					const humanReadableDate = `${date.getDate()} - ${date.getMonth() + 1} - ${date.getFullYear()}`;
-
-					return (
-						<div
-							key={test.id}
-							className="relative min-h-[179px] max-h-[180px] md:min-h-[239px] md:max-h-[240px] rounded-lg shadow-lg"
-							onClick={() => handleTestClick(test.id)}
-						>
-							<div className="flex flex-col w-full h-full gap-3 p-4 bg-white border-2 border-teal-600 rounded-lg shadow-md cursor-pointer bg-gradient-to-br from-teal-600/50 via-teal-600/20 to-teal-600/50 hover:bg-teal-600/20">
-								<div className="flex flex-col w-full h-[40%] md:h-[40%]">
-									<div className="flex w-full h-full gap-3">
-										<div
-											title={test.name}
-											className="flex items-center w-[70%]"
-										>
-											<p className="overflow-hidden text-lg font-bold md:text-xl text-nowrap text-ellipsis">
-												{test.name}
-											</p>
-										</div>
-										<div className="w-[30%] justify-center flex items-center bg-white rounded-lg">
-											<p className="text-sm font-bold">
-												{humanReadableDate}
-											</p>
-										</div>
-									</div>
-									<div className="">
-										<p className="text-sm font-semibold text-teal-800">
-											Total Students: {test.totalParticipants}
-										</p>
-									</div>
-								</div>
-								<div className="flex flex-col w-full h-[30%] md:h-[35%]">
-									<div className=" h-[50%] flex items-center">
-										<p className="overflow-hidden text-sm font-bold text-slate-900/60 text-nowrap text-ellipsis">
-											Total time: {test.duration} seconds
-										</p>
-									</div>
-									<div className="flex w-full gap-3 h-[50%]">
-										<div className="flex items-center w-[50%]">
-											<p className="overflow-hidden text-sm font-bold text-slate-900/60 text-nowrap text-ellipsis">
-												Department: {test.category}
-											</p>
-										</div>
-										<div className="text-sm font-bold text-slate-900/60 text-nowrap overflow-hidden text-ellipsis w-[50%] justify-center flex items-center">
-											<p>Total Questions: {test.totalQuestions}</p>
-										</div>
-									</div>
-								</div>
-								<div className="flex h-[30%] md:h-[20%] justify-between">
-									<button className="w-[70%] h-full flex gap-2 items-center justify-center text-lg font-medium text-white rounded-lg bg-gradient-to-br from-teal-700 to-teal-500 hover:from-teal-800 hover:to-teal-500">
-										<span>Assessment Details</span>
-									</button>
-									<button className="w-[10%] h-full flex gap-2 items-center justify-center text-lg font-medium border border-teal-600 rounded-lg hover:bg-teal-600/20">
-										<CgMoreVertical className="text-teal-600" />
-									</button>
-								</div>
-							</div>
-						</div>
-					);
-				})
-			: null}
-</div>; */
-}

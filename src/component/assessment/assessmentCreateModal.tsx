@@ -1,14 +1,21 @@
-import { Button, Checkbox, DatePicker, InputNumber, TimePicker } from 'antd';
+import { Checkbox, DatePicker, InputNumber, TimePicker } from 'antd';
 import Modal from 'antd/es/modal/Modal';
 // import { LoadingSpinner } from '../spinner/loadingSpinner';
-import { Config } from '../../config';
 import { useState } from 'react';
-// import { useAssessments } from '../../hooks/useAssessment';
+import { useAssessments } from '../../hooks/useAssessment';
 import { Input } from '../inputs/input';
 import { Dayjs } from 'dayjs';
+import toast from 'react-hot-toast';
+import { PrimaryButton } from '../buttons/primaryButton';
+import { PrimaryOutlineButton } from '../buttons/primaryOutlineButton';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const AssessmentCreateModal = () => {
 	const { RangePicker } = DatePicker;
+
+	const { dept } = useParams();
+
+	const [isModalOpen, setIsModalOpen] = useState(true);
 
 	const [isTimerForWholeAssessment, setIsTimerForWholeAssessment] = useState(false);
 	const [assessmentName, setAssessmentName] = useState('');
@@ -20,11 +27,17 @@ const AssessmentCreateModal = () => {
 		minutes: number;
 		overAllSeconds: number;
 	}>({ hours: 0, minutes: 0, overAllSeconds: 0 });
-	const [assessmentInstruction, setAssessmentInstruction] = useState('');
 
-	// const {createAssessment} = useAssessments({});
+	const [timeValue, setTimeValue] = useState<Dayjs | null>(null); // Initialize time state as null
 
-	console.log(assessmentStartDate, assessmentEndDate, assessmentTimeDuration);
+	const [assessmentInstruction, setAssessmentInstruction] = useState({
+		heading: '',
+		description: '',
+	});
+
+	const { createAssessment } = useAssessments({});
+
+	const navigate = useNavigate();
 
 	const modalStyles = {
 		header: {
@@ -36,7 +49,7 @@ const AssessmentCreateModal = () => {
 			backdropFilter: 'blur(10px)',
 		},
 	};
-	const getDept = localStorage.getItem(Config.localStorageKeys.dept);
+	// const getDept = localStorage.getItem(Config.localStorageKeys.dept);
 
 	const onDateRangeChange = (dateRange: Dayjs[] | null) => {
 		if (dateRange) {
@@ -73,53 +86,86 @@ const AssessmentCreateModal = () => {
 				minutes,
 				overAllSeconds,
 			});
+
+			// Update the state with the selected time
+			setTimeValue(value);
 		}
 	};
 
-	// const handleCreateAssessment = () => {
-	// createAssessment.mutateAsync({
-	// 	name: assessmentName,
-	// 	timerForWholeTest: isTimerForWholeAssessment,
-	// 	duration: 0,
-	// 	startTime: 0,
-	// 	endTime: 0,
-	// 	instructions: '',
-	// 	category: '',
-	// 	levelsCount: 0
-	// })
-	// };
+	const handleCreateAssessment = async (event: React.FormEvent) => {
+		event.preventDefault(); // Prevent default form submission
+		console.log(1111111);
+		try {
+			const createNewAssessment = createAssessment
+				.mutateAsync({
+					name: assessmentName,
+					timerForWholeTest: isTimerForWholeAssessment,
+					duration: assessmentTimeDuration,
+					startTime: assessmentStartDate as number,
+					endTime: assessmentEndDate as number,
+					instructions: assessmentInstruction,
+					category: dept?.toUpperCase() as string,
+					levelsCount: assessmentLevelCount,
+				})
+				.then((res) => {
+					console.log(22222222);
+					setIsModalOpen(false); // Close the modal on success
+					navigate(`/staff-dashboard/${dept}/${res.id}/create-level`);
+				});
+
+			toast.promise(
+				createNewAssessment,
+				{
+					loading: 'Assessment Creating...',
+					success: 'Assessment Created Successfully',
+					error: () =>
+						createAssessment.isError
+							? (createAssessment.error as any).message
+							: 'Sorry! failed to create Assessment, please try again later',
+				},
+
+				{ id: 'Toast' },
+			);
+
+			const res = await createNewAssessment;
+
+			console.log({ createAssessment: res });
+		} catch (err) {
+			console.log('Cannot Create Assessment ====> ', err);
+		}
+	};
 
 	return (
 		<Modal
 			title={'Assessment Configuration'}
-			open={Boolean(getDept)}
+			open={isModalOpen && Boolean(dept)}
 			centered
 			styles={modalStyles}
-			className=""
 			width={800}
-			footer={[
-				<Button
-					key="cancel"
-					onClick={() => {}}
-					style={{
-						backgroundColor: 'white',
-						color: '#0d9488',
-						borderColor: '#0d9488',
-					}} // Custom Cancel button
-				>
-					Clear
-				</Button>,
-				<Button
-					key="create"
-					type="primary"
-					onClick={() => {}}
-					style={{ backgroundColor: '#0d9488', borderColor: '' }} // Custom Ok button
-				>
-					Create Assessment
-				</Button>,
-			]}
+			footer={false}
+			// footer={[
+			// 	<Button
+			// 		key="cancel"
+			// 		onClick={() => {}}
+			// 		style={{
+			// 			backgroundColor: 'white',
+			// 			color: '#0d9488',
+			// 			borderColor: '#0d9488',
+			// 		}} // Custom Cancel button
+			// 	>
+			// 		Clear
+			// 	</Button>,
+			// 	<Button
+			// 		key="create"
+			// 		type="primary"
+			// 		onClick={handleCreateAssessment}
+			// 		style={{ backgroundColor: '#0d9488', borderColor: '' }} // Custom Ok button
+			// 	>
+			// 		{is}
+			// 	</Button>,
+			// ]}
 		>
-			<form className="flex flex-col gap-3 w-full p-3">
+			<form className="flex flex-col gap-3 w-full p-3" onSubmit={handleCreateAssessment}>
 				<div className="md:grid md:grid-cols-2 md:gap-3">
 					{/* Assessment Name Input */}
 					<Input
@@ -142,7 +188,7 @@ const AssessmentCreateModal = () => {
 						InputClassName="hover:cursor-not-allowed"
 						placeholder="Department"
 						isRequired
-						value={getDept?.toUpperCase() as string}
+						value={dept?.toUpperCase() as string}
 					/>
 				</div>
 				{/* Time For Total Assessment Checkbox &  Time Duration Input */}
@@ -164,16 +210,15 @@ const AssessmentCreateModal = () => {
 							<div className="border border-gray-300 rounded-full w-full py-3 px-2">
 								<TimePicker
 									id="timeDuration"
-									minuteStep={15}
+									minuteStep={1}
 									showSecond={false}
 									showNow={false}
-									// value={}
+									value={timeValue}
 									hourStep={1}
 									className="w-full"
 									variant="borderless"
 									placeholder="Select Duration"
 									onChange={(value) => {
-										console.log({ value });
 										onTimeChange(value);
 									}}
 								/>
@@ -200,7 +245,6 @@ const AssessmentCreateModal = () => {
 								variant="borderless"
 								popupClassName="custom-range-picker-dropdown"
 								onChange={(dateRange) => {
-									console.log({ dateRange });
 									onDateRangeChange(dateRange as Dayjs[]);
 								}}
 							/>
@@ -241,8 +285,13 @@ const AssessmentCreateModal = () => {
 							type="text"
 							placeholder="Enter Your Instruction Heading"
 							isRequired
-							value={''}
-							onChange={() => {}}
+							value={assessmentInstruction.heading}
+							onChange={(e) => {
+								setAssessmentInstruction({
+									...assessmentInstruction,
+									heading: e.target.value,
+								});
+							}}
 						/>
 						<div className="flex flex-col w-full gap-3">
 							<label
@@ -254,11 +303,20 @@ const AssessmentCreateModal = () => {
 							<textarea
 								id="ins_description"
 								className="w-full border border-gray-300 p-3 min-h-[180px] max-h-[180px] rounded-xl"
-								value={assessmentInstruction}
-								onChange={(e) => setAssessmentInstruction(e.target.value)}
+								value={assessmentInstruction.description}
+								onChange={(e) =>
+									setAssessmentInstruction({
+										...assessmentInstruction,
+										description: e.target.value,
+									})
+								}
 							/>
 						</div>
 					</div>
+				</div>
+				<div className="flex justify-end items-center gap-3">
+					<PrimaryOutlineButton type="button" text="Clear" />
+					<PrimaryButton type="submit" text="Create Assessment" />
 				</div>
 			</form>
 		</Modal>

@@ -45,9 +45,11 @@ export class AssessmentClient {
 	static async createAssessment(body: Assessments.CreateAssessmentPayload) {
 		try {
 			const res = await axios.post<Assessments.CreateAssessmentResponse>(`/tests`, body);
+			console.log({ ApiCreateTest: res });
 			return res.data;
 		} catch (error) {
 			console.log('original error while creating assessment', error);
+			console.log({ ApiCreateTest: error });
 
 			throw error;
 		}

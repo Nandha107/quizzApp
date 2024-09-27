@@ -26,7 +26,7 @@ export const AuthLayout: React.FC<AuthLayout> = ({}) => {
 
 	return (
 		<div className="flex flex-col border w-screen h-screen">
-			<div className="h-[7%] w-full px-2 md:px-5 shadow-lg bg-white">
+			<div className="h-[7%] w-full px-2 md:px-5 shadow-lg bg-white z-[1000]">
 				<Header />
 			</div>
 			<div className="h-[93%] w-full">

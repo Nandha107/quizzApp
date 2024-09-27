@@ -74,10 +74,17 @@ declare module Assessments {
 	interface CreateAssessmentPayload {
 		name: string;
 		timerForWholeTest: boolean;
-		duration: number;
+		duration: {
+			hours: number;
+			minutes: number;
+			overAllSeconds: number;
+		};
 		startTime: number;
 		endTime: number;
-		instructions: string;
+		instructions: {
+			heading: string;
+			description: string;
+		};
 		category: string;
 		levelsCount: number;
 	}
@@ -88,7 +95,10 @@ declare module Assessments {
 		timerForWholeTest: boolean;
 		publish: boolean;
 		duration: number;
-		instructions: string;
+		instructions: {
+			heading: string;
+			description: string;
+		};
 		category: string;
 		levelsCount: number;
 		startTime: number | null;

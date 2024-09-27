@@ -47,6 +47,7 @@ p {
 .btn {
 	height: 2.3rem;
 	min-height: 2.3rem;
+	@apply min-h-[3rem] text-base;
 	/* @apply text-sm 2xl:text-lg; */
 	/* @apply text-base md:text-lg; */
 }
@@ -173,6 +174,26 @@ body {
 		width: 100vw !important; /* Full viewport width on mobile */
 		left: 0 !important; /* Align the popup to the left */
 	}
+}
+
+/*Tabs customization antd*/
+.custom-tabs .ant-tabs-tab {
+	font-size: 16px; /* Customize tab text size */
+	color: #333; /* Customize tab text color */
+	width: 120px; /* Customize tab width */
+	@apply w-[80px] md:w-[100px] lg:w-[120px];
+	height: 60px; /* Customize tab height */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.custom-tabs .ant-tabs-tab:hover {
+	color: teal; /* Change color on hover */
+}
+
+.custom-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+	color: #13c2c2; /* Active tab text color */
 }
 
 :root {

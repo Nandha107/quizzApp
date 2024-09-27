@@ -10,7 +10,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const Input = forwardRef<HTMLInputElement, InputProps>(
 	({ className, InputClassName, isRequired, label, htmlFor, ...rest }, ref) => {
 		return (
-			<div className={`flex flex-col gap-y-2 w-full ${className}`}>
+			<div className={`flex flex-col gap-y-2 ${className}`}>
 				{label && (
 					<label
 						className="text-base text-secondary md:text-md flex gap-1"
