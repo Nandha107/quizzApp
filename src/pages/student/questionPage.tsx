@@ -9,6 +9,7 @@ import { parseJwt } from '../../utils/parseJWT';
 import ResultSubmittedPage from '../../component/pageComponents/student/resultSubmittedPage';
 import { Config } from '../../config';
 import QuizReminderPopup from './reminderPopup';
+import LevelsScorePage from '../../component/pageComponents/student/levelScorePage';
 const formatTime = (seconds: number): string => {
 	const minutes = Math.floor(seconds / 60);
 	const remainingSeconds = seconds % 60;
@@ -46,9 +47,7 @@ const QuestionPage = () => {
 	const [termsAccepted, setTermsAccepted] = useState(false);
 	const [submittedPage, setSubmitted] = useState(false);
 
-
 	const navigate = useNavigate();
-
 
 	const currentLevel = Test.data?.levels[currentLevelIndex];
 	const questions = currentLevel?.questions;
@@ -57,38 +56,36 @@ const QuestionPage = () => {
 
 	const timerType = Test.data?.timerForWholeTest;
 	const totalTestTime = 10000;
-	const questionTime = currentQuestion?.timer;
-
+	const questionTime = currentQuestion?.timer.overAllSeconds;
 
 	const levelResult = getResultByLevel((currentLevel as any)?.id, studentId);
-
 
 	const isFirstRun = useRef(true);
 
 	useEffect(() => {
-	  if (timerType === true && totalTestTime) {
-		if (timeRemaining === 0) return;
-  
-		if (isFirstRun.current) {
-		  setTimeRemaining(totalTestTime);
-		  isFirstRun.current = false;
+		if (timerType === true && totalTestTime) {
+			if (timeRemaining === 0) return;
+
+			if (isFirstRun.current) {
+				setTimeRemaining(totalTestTime);
+				isFirstRun.current = false;
+			}
+
+			const testTimer = setInterval(() => {
+				if (!showResult && !instruction && !Test.data?.completed) {
+					setTimeRemaining((prevTime) => {
+						if (prevTime && prevTime > 0) {
+							return prevTime - 1;
+						} else {
+							setTriggerTotalTimer(true);
+							return 0;
+						}
+					});
+				}
+			}, 1000);
+
+			return () => clearInterval(testTimer);
 		}
-  
-		const testTimer = setInterval(() => {
-		  if (!showResult && !instruction && !Test.data?.completed) {
-			setTimeRemaining((prevTime) => {
-			  if (prevTime && prevTime > 0) {
-				return prevTime - 1;
-			  } else {
-				setTriggerTotalTimer(true);
-				return 0;
-			  }
-			});
-		  }
-		}, 1000);
-  
-		return () => clearInterval(testTimer);
-	  }
 	}, [showResult, instruction, totalTestTime, timerType]);
 
 	useEffect(() => {
@@ -147,7 +144,6 @@ const QuestionPage = () => {
 	}, [showResult != true, instruction != true, tabSwitchCount]);
 	useEffect(() => {
 		if (!showResult && !instruction && !isTabFocused && tabSwitchCount < 3) {
-
 			setShowPopup(true);
 			alert("'Don't forget to return to the quiz!");
 			// Notify user when tab is not focused
@@ -159,10 +155,9 @@ const QuestionPage = () => {
 		}
 	}, [isTabFocused, showResult != true, instruction != true]);
 
-
 	const handleClosePopup = () => {
 		setShowPopup(false);
-	  };
+	};
 
 	const handleNext = () => {
 		if (questions && currentQuestionIndex < questions.length - 1) {
@@ -433,36 +428,38 @@ const QuestionPage = () => {
 
 	if (Test.data.completedLevelIndexes.includes(currentLevelIndex) || showResult) {
 		return (
-			<div className="justify-center flex flex-col h-[80vh] items-center text-center">
-				<h2 className="text-2xl font-bold mb-4">
-					Level {currentLevelIndex + 1} Results
-				</h2>
-				<p className="text-lg">You mark is {levelResult.data?.score} .</p>
-				<span>
-					{levelResult.data?.level.Response.map((res) => {
-						return (
-							<div
-								className={`bg-${res.isCorrect ? 'green-300' : 'bg-red-300'}`}
-							>
-								<span className="flex gap-7">
-									your Answer:
-									{res.selectedOption}
-								</span>
-								<span className="flex gap-2">
-									correctAnswer {res.question.answer}
-								</span>
-							</div>
-						);
-					})}
-				</span>
-				<button
-					className="bg-blue-500 py-2 px-6 rounded-lg mt-4"
-					onClick={handleNextLevel}
-					disabled={currentLevelIndex >= currentLevelLength - 1}
-				>
-					{currentLevelIndex < currentLevelLength - 1 ? 'Next Level' : 'Finish'}
-				</button>
-			</div>
+			// <div className="justify-center flex flex-col h-[80vh] items-center text-center">
+			// 	<h2 className="text-2xl font-bold mb-4">
+			// 		Level {currentLevelIndex + 1} Results
+			// 	</h2>
+			// 	<p className="text-lg">You mark is {levelResult.data?.score} .</p>
+			// 	<span>
+			// 		{levelResult.data?.level.Response.map((res) => {
+			// 			return (
+			// 				<div
+			// 					className={`bg-${res.isCorrect ? 'green-300' : 'bg-red-300'}`}
+			// 				>
+			// 					<span className="flex gap-7">
+			// 						your Answer:
+			// 						{res.selectedOption}
+			// 					</span>
+			// 					<span className="flex gap-2">
+			// 						correctAnswer {res.question.answer}
+			// 					</span>
+			// 				</div>
+			// 			);
+			// 		})}
+			// 	</span>
+			// 	<button
+			// 		className="bg-blue-500 py-2 px-6 rounded-lg mt-4"
+			// 		onClick={handleNextLevel}
+			// 		disabled={currentLevelIndex >= currentLevelLength - 1}
+			// 	>
+			// 		{currentLevelIndex < currentLevelLength - 1 ? 'Next Level' : 'Finish'}
+			// 	</button>
+			// </div>
+			<LevelsScorePage isLoading={levelResult.isLoading} onClick={handleNextLevel} score={(levelResult as any).data?.score} totalQuestions={(levelResult as any).data?.totalQuestions} pass={(levelResult as any).data?.pass} percentage={(levelResult as any ).data?.percentage}  level={(levelResult as any).data?.level}  />
+
 		);
 	}
 
@@ -481,8 +478,8 @@ const QuestionPage = () => {
 					<span className="flex gap-2  items-center">
 						{timerType === true && timeRemaining !== null && (
 							<div className="font-bold flex  items-center justify-center  gap-2 ">
-<BsClockHistory className='h-6 w-6'/>
-Time Remaining (Test): {Math.floor(timeRemaining / 60)}:
+								<BsClockHistory className="h-6 w-6" />
+								Time Remaining (Test): {Math.floor(timeRemaining / 60)}:
 								{timeRemaining % 60 < 10 ? '0' : ''}
 								{timeRemaining % 60}
 							</div>
@@ -527,13 +524,13 @@ Time Remaining (Test): {Math.floor(timeRemaining / 60)}:
 							) : (
 								<div className=" rounded-lg p-2 grid grid-cols-2 gap-2">
 									{currentQuestion.options.map(
-										(op: string, index: number) => (
+										(op: {value:string}, index: number) => (
 											<div key={index} className="my-2">
 												<label
 													htmlFor={`option-${index}`}
 													className={`flex items-center p-1 border rounded-lg cursor-pointer transition-all 
                     ${
-						selectedOption === op
+						selectedOption === op.value
 							? ' text-emerald-500 bg-emerald-100 border-emerald-500'
 							: 'bg-white border-gray-300 text-black hover:bg-gray-100'
 					}`}
@@ -542,11 +539,11 @@ Time Remaining (Test): {Math.floor(timeRemaining / 60)}:
 														type="radio"
 														id={`option-${index}`}
 														name="option"
-														value={op}
-														checked={selectedOption === op}
+														value={op.value}
+														checked={selectedOption === op.value}
 														onChange={() =>
 															handleOptionSelect(
-																op,
+																op.value,
 																currentQuestion.id,
 															)
 														}
@@ -555,7 +552,7 @@ Time Remaining (Test): {Math.floor(timeRemaining / 60)}:
 													<span className="font-bold border rounded-md bg-emerald-100  py-2 px-3">
 														{String.fromCharCode(65 + index)}
 													</span>
-													<span className="ml-2">{op}</span>
+													<span className="ml-2">{op.value}</span>
 												</label>
 											</div>
 										),
