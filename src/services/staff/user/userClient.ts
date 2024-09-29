@@ -26,7 +26,7 @@ export class UserClient {
 
 	// static async getAllAssessments(course: string) {
 	// 	try {
-	// 		const res = await axios.get<Assessments.GetAssessmentsResponse[]>(
+	// 		const res = await axios.get<Assessments.GetAssessmentResponse[]>(
 	// 			`/tests/category/${course}`,
 	// 		);
 	// 		return res.data;

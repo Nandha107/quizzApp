@@ -1,5 +1,5 @@
 declare module Assessments {
-	interface GetAssessmentsResponse {
+	interface GetAssessmentResponse {
 		id: string;
 		name: string;
 		timerForWholeTest: boolean;
@@ -9,7 +9,10 @@ declare module Assessments {
 			minutes: number;
 			overAllSeconds: number;
 		};
-		instructions: string;
+		instructions: {
+			heading: string;
+            description: string;
+		};
 		category: string;
 		levelsCount: number;
 		totalQuestions: number;
@@ -19,10 +22,10 @@ declare module Assessments {
 		updatedAt: string;
 		deletedAt: string | null;
 		totalParticipants: number;
-		levels: QuestionsLevel[] | [];
+		levels: QuestionsLevelResponse[] | [];
 	}
 
-	interface QuestionsLevel {
+	interface QuestionsLevelResponse {
 		id: string;
 		levelNo: number;
 		levelName: string;
@@ -32,16 +35,20 @@ declare module Assessments {
 		createdAt: string;
 		updatedAt: string;
 		deletedAt: string;
-		questions: Questions[] | [];
+		questions: QuestionsResponse[] | [];
 	}
 
-	interface Questions {
+	interface QuestionsResponse {
 		id: string;
 		question: string;
-		type: string;
+		type: CHOICE | TEXTAREA;
 		options: string[];
 		answer: string;
-		timer: number;
+		timer: {
+			hours: number;
+            minutes: number;
+            overAllSeconds: number;
+		};
 		levelId: string;
 		createdAt: string;
 		updatedAt: string;
@@ -107,6 +114,26 @@ declare module Assessments {
 		updatedAt: string;
 		deletedAt: string | null;
 		totalParticipants: number;
-		levels: QuestionsLevel[] | [];
+		levels: QuestionsLevelResponse[] | [];
+	}
+
+	interface UpdateAssessmentLevelPayload {
+		levelNo: number;
+		levelName: string;
+		marks: number;
+		minusMarks: number;
+		questions: QuestionPayload[];
+	}
+
+	interface QuestionPayload {
+		question: string;
+		type: CHOICE | TEXTAREA;
+		options: { value: string }[];
+		answer: string;
+		timer: {
+			hours: number;
+			minutes: number;
+			overAllSeconds: number;
+		};
 	}
 }

@@ -1,28 +1,67 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-const initAssessmentStore: AssessmentsStoreTypes.CreateAssessmentProps = {
+const initAssessmentStore: AssessmentsStoreTypes.AssessmentData = {
+	id: '',
 	name: '',
 	category: '',
 	timerForWholeTest: false,
-	duration: 0,
+	duration: {
+		hours: 0,
+		minutes: 0,
+		overAllSeconds: 0,
+	},
 	startTime: 0,
 	endTime: 0,
-	instructions: '',
+	instructions: {
+		heading: '',
+		description: '',
+	},
 	levelsCount: 0,
+	publish: false,
+	totalParticipants: 0,
+	levels: [
+		{
+			id: '',
+			levelNo: 1,
+			levelName: '',
+			testId: '',
+			marks: 1,
+			minusMarks: 1,
+			questions: [
+				{
+					question: '',
+					timer: {
+						hours: 0,
+						minutes: 0,
+						overAllSeconds: 0,
+					},
+					type: '',
+					options: [{ value: '' }],
+					answer: '',
+				},
+			],
+		},
+	],
 };
 
-export const userStore = create<AssessmentsStoreTypes.CreateAssessment>()(
+export const assessmentStore = create<AssessmentsStoreTypes.AssessmentStore>()(
 	devtools(
-		(set): AssessmentsStoreTypes.CreateAssessment => ({
+		(set): AssessmentsStoreTypes.AssessmentStore => ({
 			...initAssessmentStore,
-			setCreateAssessment(user) {
+			setCreateAssessment(value) {
 				set((state) => ({
 					...state,
-					...user,
+					...value,
 				}));
 			},
+			// populate: (props) => {
+			// 	set((state) => ({ ...state, ...AssessmentAdaptor(props) }));
+			// },
+			resetAssessmentStore: () => {
+				set({ ...initAssessmentStore });
+			},
 		}),
-		{ name: 'UserStore', enabled: import.meta.env.DEV },
+		{ name: 'AssessmentStore', enabled: import.meta.env.DEV },
 	),
 );

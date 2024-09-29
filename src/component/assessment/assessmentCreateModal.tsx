@@ -1,6 +1,6 @@
-import { Checkbox, DatePicker, InputNumber, TimePicker } from 'antd';
+import { Checkbox, DatePicker, InputNumber } from 'antd';
 import Modal from 'antd/es/modal/Modal';
-// import { LoadingSpinner } from '../spinner/loadingSpinner';
+import { LoadingSpinner } from '../spinner/loadingSpinner';
 import { useState } from 'react';
 import { useAssessments } from '../../hooks/useAssessment';
 import { Input } from '../inputs/input';
@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import { PrimaryButton } from '../buttons/primaryButton';
 import { PrimaryOutlineButton } from '../buttons/primaryOutlineButton';
 import { useNavigate, useParams } from 'react-router-dom';
+import TimeDurationSelect from '../inputs/timePicker';
 
 const AssessmentCreateModal = () => {
 	const { RangePicker } = DatePicker;
@@ -17,10 +18,12 @@ const AssessmentCreateModal = () => {
 
 	const [isModalOpen, setIsModalOpen] = useState(true);
 
+	const [isLoading, setIsLoading] = useState(false);
+
 	const [isTimerForWholeAssessment, setIsTimerForWholeAssessment] = useState(false);
 	const [assessmentName, setAssessmentName] = useState('');
-	const [assessmentStartDate, setAssessmentStartDate] = useState<number>();
-	const [assessmentEndDate, setAssessmentEndDate] = useState<number>();
+	const [assessmentStartDate, setAssessmentStartDate] = useState<number | null>();
+	const [assessmentEndDate, setAssessmentEndDate] = useState<number | null>();
 	const [assessmentLevelCount, setAssessmentLevelCount] = useState(1);
 	const [assessmentTimeDuration, setAssessmentTimeDuration] = useState<{
 		hours: number;
@@ -28,7 +31,7 @@ const AssessmentCreateModal = () => {
 		overAllSeconds: number;
 	}>({ hours: 0, minutes: 0, overAllSeconds: 0 });
 
-	const [timeValue, setTimeValue] = useState<Dayjs | null>(null); // Initialize time state as null
+	const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
 
 	const [assessmentInstruction, setAssessmentInstruction] = useState({
 		heading: '',
@@ -49,7 +52,6 @@ const AssessmentCreateModal = () => {
 			backdropFilter: 'blur(10px)',
 		},
 	};
-	// const getDept = localStorage.getItem(Config.localStorageKeys.dept);
 
 	const onDateRangeChange = (dateRange: Dayjs[] | null) => {
 		if (dateRange) {
@@ -70,32 +72,37 @@ const AssessmentCreateModal = () => {
 		}
 	};
 
-	const onTimeChange = (value: Dayjs | null) => {
-		if (value) {
-			const hours = value.hour(); // Get the selected hour
-			const minutes = value.minute(); // Get the selected minutes
+	const onTimeChange = (data: { hours: string; minutes: string }) => {
+		const hours = Number(data.hours); // Get the selected hour
+		const minutes = Number(data.minutes); // Get the selected minutes
 
-			console.log('Selected Time:', hours, 'Hours', minutes, 'Minutes');
+		console.log('Selected Time:', hours, 'Hours', minutes, 'Minutes');
 
-			const overAllSeconds = hours * 60 * 60 * 1000 + minutes * 60 * 1000;
+		const overAllSeconds = hours * 60 * 60 * 1000 + minutes * 60 * 1000;
 
-			console.log({ overAllSeconds });
+		console.log({ overAllSeconds });
 
-			setAssessmentTimeDuration({
-				hours,
-				minutes,
-				overAllSeconds,
-			});
+		setAssessmentTimeDuration({
+			hours,
+			minutes,
+			overAllSeconds,
+		});
+	};
 
-			// Update the state with the selected time
-			setTimeValue(value);
-		}
+	const onClear = () => {
+		setAssessmentName('');
+		setAssessmentStartDate(null);
+		setAssessmentEndDate(null);
+		setAssessmentInstruction({ heading: '', description: '' });
+		setAssessmentLevelCount(1);
+		setAssessmentTimeDuration({ hours: 0, minutes: 0, overAllSeconds: 0 });
+		setDateRange([null, null]);
 	};
 
 	const handleCreateAssessment = async (event: React.FormEvent) => {
 		event.preventDefault(); // Prevent default form submission
-		console.log(1111111);
 		try {
+			setIsLoading(true); // Show loading spinner while creating assessment
 			const createNewAssessment = createAssessment
 				.mutateAsync({
 					name: assessmentName,
@@ -108,9 +115,13 @@ const AssessmentCreateModal = () => {
 					levelsCount: assessmentLevelCount,
 				})
 				.then((res) => {
-					console.log(22222222);
+					setIsLoading(false);
 					setIsModalOpen(false); // Close the modal on success
 					navigate(`/staff-dashboard/${dept}/${res.id}/create-level`);
+				})
+				.catch((err) => {
+					console.log(err);
+					setIsLoading(false);
 				});
 
 			toast.promise(
@@ -143,29 +154,15 @@ const AssessmentCreateModal = () => {
 			styles={modalStyles}
 			width={800}
 			footer={false}
-			// footer={[
-			// 	<Button
-			// 		key="cancel"
-			// 		onClick={() => {}}
-			// 		style={{
-			// 			backgroundColor: 'white',
-			// 			color: '#0d9488',
-			// 			borderColor: '#0d9488',
-			// 		}} // Custom Cancel button
-			// 	>
-			// 		Clear
-			// 	</Button>,
-			// 	<Button
-			// 		key="create"
-			// 		type="primary"
-			// 		onClick={handleCreateAssessment}
-			// 		style={{ backgroundColor: '#0d9488', borderColor: '' }} // Custom Ok button
-			// 	>
-			// 		{is}
-			// 	</Button>,
-			// ]}
+			onCancel={() => {
+				setIsModalOpen(false);
+				navigate(-1);
+			}} // Custom close button
 		>
-			<form className="flex flex-col gap-3 w-full p-3" onSubmit={handleCreateAssessment}>
+			<form
+				className="flex flex-col gap-3 w-full h-full p-3"
+				onSubmit={handleCreateAssessment}
+			>
 				<div className="md:grid md:grid-cols-2 md:gap-3">
 					{/* Assessment Name Input */}
 					<Input
@@ -192,7 +189,8 @@ const AssessmentCreateModal = () => {
 					/>
 				</div>
 				{/* Time For Total Assessment Checkbox &  Time Duration Input */}
-				<div className="flex flex-col md:w-[50%] gap-2 selection:select-none">
+
+				<div className="flex flex-col gap-2 selection:select-none">
 					<Checkbox
 						checked={isTimerForWholeAssessment}
 						onChange={(e) => setIsTimerForWholeAssessment(e.target.checked)}
@@ -200,29 +198,14 @@ const AssessmentCreateModal = () => {
 						Set Timer For Whole Assessment
 					</Checkbox>
 					{isTimerForWholeAssessment ? (
-						<div className="flex flex-col gap-y-2">
+						<div className="flex flex-col h-full">
 							<label
 								className="text-base text-secondary md:text-md flex gap-1"
 								htmlFor="timeDuration"
 							>
 								Time Duration <span className="text-xl text-danger">*</span>
 							</label>
-							<div className="border border-gray-300 rounded-full w-full py-3 px-2">
-								<TimePicker
-									id="timeDuration"
-									minuteStep={1}
-									showSecond={false}
-									showNow={false}
-									value={timeValue}
-									hourStep={1}
-									className="w-full"
-									variant="borderless"
-									placeholder="Select Duration"
-									onChange={(value) => {
-										onTimeChange(value);
-									}}
-								/>
-							</div>
+							<TimeDurationSelect onDataChange={onTimeChange} />
 						</div>
 					) : null}
 				</div>
@@ -236,16 +219,18 @@ const AssessmentCreateModal = () => {
 							Assessment Available Duration Period{' '}
 							<span className="text-xl text-danger">*</span>
 						</label>
-						<div className="border border-gray-300 rounded-full w-full py-2 px-2">
+						<div className="border border-gray-300 rounded-full w-full md:py-2 px-2">
 							<RangePicker
 								id={'dateDuration'}
 								size="large"
 								className="w-full"
 								placeholder={['start-date', 'end-date']}
+								value={dateRange}
 								variant="borderless"
 								popupClassName="custom-range-picker-dropdown"
 								onChange={(dateRange) => {
 									onDateRangeChange(dateRange as Dayjs[]);
+									setDateRange(dateRange as [Dayjs, Dayjs]);
 								}}
 							/>
 						</div>
@@ -258,7 +243,7 @@ const AssessmentCreateModal = () => {
 						>
 							Total Level Count <span className="text-xl text-danger">*</span>
 						</label>
-						<div className="border border-gray-300 rounded-full w-full py-3 px-2">
+						<div className="border border-gray-300 rounded-full w-full py-1 md:py-3 px-2">
 							<InputNumber
 								min={1}
 								max={10}
@@ -315,8 +300,26 @@ const AssessmentCreateModal = () => {
 					</div>
 				</div>
 				<div className="flex justify-end items-center gap-3">
-					<PrimaryOutlineButton type="button" text="Clear" />
-					<PrimaryButton type="submit" text="Create Assessment" />
+					<PrimaryOutlineButton
+						type="button"
+						text="Clear"
+						disabled={isLoading}
+						onClick={onClear}
+					/>
+					<PrimaryButton
+						type="submit"
+						disabled={isLoading}
+						className='disabled:bg-teal-600/200'
+						icon={
+							isLoading ? (
+								<LoadingSpinner
+									text="Creating..."
+									className="text-white font-semibold"
+								/>
+							) : null
+						}
+						text={isLoading ? '' : 'Create Assessment'}
+					/>
 				</div>
 			</form>
 		</Modal>
