@@ -113,7 +113,7 @@ export type UserMarks = {
 	studentId: string;
 	testId: string;
 	marks: number;
-    testName:string,
+	testName: string;
 	pass: boolean;
 	givenTime: { hours: number; minutes: number; overAllSeconds: number };
 	timerForWholeTest: boolean;

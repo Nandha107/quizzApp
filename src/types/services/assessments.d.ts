@@ -11,7 +11,7 @@ declare module Assessments {
 		};
 		instructions: {
 			heading: string;
-            description: string;
+			description: string;
 		};
 		category: string;
 		levelsCount: number;
@@ -46,8 +46,8 @@ declare module Assessments {
 		answer: string;
 		timer: {
 			hours: number;
-            minutes: number;
-            overAllSeconds: number;
+			minutes: number;
+			overAllSeconds: number;
 		};
 		levelId: string;
 		createdAt: string;

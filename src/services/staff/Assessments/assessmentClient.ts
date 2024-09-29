@@ -55,9 +55,15 @@ export class AssessmentClient {
 		}
 	}
 
-	static async updateAssessmentLevel(LevelId: string, body: Assessments.UpdateAssessmentLevelPayload) {
+	static async updateAssessmentLevel(
+		LevelId: string,
+		body: Assessments.UpdateAssessmentLevelPayload,
+	) {
 		try {
-			const res = await axios.put<Assessments.CreateAssessmentResponse>(`/tests/levels/${LevelId}`, body);
+			const res = await axios.put<Assessments.CreateAssessmentResponse>(
+				`/tests/levels/${LevelId}`,
+				body,
+			);
 			console.log({ ApiUpdateTest: res });
 			return res.data;
 		} catch (error) {

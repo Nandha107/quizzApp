@@ -309,7 +309,7 @@ const AssessmentCreateModal = () => {
 					<PrimaryButton
 						type="submit"
 						disabled={isLoading}
-						className='disabled:bg-teal-600/200'
+						className="disabled:bg-teal-600/200"
 						icon={
 							isLoading ? (
 								<LoadingSpinner

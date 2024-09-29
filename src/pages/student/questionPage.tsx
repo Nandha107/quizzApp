@@ -458,8 +458,15 @@ const QuestionPage = () => {
 			// 		{currentLevelIndex < currentLevelLength - 1 ? 'Next Level' : 'Finish'}
 			// 	</button>
 			// </div>
-			<LevelsScorePage isLoading={levelResult.isLoading} onClick={handleNextLevel} score={(levelResult as any).data?.score} totalQuestions={(levelResult as any).data?.totalQuestions} pass={(levelResult as any).data?.pass} percentage={(levelResult as any ).data?.percentage}  level={(levelResult as any).data?.level}  />
-
+			<LevelsScorePage
+				isLoading={levelResult.isLoading}
+				onClick={handleNextLevel}
+				score={(levelResult as any).data?.score}
+				totalQuestions={(levelResult as any).data?.totalQuestions}
+				pass={(levelResult as any).data?.pass}
+				percentage={(levelResult as any).data?.percentage}
+				level={(levelResult as any).data?.level}
+			/>
 		);
 	}
 
@@ -524,7 +531,7 @@ const QuestionPage = () => {
 							) : (
 								<div className=" rounded-lg p-2 grid grid-cols-2 gap-2">
 									{currentQuestion.options.map(
-										(op: {value:string}, index: number) => (
+										(op: { value: string }, index: number) => (
 											<div key={index} className="my-2">
 												<label
 													htmlFor={`option-${index}`}

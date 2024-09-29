@@ -26,10 +26,7 @@ export const PreviewQuestions = () => {
 							{JSON.parse(getLocalStorageQuestionsItem).map(
 								(question: createTestType, index: number) => {
 									return (
-										<div
-											key={index}
-											className="flex flex-col gap-4"
-										>
+										<div key={index} className="flex flex-col gap-4">
 											<p className="font-bold text-xl px-2">
 												{' '}
 												{index + 1}. {question.question}

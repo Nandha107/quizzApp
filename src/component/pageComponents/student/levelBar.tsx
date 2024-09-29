@@ -9,7 +9,6 @@ interface LevelBarProps {
 const LevelBar: React.FC<LevelBarProps> = ({ totalLevels, activeLevel, completedLevels }) => {
 	return (
 		<div className=" w-[60%] h-4 p-1 flex justify-between text-center gap-1 items-center bg-[#F3F7FC] rounded-md ">
-
 			{Array.from({ length: totalLevels }, (_, index) => {
 				const isCompleted = completedLevels.includes(index);
 				const isActive = index === activeLevel;
@@ -32,12 +31,9 @@ const LevelBar: React.FC<LevelBarProps> = ({ totalLevels, activeLevel, completed
 							width: `${100 / totalLevels}%`,
 							display: 'inline-block',
 						}}
-					>
-					
-					</div>
+					></div>
 				);
 			})}
-		
 		</div>
 	);
 };
