@@ -12,7 +12,7 @@ export const RequestInterceptor = (config: InternalAxiosRequestConfig) => {
 
 	const accessToken = localStorage.getItem(Config.localStorageKeys.access_token);
 
-	(config as any).headers.authorization = `Bearer ${accessToken}` ?? '';
+	(config as any).headers.authorization = accessToken ? `Bearer ${accessToken}` : '';
 
 	config.url = url + config.url;
 

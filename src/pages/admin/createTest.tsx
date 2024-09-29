@@ -33,9 +33,9 @@ const CreateTestPage = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const { getAssessment, updateAssessment } = useAssessments({ assessmentId });
 
-	const levelsCount = getAssessment.data?.levelsCount ?? 0;
+	const levelsCount = getAssessment.data?.levelsCount ? getAssessment.data?.levelsCount : 0;
 
-	const currentLevelId = searchParams.get('level') ?? '1';
+	const currentLevelId = searchParams.get('level') ? searchParams.get('level') : '1';
 
 	const items: TabsProps['items'] = Array.from({ length: levelsCount }, (_, index) => ({
 		label: `Level ${index + 1}`,
@@ -57,7 +57,7 @@ const CreateTestPage = () => {
 	const chooseQuestionType = watch('type');
 
 	const { fields, append, remove } = useFieldArray({
-	// const { fields, append, remove, update } = useFieldArray({
+		// const { fields, append, remove, update } = useFieldArray({
 		control, // Pass control to useFieldArray hook
 		name: 'options', // Name of the field to manage dynamically
 	});
@@ -100,7 +100,7 @@ const CreateTestPage = () => {
 			const updateAssessmentLevel = updateAssessment.mutateAsync({
 				levelId: getCurrentLevelId as string,
 				body: {
-					levelName: `Label ${currentLevelId}` ?? activeTab.label,
+					levelName: currentLevelId ? `Label ${currentLevelId}` : activeTab.label,
 					levelNo: Number(currentLevelId),
 					marks: 1,
 					minusMarks: 1,
@@ -126,7 +126,7 @@ const CreateTestPage = () => {
 		}
 	};
 
-	console.log({chooseQuestionType})
+	console.log({ chooseQuestionType });
 
 	return (
 		<div className="h-full w-full flex bg-white">
@@ -160,7 +160,9 @@ const CreateTestPage = () => {
 									items={items}
 									style={{ padding: '0px', display: 'block' }}
 									activeKey={
-										(currentLevelId as string) ?? (activeTab.key as string)
+										currentLevelId
+											? (currentLevelId as string)
+											: (activeTab.key as string)
 									}
 									onChange={(key: string) => {
 										console.log({ key });
