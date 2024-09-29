@@ -22,4 +22,4 @@ const SkeletonLoader = () => (
 		</div>
 	</div>
 );
-export default SkeletonLoader
+export default SkeletonLoader;
