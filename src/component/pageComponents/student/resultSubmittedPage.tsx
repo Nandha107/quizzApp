@@ -6,10 +6,7 @@ interface ResultSubmittedPageProps {
 	onClick: () => void;
 }
 
-const ResultSubmittedPage: React.FC<ResultSubmittedPageProps> = ({
-	testName,
-	onClick,
-}) => {
+const ResultSubmittedPage: React.FC<ResultSubmittedPageProps> = ({ testName, onClick }) => {
 	return (
 		<div className="flex flex-col items-center justify-center h-full">
 			<div className="  flex items-center w-full">
