@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SkeletonLoader from './resultPageSkeletonLosder';
 
 type Response = {
     question: {
@@ -18,6 +19,7 @@ type Response = {
   
   type LevelsScorePageProps = {
    onClick:() => void
+   isLoading:boolean;
     score: number;
     totalQuestions: number;
     pass: boolean | null;
@@ -35,7 +37,7 @@ const formatTime = (seconds: number) => {
 };
 
 const LevelsScorePage: React.FC<LevelsScorePageProps> = ({
- score,totalQuestions,pass,percentage,level,
+ score,totalQuestions,pass,percentage,level,isLoading,
  onClick
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean[]>([]);
@@ -47,7 +49,9 @@ const LevelsScorePage: React.FC<LevelsScorePageProps> = ({
       return newExpanded;
     });
   };
-
+  if (isLoading) {
+    return <SkeletonLoader />;
+}
   return (
     <div className="w-full mx-auto bg-white">
       <div className="md:flex w-full gap-2  h-full md:gap-9 p-8">

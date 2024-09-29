@@ -458,7 +458,7 @@ const QuestionPage = () => {
 			// 		{currentLevelIndex < currentLevelLength - 1 ? 'Next Level' : 'Finish'}
 			// 	</button>
 			// </div>
-			<LevelsScorePage onClick={handleNextLevel} score={(levelResult as any).data?.score} totalQuestions={(levelResult as any).data?.totalQuestions} pass={(levelResult as any).data?.pass} percentage={(levelResult as any ).data?.percentage}  level={(levelResult as any).data?.level}  />
+			<LevelsScorePage isLoading={levelResult.isLoading} onClick={handleNextLevel} score={(levelResult as any).data?.score} totalQuestions={(levelResult as any).data?.totalQuestions} pass={(levelResult as any).data?.pass} percentage={(levelResult as any ).data?.percentage}  level={(levelResult as any).data?.level}  />
 
 		);
 	}
