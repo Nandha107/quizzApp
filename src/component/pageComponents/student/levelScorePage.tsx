@@ -28,18 +28,18 @@ type LevelsScorePageProps = {
 	level: Level;
 };
 
-const formatTime = (seconds: number) => {
-	const hours = Math.floor(seconds / 3600);
-	const minutes = Math.floor((seconds % 3600) / 60);
-	const secs = seconds % 60;
+// const formatTime = (seconds: number) => {
+// 	const hours = Math.floor(seconds / 3600);
+// 	const minutes = Math.floor((seconds % 3600) / 60);
+// 	const secs = seconds % 60;
 
-	return `${hours > 0 ? hours + ':' : ''}${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-};
+// 	return `${hours > 0 ? hours + ':' : ''}${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+// };
 
 const LevelsScorePage: React.FC<LevelsScorePageProps> = ({
 	score,
-	totalQuestions,
-	pass,
+	// totalQuestions,
+	// pass,
 	percentage,
 	level,
 	isLoading,

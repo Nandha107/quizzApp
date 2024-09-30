@@ -1,12 +1,12 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useStudents } from '../../hooks/user/students/useStudents';
-import { parseJwt } from '../../utils/parseJWT';
+// import { parseJwt } from '../../utils/parseJWT';
 import { Config } from '../../config';
 import { Segmented } from 'antd';
 import { jwtDecode } from 'jwt-decode';
 import Skeleton from 'react-loading-skeleton';
 import { PrimaryButton } from '../../component/buttons/primaryButton';
-import { FaCalendar } from 'react-icons/fa';
+// import { FaCalendar } from 'react-icons/fa';
 
 export interface user {
 	email: string;

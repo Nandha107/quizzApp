@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { BsArrowLeft, BsClockHistory } from 'react-icons/bs';
+import { BsClockHistory } from 'react-icons/bs';
+// import { BsArrowLeft, BsClockHistory } from 'react-icons/bs';
 import { FaSpinner } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import LevelBar from '../../component/pageComponents/student/levelBar';
@@ -65,98 +66,98 @@ const QuestionPage = () => {
 
 	const isFirstRun = useRef(true);
 
-	// useEffect(() => {
-	// 	if (timerType === true && totalTestTime) {
-	// 		if (timeRemaining === 0) return;
+	useEffect(() => {
+		if (timerType === true && totalTestTime) {
+			if (timeRemaining === 0) return;
 
-	// 		if (isFirstRun.current) {
-	// 			setTimeRemaining(totalTestTime);
-	// 			isFirstRun.current = false;
-	// 		}
+			if (isFirstRun.current) {
+				setTimeRemaining(totalTestTime);
+				isFirstRun.current = false;
+			}
 
-	// 		const testTimer = setInterval(() => {
-	// 			if (!showResult && !instruction && !Test.data?.completed) {
-	// 				setTimeRemaining((prevTime) => {
-	// 					if (prevTime && prevTime > 0) {
-	// 						return prevTime - 1;
-	// 					} else {
-	// 						setTriggerTotalTimer(true);
-	// 						return 0;
-	// 					}
-	// 				});
-	// 			}
-	// 		}, 1000);
+			const testTimer = setInterval(() => {
+				if (!showResult && !instruction && !Test.data?.completed) {
+					setTimeRemaining((prevTime) => {
+						if (prevTime && prevTime > 0) {
+							return prevTime - 1;
+						} else {
+							setTriggerTotalTimer(true);
+							return 0;
+						}
+					});
+				}
+			}, 1000);
 
-	// 		return () => clearInterval(testTimer);
-	// 	}
-	// }, [showResult, instruction, totalTestTime, timerType]);
+			return () => clearInterval(testTimer);
+		}
+	}, [showResult, instruction, totalTestTime, timerType]);
 
-	// useEffect(() => {
-	// 	handleSubmitResponse();
-	// }, [triggerSubmitForTotalTimer, !Test.data?.completed]);
+	useEffect(() => {
+		handleSubmitResponse();
+	}, [triggerSubmitForTotalTimer, !Test.data?.completed]);
 
-	// useEffect(() => {
-	// 	if (timerType === false && questionTime) {
-	// 		setQuestionTimeRemaining(questionTime);
+	useEffect(() => {
+		if (timerType === false && questionTime) {
+			setQuestionTimeRemaining(questionTime);
 
-	// 		const questionTimer = setInterval(() => {
-	// 			if (!showResult && !instruction) {
-	// 				setQuestionTimeRemaining((prevTime) => {
-	// 					if (prevTime && prevTime > 0) {
-	// 						return prevTime - 1;
-	// 					} else {
-	// 						// Time's up! Move to next question
-	// 						handleNext();
-	// 						setTrigger(true);
-	// 						return 0; // Set to zero to prevent further processing
-	// 					}
-	// 				});
-	// 			}
-	// 		}, 1000);
+			const questionTimer = setInterval(() => {
+				if (!showResult && !instruction) {
+					setQuestionTimeRemaining((prevTime) => {
+						if (prevTime && prevTime > 0) {
+							return prevTime - 1;
+						} else {
+							// Time's up! Move to next question
+							handleNext();
+							setTrigger(true);
+							return 0; // Set to zero to prevent further processing
+						}
+					});
+				}
+			}, 1000);
 
-	// 		return () => clearInterval(questionTimer);
-	// 	}
-	// }, [
-	// 	showResult,
-	// 	instruction,
-	// 	currentQuestionIndex,
-	// 	questionTime,
-	// 	triggerSubmit,
-	// 	timerType,
-	// ]);
+			return () => clearInterval(questionTimer);
+		}
+	}, [
+		showResult,
+		instruction,
+		currentQuestionIndex,
+		questionTime,
+		triggerSubmit,
+		timerType,
+	]);
 
-	// useEffect(() => {
-	// 	const handleVisibilityChange = () => {
-	// 		if (document.visibilityState === 'visible') {
-	// 			setIsTabFocused(true);
-	// 		} else {
-	// 			setIsTabFocused(false);
-	// 			if (!showResult || !instruction) {
-	// 				setTabSwitchCount((prevCount) => prevCount + 1);
-	// 			}
-	// 			if (tabSwitchCount >= 2) {
-	// 				Test.data?.levels[currentLevelIndex].questions;
-	// 				handleSubmitResponse();
-	// 			}
-	// 		}
-	// 	};
-	// 	document.addEventListener('visibilitychange', handleVisibilityChange);
-	// 	return () => {
-	// 		document.removeEventListener('visibilitychange', handleVisibilityChange);
-	// 	};
-	// }, [showResult != true, instruction != true, tabSwitchCount]);
-	// useEffect(() => {
-	// 	if (!showResult && !instruction && !isTabFocused && tabSwitchCount < 3) {
-	// 		setShowPopup(true);
-	// 		alert("'Don't forget to return to the quiz!");
-	// 		// Notify user when tab is not focused
-	// 		if (Notification.permission === 'granted') {
-	// 			new Notification('Reminder', {
-	// 				body: "Don't forget to return to the quiz!",
-	// 			});
-	// 		}
-	// 	}
-	// }, [isTabFocused, showResult != true, instruction != true]);
+	useEffect(() => {
+		const handleVisibilityChange = () => {
+			if (document.visibilityState === 'visible') {
+				setIsTabFocused(true);
+			} else {
+				setIsTabFocused(false);
+				if (!showResult || !instruction) {
+					setTabSwitchCount((prevCount) => prevCount + 1);
+				}
+				if (tabSwitchCount >= 2) {
+					Test.data?.levels[currentLevelIndex].questions;
+					handleSubmitResponse();
+				}
+			}
+		};
+		document.addEventListener('visibilitychange', handleVisibilityChange);
+		return () => {
+			document.removeEventListener('visibilitychange', handleVisibilityChange);
+		};
+	}, [showResult != true, instruction != true, tabSwitchCount]);
+	useEffect(() => {
+		if (!showResult && !instruction && !isTabFocused && tabSwitchCount < 3) {
+			setShowPopup(true);
+			alert("'Don't forget to return to the quiz!");
+			// Notify user when tab is not focused
+			if (Notification.permission === 'granted') {
+				new Notification('Reminder', {
+					body: "Don't forget to return to the quiz!",
+				});
+			}
+		}
+	}, [isTabFocused, showResult != true, instruction != true]);
 
 	const handleClosePopup = () => {
 		setShowPopup(false);
