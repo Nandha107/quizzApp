@@ -2,10 +2,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useStudents } from '../../hooks/user/students/useStudents';
 // import { parseJwt } from '../../utils/parseJWT';
 import { Config } from '../../config';
-import { Segmented } from 'antd';
+import { Badge, Segmented } from 'antd';
 import { jwtDecode } from 'jwt-decode';
 import Skeleton from 'react-loading-skeleton';
 import { PrimaryButton } from '../../component/buttons/primaryButton';
+import StudentAnalyticPage from '../../component/pageComponents/student/studentReport';
 // import { FaCalendar } from 'react-icons/fa';
 
 export interface user {
@@ -159,7 +160,15 @@ const StudentDashboard = () => {
 											</div>
 											<div className="rounded-b-lg py-1.5 md:py-3 lg:py-2.5 flex items-center justify-center cursor-pointer">
 												<PrimaryButton
-													text="Complete Assessment"
+													text={
+														!test.enableResponseReceiving &&
+														!test.completed
+															? 'Upcoming Assessment'
+															: test.enableResponseReceiving &&
+																  test.completed
+																? 'Completed Assessment'
+																: 'Start Assessment'
+													}
 													className="text-sm w-[70%]"
 													onClick={() =>
 														navigate(`/question/${test.id}`)
@@ -167,50 +176,24 @@ const StudentDashboard = () => {
 												/>
 											</div>
 										</div>
-										{/* <div className="flex justify-between items-center mb-4">
-										<h2 className="text-lg font-medium text-gray-900">
-											{test.name}
-										</h2>
-										<span className="bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												className="h-4 w-4 inline-block mr-1"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke="currentColor"
-											>
-												<path
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													stroke-width="2"
-													d="M8 7V6a2 2 0 114 0v1a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 114 0v1m-6 3C4 17 7 21 11 21h2c4 0 7-4 7-9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v5z"
-												/>
-											</svg>
-											{new Date(test.createdAt).toDateString()}
-										</span>
-									</div>
-									<div className="text-gray-700">
-										<p className="mb-2">
-											<span className="font-medium">Total time:</span>{' '}
-											{test.duration.hours} seconds
-										</p>
-										<p className="mb-2">
-											<span className="font-medium">Department:</span>{' '}
-											{test.category}
-										</p>
-										<p className="mb-4">
-											<span className="font-medium">
-												Total questions:
-											</span>{' '}
-											{test.totalQuestions}
-										</p>
-									</div>
-									<button
-										onClick={() => navigate(`/question/${test.id}`)}
-										className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-md"
-									>
-										Complete test
-									</button> */}
+										{!test.enableResponseReceiving && !test.completed ? (
+											<div className="absolute bottom-0 bg-teal-900/50 w-full h-full z-100 rounded-lg">
+												<Badge.Ribbon
+													text="Up Coming"
+													className="top-2 font-semibold text-black"
+													color="yellow"
+												></Badge.Ribbon>
+											</div>
+										) : null}
+										{test.enableResponseReceiving && test.completed ? (
+											<div className="absolute bottom-0 bg-teal-900/50 w-full h-full z-100 rounded-lg">
+												<Badge.Ribbon
+													text="Completed"
+													className="top-2 font-semibold text-black"
+													color="green"
+												></Badge.Ribbon>
+											</div>
+										) : null}
 									</div>
 								);
 							})
@@ -219,23 +202,13 @@ const StudentDashboard = () => {
 				</div>
 			)}
 			{/* Content based on paramValue */}
-			{/* {paramValue === 'report' && (
+			{paramValue === 'report' && (
 				<div className="flex flex-col w-full h-[92%] rounded-xl border border-gray-300 relative">
 					<div className="flex items-center justify-center w-full h-full">
-						<AnalyticPage department={dept as string} />
+						<StudentAnalyticPage />
 					</div>
 				</div>
-			)} */}
-			{/* <div className="absolute md:hidden flex bottom-8 right-8 z-[1000]">
-				<button
-					className="w-16 h-16 flex gap-2 items-center justify-center text-xl font-medium text-white rounded-full bg-btn-gradient shadow-lg"
-					onClick={() => {
-						navigate(`/staff-dashboard/${dept}/create-assessment`);
-					}}
-				>
-					<span className="text-3xl">+</span>
-				</button>
-			</div> */}
+			)}
 		</div>
 	);
 };
