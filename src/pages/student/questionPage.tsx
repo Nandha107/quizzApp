@@ -50,6 +50,7 @@ const QuestionPage = () => {
 	const [isTabFocused, setIsTabFocused] = useState(true);
 	const [termsAccepted, setTermsAccepted] = useState(false);
 	const [submittedPage, setSubmitted] = useState(false);
+	const [textarea,setTextAreaValue] = useState("")
 
 	const navigate = useNavigate();
 
@@ -164,6 +165,7 @@ const QuestionPage = () => {
 	};
 
 	const handleNext = () => {
+		setTextAreaValue("")
 		if (questions && currentQuestionIndex < questions.length - 1) {
 			setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
 		} else {
@@ -263,6 +265,8 @@ const QuestionPage = () => {
 						});
 
 				console.log(res);
+
+				Test.refetch()
 				// if(!res.create){
 				//   console.log(1)
 				//   alert(res.message)
@@ -277,9 +281,7 @@ const QuestionPage = () => {
 					toast.success('successfully submitted the responses');
 					setShowResult(true);
 				}
-				localStorage.removeItem(
-					`test-${testId}-level-${currentLevelIndex}-responses`,
-				);
+				localStorage.removeItem(`test-${testId}-level-${currentLevelIndex}-responses`);
 				if (
 					res.update &&
 					currentLevelIndex === (Test as any).data?.levels?.length - 1
@@ -297,6 +299,8 @@ const QuestionPage = () => {
 	};
 
 	const handleTextareaChange = (value: string, currentQuestionId: string) => {
+
+		setTextAreaValue(value)
 		const levelKey = `test-${testId}-level-${currentLevelIndex}-responses`;
 		const responses = JSON.parse(localStorage.getItem(levelKey) || '[]');
 
@@ -314,6 +318,7 @@ const QuestionPage = () => {
 
 		localStorage.setItem(levelKey, JSON.stringify(responses));
 		setSelectedOption(value);
+		
 	};
 
 	const handleOptionSelect = (option: string, questionId: string) => {
@@ -528,6 +533,7 @@ const QuestionPage = () => {
 							{currentQuestion.type === 'TEXTAREA' ? (
 								<textarea
 									className={`border transition-all duration-200 resize-none min-h-[200px] max-h-[200px] w-full px-3 py-4 rounded-lg outline-none focus:border-primary`}
+									value={textarea}
 									onChange={(e) =>
 										handleTextareaChange(
 											e.target.value,

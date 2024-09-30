@@ -64,7 +64,7 @@ const ResultPage = () => {
 				<div className="bg-emerald-50 w-full py-5 flex justify-end  px-24">
 					<button
 						onClick={() => {
-							navigate('/student-dashboard');
+							navigate('/student-dashboard?tab=assessments');
 						}}
 						className={`bg-gradient-to-r from-emerald-500 to-emerald-900 text-white py-2 px-9 rounded-lg `}
 					>
