@@ -1,7 +1,5 @@
-// import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-// import * as XLSX from 'xlsx';
-// import { BackArrowIcon } from '../../assets/svg/common/backArrow';
+import * as XLSX from 'xlsx';
 import Skeleton from 'react-loading-skeleton';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie as PieChart, Doughnut } from 'react-chartjs-2';
@@ -19,33 +17,29 @@ const AssessmentDetails = () => {
 
 	const { getAssessmentAnalytics } = useAssessments({ assessmentId });
 
-	// const exportToExcel = () => {
+	const exportToExcel = () => {
+		console.log();
 
-	// 	console.log();
+		const exportData = getAssessmentAnalytics.data?.studentAnalytics?.map(
+			(student: Assessments.StudentDetails) => ({
+				StudentName: student.name,
+				StudentEmail: student.email,
+				TotalMarks: student.totalMarks,
+				PassStatus: student.pass ? 'Pass' : 'Fail',
+				CorrectAnswers: student.correctAnswers,
+				WrongAnswers: student.wrongAnswers,
+			}),
+		);
 
-	// 	const exportData = responses?.map((response: any) => ({
-	// 		StudentName: response.user.name,
-	// 		StudentEmail: response.user.email,
-	// 		TotalMarks: response.marks,
-	// 		PassStatus: response.pass ? 'Pass' : 'Fail',
-	// 		CorrectAnswers:
-	// 			response.selectedOption ===
-	// 			response.test.questions.find((q: any) => q.id === response.questionId).answer
-	// 				? 1
-	// 				: 0,
-	// 		WrongAnswers:
-	// 			response.selectedOption !==
-	// 			response.test.questions.find((q: any) => q.id === response.questionId).answer
-	// 				? 1
-	// 				: 0,
-	// 	}));
+		const worksheet = XLSX.utils.json_to_sheet(exportData as any);
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Test Analytics');
 
-	// 	const worksheet = XLSX.utils.json_to_sheet(exportData);
-	// 	const workbook = XLSX.utils.book_new();
-	// 	XLSX.utils.book_append_sheet(workbook, worksheet, 'Test Analytics');
-
-	// 	XLSX.writeFile(workbook, `${responses[0].test.name}_${assessmentId}.xlsx`);
-	// };
+		XLSX.writeFile(
+			workbook,
+			`${getAssessmentAnalytics.data?.testName}_${assessmentId}.xlsx`,
+		);
+	};
 
 	const pieData = {
 		labels: ['Correct Answers', 'Wrong Answers'],
@@ -209,7 +203,7 @@ const AssessmentDetails = () => {
 			<div className="flex lg:hidden shrink-0 w-full h-[10%] bg-teal-600/30 items-center justify-center">
 				<button
 					className="w-[60%] py-3 md:w-[50%] md:py-5 text-md font-medium text-white rounded-md bg-gradient-to-br from-teal-700 to-teal-500 hover:from-teal-800 hover:to-teal-500"
-					// onClick={exportToExcel}
+					onClick={exportToExcel}
 				>
 					Export to Excel
 				</button>

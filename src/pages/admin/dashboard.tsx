@@ -2,7 +2,7 @@ import { Segmented } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAssessments } from '../../hooks/useAssessment';
-import { FaEllipsisV } from 'react-icons/fa';
+import { FaCalendar, FaEllipsisV } from 'react-icons/fa';
 import { PrimaryButton } from '../../component/buttons/primaryButton';
 import AnalyticPage from '../../component/pageComponents/admin/reportDepartment';
 
@@ -57,7 +57,7 @@ const StaffDashboard = () => {
 							[...Array(8)].map((_, index) => (
 								<div
 									key={index}
-									className="relative min-h-[180px] max-h-[180px] md:min-h-[190px] md:max-h-[190px] xl:min-h-[225px] xl:max-h-[225px] rounded-lg"
+									className="relative min-h-[180px] max-h-[180px] md:min-h-[200px] md:max-h-[200px] xl:min-h-[225px] xl:max-h-[225px] rounded-lg"
 								>
 									<Skeleton
 										key={index}
@@ -77,13 +77,28 @@ const StaffDashboard = () => {
 							getAllAssessments.data.map((assessment, index) => {
 								// Convert ISO string to Date object
 								const date = new Date(assessment.createdAt);
+								const monthNames = [
+									'Jan',
+									'Feb',
+									'Mar',
+									'Apr',
+									'May',
+									'Jun',
+									'Jul',
+									'Aug',
+									'Sep',
+									'Oct',
+									'Nov',
+									'Dec',
+								];
 
 								// Format the date into human-readable form
-								const humanReadableDate = `${date.getDate()} - ${date.getMonth() + 1} - ${date.getFullYear()}`;
+								const formattedDate = `${date.getDate()} ${monthNames[date.getMonth()]}, ${date.getFullYear()}`;
+								// const humanReadableDate = `${date.getDate()} - ${date.getMonth() + 1} - ${date.getFullYear()}`;
 								return (
 									<div
 										key={index}
-										className="relative min-h-[180px] max-h-[180px] md:min-h-[190px] md:max-h-[190px] xl:min-h-[225px] xl:max-h-[225px] rounded-lg"
+										className="relative min-h-[180px] max-h-[180px] md:min-h-[200px] md:max-h-[200px] xl:min-h-[225px] xl:max-h-[225px] rounded-lg"
 									>
 										<div className="flex flex-col w-full h-full bg-white border border-teal-600 rounded-lg shadow-md bg-gradient-to-br from-teal-600/50 via-teal-600/20 to-teal-600/50 hover:bg-teal-600/20">
 											{/* <div className="rounded-t-lg px-4 py-3 border border-red-900"> */}
@@ -122,9 +137,10 @@ const StaffDashboard = () => {
 																}{' '}
 																seconds
 															</p>
-															<div className="justify-center flex py-2 px-7 items-center bg-white rounded-lg">
+															<div className="justify-center gap-2 flex py-2 px-7 items-center bg-white rounded-lg">
+																<FaCalendar/>
 																<p className="text-sm font-semibold">
-																	{humanReadableDate}
+																	{formattedDate}
 																</p>
 															</div>
 														</div>

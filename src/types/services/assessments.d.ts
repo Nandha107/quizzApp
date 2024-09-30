@@ -64,6 +64,25 @@ declare module Assessments {
 		levels: number;
 		passCount: number;
 		failCount: number;
+		studentAnalytics: StudentDetails[];
+	}
+
+	interface StudentDetails {
+		name: string;
+		department: string;
+		phoneNumber: string;
+		collegeName: string;
+		graduationYear: number;
+		registerNo: number;
+		email: string;
+		studentId: string;
+		totalQuestions: number;
+		correctAnswers: number;
+		wrongAnswers: number;
+		marksObtained: number;
+		totalMarks: number;
+		passPercentage: number;
+		pass: boolean;
 	}
 
 	// interface AssessmentAnalyticsLevel {
