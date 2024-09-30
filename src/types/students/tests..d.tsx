@@ -29,6 +29,7 @@ export type Test = {
 	totalQuestions: number;
 	completed: boolean;
 	totalMarksObtained: number;
+	enableResponseReceiving:boolean;
 	completedLevelIndexes: number[];
 };
 
