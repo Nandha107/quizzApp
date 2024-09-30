@@ -27,7 +27,7 @@ export function useStudents() {
 				}
 			},
 			enabled: Boolean(category && studentId),
-			staleTime: 30000,
+			staleTime: 60000,
 		});
 	const getTestById = (testId: string, studentId: string) =>
 		useQuery({
@@ -44,8 +44,8 @@ export function useStudents() {
 					throw error;
 				}
 			},
-			enabled: Boolean(testId),
-			staleTime: 30000,
+			enabled: Boolean(testId) && Boolean(studentId),
+			staleTime: 60000,
 		});
 
 	const getLevelByTestId = (testId: string) =>

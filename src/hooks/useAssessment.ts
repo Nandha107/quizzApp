@@ -20,20 +20,20 @@ export const useAssessments = ({
 		queryKey: ['getAssessment', assessmentId!],
 		queryFn: () => AssessmentClient.getAssessment(assessmentId!),
 		staleTime: 600000,
-		enabled: Boolean(assessmentId && course),
+		enabled: Boolean(assessmentId),
 	});
 
 	const getAssessmentAnalytics = useQuery({
 		queryKey: ['getAssessmentAnalytics', assessmentId!],
 		queryFn: () => AssessmentClient.getAssessmentAnalytics(assessmentId!),
 		staleTime: 600000,
-		enabled: Boolean(assessmentId),
+		enabled: Boolean(assessmentId) && Boolean(course),
 	});
 
 	const createAssessment = useMutation({
 		mutationFn: (body: Assessments.CreateAssessmentPayload) =>
 			AssessmentClient.createAssessment(body),
-		onSettled: () => {
+		onSuccess: () => {
 			toast.success('Assessment has successfully Created...');
 		},
 		onError: (error) => {
@@ -43,5 +43,26 @@ export const useAssessments = ({
 		},
 	});
 
-	return { getAllAssessments, getAssessment, getAssessmentAnalytics, createAssessment };
+	const updateAssessment = useMutation({
+		mutationFn: (payload: {
+			levelId: string;
+			body: Assessments.UpdateAssessmentLevelPayload;
+		}) => AssessmentClient.updateAssessmentLevel(payload.levelId, payload.body),
+		onSuccess: () => {
+			toast.success('Assessment has successfully updated...');
+		},
+		onError: (error) => {
+			toast.error(
+				error.message ?? 'Sorry, Failed to Update a Assessment, please try again',
+			);
+		},
+	});
+
+	return {
+		getAllAssessments,
+		getAssessment,
+		getAssessmentAnalytics,
+		createAssessment,
+		updateAssessment,
+	};
 };

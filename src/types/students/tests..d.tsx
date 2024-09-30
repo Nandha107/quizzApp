@@ -29,6 +29,7 @@ export type Test = {
 	totalQuestions: number;
 	completed: boolean;
 	totalMarksObtained: number;
+	enableResponseReceiving:boolean;
 	completedLevelIndexes: number[];
 };
 
@@ -53,7 +54,7 @@ export type Question = {
 	id: string;
 	question: string;
 	type: 'CHOICE' | 'TEXTAREA';
-	options: {value:string}[];
+	options: { value: string }[];
 	answer: string;
 	timer: {
 		hours: number;

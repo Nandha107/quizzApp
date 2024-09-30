@@ -51,7 +51,11 @@ const StudentLogin: React.FC = () => {
 
 		try {
 			await axios
-				.post('https://quiz-server-sigma.vercel.app/auth/login', { phone, password })
+				.post('/auth/login', {
+					registerNo,
+					phone,
+					password,
+				})
 				.then((res) => {
 					toast.success('Student login successfully...');
 					// Store token in localStorage
@@ -63,7 +67,7 @@ const StudentLogin: React.FC = () => {
 					console.log('Decoded token:', decodedToken);
 
 					// Navigate based on the user role from the decoded token
-					navigate('/student-dashboard/course');
+					navigate('/student-dashboard?tab=assessments');
 				})
 				.catch((err) => toast.error(err));
 		} catch (error) {
@@ -117,7 +121,7 @@ const StudentLogin: React.FC = () => {
 								<input
 									type="text"
 									id="registerNumber"
-									minLength={10}
+									minLength={4}
 									maxLength={10}
 									placeholder="Enter Register Number"
 									value={registerNo}

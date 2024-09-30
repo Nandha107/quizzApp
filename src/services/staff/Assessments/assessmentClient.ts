@@ -4,7 +4,7 @@ export class AssessmentClient {
 	static async getAssessment(AssessmentId: string) {
 		try {
 			if (!AssessmentId) return;
-			const res = await axios.get<Assessments.GetAssessmentsResponse>(
+			const res = await axios.get<Assessments.GetAssessmentResponse>(
 				`/tests/${AssessmentId}`,
 			);
 			return res.data;
@@ -31,7 +31,7 @@ export class AssessmentClient {
 
 	static async getAllAssessments(course: string) {
 		try {
-			const res = await axios.get<Assessments.GetAssessmentsResponse[]>(
+			const res = await axios.get<Assessments.GetAssessmentResponse[]>(
 				`/tests/category/${course}`,
 			);
 			return res.data;
@@ -45,9 +45,30 @@ export class AssessmentClient {
 	static async createAssessment(body: Assessments.CreateAssessmentPayload) {
 		try {
 			const res = await axios.post<Assessments.CreateAssessmentResponse>(`/tests`, body);
+			console.log({ ApiCreateTest: res });
 			return res.data;
 		} catch (error) {
 			console.log('original error while creating assessment', error);
+			console.log({ ApiCreateTest: error });
+
+			throw error;
+		}
+	}
+
+	static async updateAssessmentLevel(
+		LevelId: string,
+		body: Assessments.UpdateAssessmentLevelPayload,
+	) {
+		try {
+			const res = await axios.put<Assessments.CreateAssessmentResponse>(
+				`/tests/levels/${LevelId}`,
+				body,
+			);
+			console.log({ ApiUpdateTest: res });
+			return res.data;
+		} catch (error) {
+			console.log('original error while updating assessment', error);
+			console.log({ ApiUpdateTest: error });
 
 			throw error;
 		}

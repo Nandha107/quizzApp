@@ -10,11 +10,9 @@ import { useClickOutside } from '../../hooks/useClickOutSide';
 const Header: React.FC = () => {
 	const navigate = useNavigate();
 
-	const { dept } = useParams();
+	const { dept, assessmentId } = useParams();
 
 	const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-
-	// const getDept = localStorage.getItem(Config.localStorageKeys.dept);
 
 	const handleLogout = () => {
 		localStorage.removeItem(Config.localStorageKeys.access_token);
@@ -57,12 +55,13 @@ const Header: React.FC = () => {
 				<p className="text-xs text-teal-950/50">Welcome to Assessment</p>
 			</div>
 			<div className="w-[50%] flex justify-end items-center gap-5">
-				{dept ? (
+				{dept && !assessmentId ? (
 					<div className="hidden md:flex rounded-lg justify-center items-center">
 						<PrimaryButton
 							text="Create Assessment"
 							icon={<PlusIcon />}
-							onClick={() => navigate('/create-assessment')}
+							// onClick={() => navigate(`/staff-dashboard/${getDept}/create-assessment`)}
+							onClick={() => navigate(`/create-assessment/${dept}`)}
 						/>
 					</div>
 				) : null}
