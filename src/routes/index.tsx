@@ -8,6 +8,8 @@ import AssessmentDetails from '../component/assessment/assessmentDetails';
 import CoursesPage from '../pages/admin/coursesPage';
 import CreateTestPage from '../pages/admin/createTest';
 import AssessmentCreateModal from '../component/assessment/assessmentCreateModal';
+import QuestionPage from '../pages/student/questionPage';
+import ResultPage from '../pages/student/ResultPage';
 
 export const router = createBrowserRouter([
 	{
@@ -42,6 +44,14 @@ export const router = createBrowserRouter([
 					{
 						path: 'student-dashboard',
 						element: <StudentDashboard />,
+					},
+					{
+						path: 'question/:testId',
+						element: <QuestionPage />,
+					},
+					{
+						path: '/result/:userMarksId',
+						element: <ResultPage />,
 					},
 				],
 			},

@@ -53,9 +53,13 @@ export type Question = {
 	id: string;
 	question: string;
 	type: 'CHOICE' | 'TEXTAREA';
-	options: string[];
+	options: { value: string }[];
 	answer: string;
-	timer: number;
+	timer: {
+		hours: number;
+		minutes: number;
+		overAllSeconds: number;
+	};
 	levelId: string;
 	createdAt: string;
 	updatedAt: string;
