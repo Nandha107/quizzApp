@@ -7,6 +7,10 @@ function App() {
 	// Create a client
 	const queryClient = new QueryClient();
 
+	document.addEventListener('touchmove', function (event) {
+		event.preventDefault(); /* This prevents default swipe actions like pull-to-refresh */
+	});
+
 	return (
 		<QueryClientProvider client={queryClient}>
 			<RouterProvider router={router} />

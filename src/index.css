@@ -31,7 +31,8 @@ body {
 	/* font-family: 'Poppins','DM Sans', sans-serif; */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	overflow: hidden;
+	overflow-y: auto;
+	touch-action: auto;
 }
 
 /* Antd overrided */
