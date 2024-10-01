@@ -4,8 +4,11 @@ import { checker } from 'vite-plugin-checker';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [
-		react(),
-		checker({ typescript: true }),
-	],
+	base: '/',
+	build: {
+		rollupOptions: {
+			input: '/index.html',
+		},
+	},
+	plugins: [react(), checker({ typescript: true })],
 });
