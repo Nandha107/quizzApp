@@ -21,7 +21,7 @@ const DefaultPage = () => {
 	}, []);
 
 	return (
-		<div className="flex items-center justify-center w-full h-full p-5">
+		<div className="flex items-center justify-center border border-green-900 h-full overflow-auto p-5">
 			<div className="w-full h-full md:w-[80%] lg:w-[50%] flex flex-col items-center justify-center gap-8">
 				<div className="flex justify-center items-center w-full text-primary font-bold">
 					<p className="text-xl md:text-3xl">Choose Your Role</p>

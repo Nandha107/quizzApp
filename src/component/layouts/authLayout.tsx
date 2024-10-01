@@ -25,7 +25,7 @@ export const AuthLayout: React.FC<AuthLayout> = ({}) => {
 		return <LoadingSpinner text="You are being logged out" className="text-teal-600" />;
 
 	return (
-		<div className="flex flex-col w-full h-full overflow-y-auto">
+		<div className="flex flex-col w-full h-full overflow-y-auto border border-blue-800">
 			<div className="h-[7%] w-full px-2 md:px-5 shadow-lg bg-white">
 				<Header />
 			</div>
@@ -43,19 +43,3 @@ export const AuthLayout: React.FC<AuthLayout> = ({}) => {
 		</div>
 	);
 };
-// <div className="fixed top-0 left-0 flex flex-col w-full h-full border-4 border-red-900">
-// 	<div className="h-[10%] sm:h-[10%] md:h-[9%] lg:h-[9%] xl:h-[8%] 2xl:h-[7%] w-full shadow-md z-[10000]">
-// 		<Header />
-// 	</div>
-// 	<div className="flex w-full h-full">
-// 		<div className="w-full h-full transition-all duration-700 bg-slate-600/5">
-// 			<Suspense
-// 				fallback={
-// 					<LoadingSpinner text="Please wait while loading goodies..." />
-// 				}
-// 			>
-// 				<Outlet />
-// 			</Suspense>
-// 		</div>
-// 	</div>
-// </div>
