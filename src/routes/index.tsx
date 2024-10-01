@@ -1,6 +1,7 @@
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import { AppLayout } from '../component/layouts/appLayout';
 import { AuthLayout } from '../component/layouts/authLayout';
-import { insecureRoutes } from './insequreRoutes';
+import { insecureRoutes } from './insecureRoutes';
 import StaffDashboard from '../pages/admin/dashboard';
 import StudentDashboard from '../pages/student/dashboard';
 import AssessmentDetails from '../component/assessment/assessmentDetails';
@@ -9,18 +10,21 @@ import CreateTestPage from '../pages/admin/createTest';
 import AssessmentCreateModal from '../component/assessment/assessmentCreateModal';
 import QuestionPage from '../pages/student/questionPage';
 import ResultPage from '../pages/student/ResultPage';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-export const router = () => {
+export const AppRouter = () => {
 	return (
-		<BrowserRouter>
+		<HashRouter>
 			<Routes>
+				{/* App Layout */}
 				<Route path="/" element={<AppLayout />}>
-					{/* Unprotected Routes */}
-					{...insecureRoutes}
+					{/* Public or insecure routes */}
+					{insecureRoutes.map((route, index) => (
+						<Route key={index} path={route.path} element={route.element} />
+					))}
 
-					{/* Authenticated Routes */}
-					<Route path="" element={<AuthLayout />}>
+					{/* Auth Layout and protected routes */}
+					<Route element={<AuthLayout />}>
+						{/* Define your routes */}
 						<Route path="staff-dashboard/courses" element={<CoursesPage />} />
 						<Route path="staff-dashboard/:dept" element={<StaffDashboard />} />
 						<Route
@@ -41,9 +45,10 @@ export const router = () => {
 					</Route>
 				</Route>
 			</Routes>
-		</BrowserRouter>
+		</HashRouter>
 	);
 };
+
 // export const router = createBrowserRouter([
 // 	{
 // 		path: '/',
