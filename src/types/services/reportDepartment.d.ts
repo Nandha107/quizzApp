@@ -13,6 +13,11 @@ declare module ReportDepartment {
 		department: string;
 		collegeName: string;
 		testsTaken: number;
+		totalTest: number;
+		completedTests: number;
+		incompleteTests: number;
+		passedCount: number;
+		failedCount: number;
 		testResults: TestResult[];
 	}
 

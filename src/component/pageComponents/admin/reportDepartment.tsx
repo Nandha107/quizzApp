@@ -14,8 +14,7 @@ interface Props {
 }
 
 const AnalyticPage: React.FC<Props> = ({ department }) => {
-
-	let testTaken: number;
+	// let testTaken: number;
 
 	const pagination = {
 		current: 1,
@@ -68,20 +67,20 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 			key: 'testsTaken',
 		},
 		{
-			title: 'Passed',
-			dataIndex: 'testResults',
-			key: 'testResults',
-			render: (testResults: ReportDepartment.TestResult[]) => (
-				<p>{testResults.filter((res) => res.pass).length}</p>
-			),
+			title: 'Passed Count',
+			dataIndex: 'passedCount',
+			key: 'passedCount',
+			// render: (testResults: ReportDepartment.TestResult[]) => (
+			// 	<p>{testResults.filter((res) => res.pass).length}</p>
+			// ),
 		},
 		{
-			title: 'Failed',
-			dataIndex: 'testResults',
-			key: 'testResults',
-			render: (testResults: ReportDepartment.TestResult[]) => (
-				<p>{testTaken - testResults.filter((res) => res.pass).length}</p>
-			),
+			title: 'Failed Count',
+			dataIndex: 'failedCount',
+			key: 'failedCount',
+			// render: (testResults: ReportDepartment.TestResult[]) => (
+			// 	<p>{testTaken - testResults.filter((res) => res.pass).length}</p>
+			// ),
 		},
 		{
 			title: 'Actions',
@@ -132,11 +131,10 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 					Department: student.department,
 					'Registration Number': student.registrationNumber,
 					College: student.collegeName,
+					'Total Tests': student.totalTest,
 					'Tests Taken': student.testsTaken,
-					'Passed Count': student.testResults.filter((res) => res.pass).length,
-					'Failed Count':
-						student.testsTaken -
-						student.testResults.filter((res) => res.pass).length,
+					'Passed Count': student.passedCount,
+					'Failed Count': student.failedCount,
 					'Test Details': student.testResults
 						.map(
 							(res) =>
@@ -154,11 +152,10 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 					Department: student.department,
 					'Registration Number': student.registrationNumber,
 					College: student.collegeName,
+					'Total Tests': student.totalTest,
 					'Tests Taken': student.testsTaken,
-					'Passed Count': student.testResults.filter((res) => res.pass).length,
-					'Failed Count':
-						student.testsTaken -
-						student.testResults.filter((res) => res.pass).length,
+					'Passed Count': student.passedCount,
+					'Failed Count': student.failedCount,
 					'Test Details': student.testResults
 						.map(
 							(res) =>
