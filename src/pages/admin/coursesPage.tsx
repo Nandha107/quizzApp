@@ -7,12 +7,12 @@ const CoursesPage = () => {
 
 	return (
 		<div className="items-center justify-center w-full h-full flex flex-col md:p-5">
-			<div className="w-full flex justify-center items-center h-[10%]">
-				<p className="text-xl md:text-3xl lg:text-4xl font-bold bg-text-gradient bg-clip-text text-transparent">
+			<div className="w-full flex justify-center items-center py-5">
+				<p className="text-3xl lg:text-4xl font-bold bg-text-gradient bg-clip-text text-transparent">
 					Choose your department
 				</p>
 			</div>
-			<div className="grid md:grid-cols-2 lg:grid-cols-5 w-full gap-x-5 gap-y-5 px-10 py-5 overflow-y-scroll">
+			<div className="grid md:grid-cols-2 lg:grid-cols-5 w-full gap-x-5 gap-y-5 px-10 pb-7 overflow-y-scroll">
 				{CoursesData.map((dept, index) => (
 					<div
 						key={index}
