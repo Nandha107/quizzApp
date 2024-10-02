@@ -60,7 +60,7 @@ declare module Assessments {
 		testName: string;
 		totalQuestions: number;
 		totalCorrectAnswers: number;
-		totalWrongAnswers: number;
+		totalWrongAnswer: number;
 		levels: number;
 		passCount: number;
 		failCount: number;

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { AssessmentClient } from '../services/staff/Assessments/assessmentClient';
 import toast from 'react-hot-toast';
 
@@ -9,25 +9,27 @@ export const useAssessments = ({
 	course?: string;
 	assessmentId?: string;
 }) => {
+	const queryClient = new QueryClient();
+
 	const getAllAssessments = useQuery({
 		queryKey: ['allAssessments', JSON.stringify(course)],
 		queryFn: () => AssessmentClient.getAllAssessments(course!),
 		staleTime: 600000,
-		enabled: Boolean(course),
+		enabled: Boolean(course) && Boolean(!assessmentId),
 	});
 
 	const getAssessment = useQuery({
 		queryKey: ['getAssessment', assessmentId!],
 		queryFn: () => AssessmentClient.getAssessment(assessmentId!),
 		staleTime: 600000,
-		enabled: Boolean(assessmentId),
+		enabled: Boolean(assessmentId) && Boolean(!course),
 	});
 
 	const getAssessmentAnalytics = useQuery({
 		queryKey: ['getAssessmentAnalytics', assessmentId!],
 		queryFn: () => AssessmentClient.getAssessmentAnalytics(assessmentId!),
 		staleTime: 600000,
-		enabled: Boolean(assessmentId),
+		enabled: Boolean(assessmentId) && Boolean(course),
 	});
 
 	const createAssessment = useMutation({
@@ -35,6 +37,7 @@ export const useAssessments = ({
 			AssessmentClient.createAssessment(body),
 		onSuccess: () => {
 			toast.success('Assessment has successfully Created...');
+			queryClient.invalidateQueries(['allAssessments', JSON.stringify(course)] as any);
 		},
 		onError: (error) => {
 			toast.error(
@@ -50,6 +53,7 @@ export const useAssessments = ({
 		}) => AssessmentClient.updateAssessmentLevel(payload.levelId, payload.body),
 		onSuccess: () => {
 			toast.success('Assessment has successfully updated...');
+			queryClient.invalidateQueries(['allAssessments', JSON.stringify(course)] as any);
 		},
 		onError: (error) => {
 			toast.error(

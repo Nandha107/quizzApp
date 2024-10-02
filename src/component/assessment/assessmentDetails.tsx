@@ -7,6 +7,7 @@ import { useAssessments } from '../../hooks/useAssessment';
 import { BackArrow } from '../../assets/svg/backArrow';
 import { PrimaryButton } from '../buttons/primaryButton';
 import { FaFileExport } from 'react-icons/fa';
+import { Config } from '../../config';
 
 const AssessmentDetails = () => {
 	// Register the chart elements with Chart.js
@@ -16,7 +17,12 @@ const AssessmentDetails = () => {
 
 	const { assessmentId } = useParams();
 
-	const { getAssessmentAnalytics } = useAssessments({ assessmentId });
+	const getDept = localStorage.getItem(Config.localStorageKeys.dept);
+
+	const { getAssessmentAnalytics } = useAssessments({
+		assessmentId,
+		course: getDept as string,
+	});
 
 	const exportToExcel = () => {
 		console.log();
@@ -49,7 +55,7 @@ const AssessmentDetails = () => {
 				label: 'Performance',
 				data: [
 					getAssessmentAnalytics.data?.totalCorrectAnswers,
-					getAssessmentAnalytics.data?.totalWrongAnswers,
+					getAssessmentAnalytics.data?.totalWrongAnswer,
 				],
 				backgroundColor: ['#0d9488', '#0d94884d'],
 			},
@@ -86,7 +92,10 @@ const AssessmentDetails = () => {
 					<PrimaryButton text="Export to Excel" onClick={() => {}} />
 				</div>
 			</div>
-			<div className="relative overflow-y-auto lg:h-[90%] p-5 md:py-10 lg:py-5 space-y-10">
+			<div className="relative overflow-y-auto lg:h-[90%] p-5 md:py-10 lg:py-5 flex flex-col gap-y-5">
+				<div className='hidden lg:flex'>
+					<p className='text-lg font-bold'>Assessment Name : <span className='text-transparent bg-text-gradient bg-clip-text'>{getAssessmentAnalytics.data?.testName}</span></p>
+				</div>
 				<div className="grid w-full grid-cols-2 gap-y-5 2xl:gap-y-16 gap-x-5 row md:grid-cols-3 xl:grid-cols-6 2xl:grid-cols-6">
 					{getAssessmentAnalytics.isLoading ||
 					getAssessmentAnalytics.isFetching ||
@@ -112,9 +121,7 @@ const AssessmentDetails = () => {
 										</p>
 									</div>
 									<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
-										<p className="text-sm font-medium">
-											Total Questions
-										</p>
+										<p className="text-sm font-medium">Total Questions</p>
 										<p className="text-3xl font-semibold text-teal-600">
 											{getAssessmentAnalytics.data?.totalQuestions}
 										</p>
@@ -132,7 +139,7 @@ const AssessmentDetails = () => {
 											Total Wrong Answers
 										</p>
 										<p className="text-3xl font-semibold text-teal-600">
-											{getAssessmentAnalytics.data?.totalWrongAnswers}
+											{getAssessmentAnalytics.data?.totalWrongAnswer}
 										</p>
 									</div>
 									<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
