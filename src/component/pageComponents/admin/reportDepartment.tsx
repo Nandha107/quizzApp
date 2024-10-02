@@ -213,27 +213,27 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 					</p>
 				</div>
 				<div className="grid grid-cols-2 gap-3 rounded-lg lg:p-5 lg:bg-white lg:shadow-md md:grid-cols-3 xl:grid-cols-6">
-					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Total Students</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Pass Average</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Fail Average</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Total Assessment</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Completed Assessment</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Incomplete Assessment</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>

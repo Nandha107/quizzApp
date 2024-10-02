@@ -6,6 +6,7 @@ import { Pie as PieChart, Doughnut } from 'react-chartjs-2';
 import { useAssessments } from '../../hooks/useAssessment';
 import { BackArrow } from '../../assets/svg/backArrow';
 import { PrimaryButton } from '../buttons/primaryButton';
+import { FaFileExport } from 'react-icons/fa';
 
 const AssessmentDetails = () => {
 	// Register the chart elements with Chart.js
@@ -70,9 +71,9 @@ const AssessmentDetails = () => {
 	};
 
 	return (
-		<div className="w-full h-full flex flex-col">
+		<div className="relative flex flex-col w-full h-full">
 			<div className="h-[10%] hidden lg:flex px-5 py-3">
-				<div className=" w-[80%] flex items-center gap-2">
+				<div className=" w-[80%] flex items-center gap-4">
 					<div
 						className="px-2 py-2 border border-gray-500 rounded-lg hover:cursor-pointer hover:bg-gray-300"
 						onClick={() => navigate(-1)}
@@ -85,8 +86,8 @@ const AssessmentDetails = () => {
 					<PrimaryButton text="Export to Excel" onClick={() => {}} />
 				</div>
 			</div>
-			<div className="relative overflow-y-auto h-[90%] p-5 md:py-10 lg:py-5 space-y-10">
-				<div className="grid gap-y-5 2xl:gap-y-16 gap-x-5 row grid-cols-2 md:grid-cols-3 xl:grid-cols-6 2xl:grid-cols-6 w-full">
+			<div className="relative overflow-y-auto lg:h-[90%] p-5 md:py-10 lg:py-5 space-y-10">
+				<div className="grid w-full grid-cols-2 gap-y-5 2xl:gap-y-16 gap-x-5 row md:grid-cols-3 xl:grid-cols-6 2xl:grid-cols-6">
 					{getAssessmentAnalytics.isLoading ||
 					getAssessmentAnalytics.isFetching ||
 					getAssessmentAnalytics.isRefetching ? (
@@ -104,46 +105,46 @@ const AssessmentDetails = () => {
 							{getAssessmentAnalytics.isSuccess &&
 							getAssessmentAnalytics.data?.testId ? (
 								<>
-									<div className="flex flex-col px-6 py-5 justify-center gap-3 rounded-lg shadow-md border border-teal-600 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 relative min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px] p-5">
-										<p className="text-base font-semibold">Total Levels</p>
+									<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+										<p className="text-sm font-medium">Total Levels</p>
 										<p className="text-3xl font-semibold text-teal-600">
 											{getAssessmentAnalytics.data?.levels}
 										</p>
 									</div>
-									<div className="flex flex-col px-6 py-5 justify-center gap-3 rounded-lg shadow-md border border-teal-600 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 relative min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px] p-5">
-										<p className="text-base font-semibold">
+									<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+										<p className="text-sm font-medium">
 											Total Questions
 										</p>
 										<p className="text-3xl font-semibold text-teal-600">
 											{getAssessmentAnalytics.data?.totalQuestions}
 										</p>
 									</div>
-									<div className="flex flex-col px-6 py-5 justify-center gap-3 rounded-lg shadow-md border border-teal-600 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 relative min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px] p-5">
-										<p className="text-base font-semibold">
+									<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+										<p className="text-sm font-medium">
 											Total Correct Answers
 										</p>
 										<p className="text-3xl font-semibold text-teal-600">
 											{getAssessmentAnalytics.data?.totalCorrectAnswers}
 										</p>
 									</div>
-									<div className="flex flex-col px-6 py-5 justify-center gap-3 rounded-lg shadow-md border border-teal-600 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 relative min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px] p-5">
-										<p className="text-base font-semibold">
+									<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+										<p className="text-sm font-medium">
 											Total Wrong Answers
 										</p>
 										<p className="text-3xl font-semibold text-teal-600">
 											{getAssessmentAnalytics.data?.totalWrongAnswers}
 										</p>
 									</div>
-									<div className="flex flex-col px-6 py-5 justify-center gap-3 rounded-lg shadow-md border border-teal-600 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 relative min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px] p-5">
-										<p className="text-base font-semibold">
+									<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+										<p className="text-sm font-medium">
 											Total Passed Students
 										</p>
 										<p className="text-3xl font-semibold text-teal-600">
 											{getAssessmentAnalytics.data?.passCount}
 										</p>
 									</div>
-									<div className="flex flex-col px-6 py-5 justify-center gap-3 rounded-lg shadow-md border border-teal-600 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 relative min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px] p-5">
-										<p className="text-base font-semibold">
+									<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
+										<p className="text-sm font-medium">
 											Total Failed Students
 										</p>
 										<p className="text-3xl font-semibold text-teal-600">
@@ -157,7 +158,7 @@ const AssessmentDetails = () => {
 						</>
 					)}
 				</div>
-				<div className="flex flex-col md:flex-row gap-5">
+				<div className="flex flex-col gap-5 md:flex-row">
 					<div className="w-full md:w-[50%] rounded-lg bg-white shadow-md">
 						<div className="flex flex-col items-center w-full gap-3 p-5 border rounded-lg">
 							<p className="text-xl font-semibold text-slate-500">
@@ -200,14 +201,24 @@ const AssessmentDetails = () => {
 					</div>
 				</div>
 			</div>
-			<div className="flex lg:hidden shrink-0 w-full h-[10%] bg-teal-600/30 items-center justify-center">
+			<div className="absolute lg:hidden flex bottom-20 right-8 z-[1000]">
+				<button
+					className="flex items-center justify-center w-20 h-20 gap-2 text-xl font-medium text-white rounded-full shadow-lg bg-btn-gradient"
+					onClick={exportToExcel}
+				>
+					<span className="text-3xl">
+						<FaFileExport />
+					</span>
+				</button>
+			</div>
+			{/* <div className="absolute bottom-0 z-1000 flex lg:hidden shrink-0 h-[10%] bg-teal-600/30 items-center justify-center border border-red-900">
 				<button
 					className="w-[60%] py-3 md:w-[50%] md:py-5 text-md font-medium text-white rounded-md bg-gradient-to-br from-teal-700 to-teal-500 hover:from-teal-800 hover:to-teal-500"
 					onClick={exportToExcel}
 				>
 					Export to Excel
 				</button>
-			</div>
+			</div> */}
 		</div>
 	);
 };
