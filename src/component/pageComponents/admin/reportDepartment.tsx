@@ -263,46 +263,44 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 						</span>
 					</p>
 				</div>
-				<div className="lg:p-5 lg:bg-white rounded-lg lg:shadow-md grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5">
-					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
-						<p className="text-base font-medium">Total Students</p>
+				<div className="lg:p-5 lg:bg-white rounded-lg lg:shadow-md grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+						<p className="text-sm font-medium">Total Students</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
-						<p className="text-base font-medium">Pass Average</p>
+					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+						<p className="text-sm font-medium">Pass Average</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
-						<p className="text-base font-medium">Fail Average</p>
+					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+						<p className="text-sm font-medium">Fail Average</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
-						<p className="text-base font-medium">Total Assessment</p>
+					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+						<p className="text-sm font-medium">Total Assessment</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
-						<p className="text-base font-medium">Completed Assessment</p>
+					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+						<p className="text-sm font-medium">Completed Assessment</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
-						<p className="text-base font-medium">Incomplete Assessment</p>
+					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+						<p className="text-sm font-medium">Incomplete Assessment</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
 				</div>
 			</div>
-			<div className="flex flex-col gap-3">
-				<div className="w-full flex flex-col md:flex-row md:justify-between md:items-center">
+			<div className="flex flex-col gap-5">
+				<div className="w-full flex justify-between items-center">
 					<p className="text-lg font-semibold lg:text-2xl">Students Analytics</p>
-					<div className="flex gap-3">
-						<PrimaryButton text="Export All as CSV" className="rounded-md" />
-						<PrimaryButton text="Export All as XLSX" className="rounded-md" />
-					</div>
+					<PrimaryButton text="Export All as XLSX" className="rounded-md" />
 				</div>
-				<div className=" bg-white rounded-lg">
+				<div className=" bg-white rounded-lg shadow-lg">
 					<Table
 						columns={columns}
 						dataSource={studentDetails}
 						rowKey="registrationNumber"
+						className='border border-gray-300 rounded-lg'
 						scroll={{ x: '100%' }}
 						pagination={{
 							...pagination,

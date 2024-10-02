@@ -167,7 +167,7 @@ const StaffDashboard = () => {
 			)}
 			{/* Content based on paramValue */}
 			{paramValue === 'report' && (
-				<div className="flex flex-col w-full h-[92%] rounded-xl border border-gray-300 relative">
+				<div className="flex flex-col w-full h-[92%] rounded-xl md:border md:border-gray-300 relative">
 					<div className="flex items-center justify-center w-full h-full">
 						{/* <AnalyticPage /> */}
 						<AnalyticPage department={dept as string} />
