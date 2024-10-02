@@ -93,8 +93,15 @@ const AssessmentDetails = () => {
 				</div>
 			</div>
 			<div className="relative overflow-y-auto lg:h-[90%] p-5 md:py-10 lg:py-5 flex flex-col gap-y-5">
-				<div className='hidden lg:flex'>
-					<p className='text-lg font-bold'>Assessment Name : <span className='text-transparent bg-text-gradient bg-clip-text'>{getAssessmentAnalytics.data?.testName}</span></p>
+				<div className="hidden lg:flex">
+					<p className="text-lg font-bold">
+						Assessment Name :{' '}
+						<span className="text-transparent bg-text-gradient bg-clip-text">
+							{getAssessmentAnalytics.data
+								? getAssessmentAnalytics.data?.testName
+								: 'Loading...'}
+						</span>
+					</p>
 				</div>
 				<div className="grid w-full grid-cols-2 gap-y-5 2xl:gap-y-16 gap-x-5 row md:grid-cols-3 xl:grid-cols-6 2xl:grid-cols-6">
 					{getAssessmentAnalytics.isLoading ||
@@ -175,7 +182,9 @@ const AssessmentDetails = () => {
 								{getAssessmentAnalytics.isLoading ||
 								getAssessmentAnalytics.isFetching ||
 								getAssessmentAnalytics.isRefetching ? (
-									<Skeleton height={300} />
+									<div className="relative w-full">
+										<Skeleton className="min-h-[400px] max-h-[400px] absolute -top-1" />
+									</div>
 								) : getAssessmentAnalytics.data?.testId ? (
 									<PieChart data={pieData} />
 								) : (
@@ -195,7 +204,9 @@ const AssessmentDetails = () => {
 								{getAssessmentAnalytics.isLoading ||
 								getAssessmentAnalytics.isFetching ||
 								getAssessmentAnalytics.isRefetching ? (
-									<Skeleton height={300} />
+									<div className="relative w-full">
+										<Skeleton className="min-h-[400px] max-h-[400px] absolute -top-1" />
+									</div>
 								) : getAssessmentAnalytics.data?.testId ? (
 									<Doughnut data={barData} />
 								) : (
