@@ -4,7 +4,7 @@ import { Table, TableColumnsType, TableProps } from 'antd';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 // import { saveAs } from 'file-saver';
-// import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
 import { CoursesData } from '../../../utils/courses';
 import { PrimaryButton } from '../../buttons/primaryButton';
 import { useReportDepartment } from '../../../hooks/useReportDepartment';
@@ -14,32 +14,22 @@ interface Props {
 }
 
 const AnalyticPage: React.FC<Props> = ({ department }) => {
-	// const [analytics, setAnalytics] = useState<DepartmentAnalytics | null>(null);
-	// const [testTaken, setTestTaken] = useState<number>(0);
 
 	let testTaken: number;
 
-	// const [pagination, setPagination] = useState({
-	// 	current: 1,
-	// 	pageSize: 10,
-	// 	total: 0,
-	// });
 	const pagination = {
 		current: 1,
 		pageSize: 10,
 		total: 0,
 	};
 
-	// const [page, setPage] = useState<string | number>(1);
-	// const [limit, setLimit] = useState<string | number>(25);
-	// const [status, setStatus] = useState<string | null>(null);
-
 	const [studentDetails, setStudentDetails] = useState<
 		ReportDepartment.StudentDetails[] | []
 	>([]);
-	// const [loading, setLoading] = useState<boolean>(true);
-	// const token = localStorage.getItem('token');
-	// const headers = { Authorization: `Bearer ${token}` };
+
+	const [selectedStudentDetails, setSelectedStudentDetails] = useState<
+		ReportDepartment.StudentDetails[] | []
+	>([]);
 
 	const { getReportDepartment } = useReportDepartment({
 		course: department.toUpperCase(),
@@ -98,7 +88,7 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 			key: 'actions',
 			render: (student: ReportDepartment.StudentDetails) => (
 				<button
-					className="py-2 px-3 w-full font-medium text-white rounded-md text-xs lg:text-base bg-gradient-to-br from-teal-700 to-teal-500 hover:from-teal-800 hover:to-teal-500"
+					className="w-full px-3 py-2 text-xs font-medium text-white rounded-md lg:text-base bg-gradient-to-br from-teal-700 to-teal-500 hover:from-teal-800 hover:to-teal-500"
 					onClick={() => exportStudentAsPDF(student)}
 				>
 					Export PDF
@@ -130,87 +120,62 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 		doc.save(`${student.studentName}-details.pdf`);
 	};
 
-	// const exportAllAsCSV = () => {
-	// 	if (!analytics) return;
+	const exportAllAsXLSX = () => {
+		if (!studentDetails.length) return;
 
-	// 	const csvData = analytics.studentDetails.map((student) => {
-	// 		return {
-	// 			studentName: student.studentName,
-	// 			department: student.department,
-	// 			registrationNumber: student.registrationNumber,
-	// 			collegeName: student.collegeName,
-	// 			testsTaken: student.testsTaken,
-	// 			passedCount: student.testResults.filter((res) => res.pass).length,
-	// 			failedCount:
-	// 				student.testsTaken - student.testResults.filter((res) => res.pass).length,
-	// 			testDetails: student.testResults
-	// 				.map(
-	// 					(res) =>
-	// 						`${res.testName}: ${res.pass ? 'Pass' : 'Fail'} (Marks: ${
-	// 							res.marks
-	// 						}, Time: ${res.timeTaken})`,
-	// 				)
-	// 				.join(', '),
-	// 		};
-	// 	});
+		let sheetData;
 
-	// 	const csvRows = [
-	// 		[
-	// 			'Student Name',
-	// 			'Department',
-	// 			'Registration Number',
-	// 			'College Name',
-	// 			'Tests Taken',
-	// 			'Passed',
-	// 			'Failed',
-	// 			'Test Details',
-	// 		],
-	// 		...csvData.map((row) => [
-	// 			row.studentName,
-	// 			row.department,
-	// 			row.registrationNumber,
-	// 			row.collegeName,
-	// 			row.testsTaken,
-	// 			row.passedCount,
-	// 			row.failedCount,
-	// 			row.testDetails,
-	// 		]),
-	// 	];
+		if (selectedStudentDetails.length) {
+			sheetData = selectedStudentDetails.map((student) => {
+				return {
+					'Student Name': student.studentName,
+					Department: student.department,
+					'Registration Number': student.registrationNumber,
+					College: student.collegeName,
+					'Tests Taken': student.testsTaken,
+					'Passed Count': student.testResults.filter((res) => res.pass).length,
+					'Failed Count':
+						student.testsTaken -
+						student.testResults.filter((res) => res.pass).length,
+					'Test Details': student.testResults
+						.map(
+							(res) =>
+								`${res.testName}: ${res.pass ? 'Pass' : 'Fail'} (Marks: ${
+									res.marks
+								}, Time: ${res.timeTaken})`,
+						)
+						.join(', '),
+				};
+			});
+		} else {
+			sheetData = studentDetails.map((student) => {
+				return {
+					'Student Name': student.studentName,
+					Department: student.department,
+					'Registration Number': student.registrationNumber,
+					College: student.collegeName,
+					'Tests Taken': student.testsTaken,
+					'Passed Count': student.testResults.filter((res) => res.pass).length,
+					'Failed Count':
+						student.testsTaken -
+						student.testResults.filter((res) => res.pass).length,
+					'Test Details': student.testResults
+						.map(
+							(res) =>
+								`${res.testName}: ${res.pass ? 'Pass' : 'Fail'} (Marks: ${
+									res.marks
+								}, Time: ${res.timeTaken})`,
+						)
+						.join(', '),
+				};
+			});
+		}
 
-	// 	const csvContent = csvRows.map((row) => row.join(',')).join('\n');
-	// 	const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-	// 	saveAs(blob, 'department-analytics.csv');
-	// };
-
-	// const exportAllAsXLSX = () => {
-	// 	if (!analytics) return;
-
-	// 	const sheetData = analytics.studentDetails.map((student) => {
-	// 		return {
-	// 			'Student Name': student.studentName,
-	// 			Department: student.department,
-	// 			'Registration Number': student.registrationNumber,
-	// 			College: student.collegeName,
-	// 			'Tests Taken': student.testsTaken,
-	// 			'Passed Count': student.testResults.filter((res) => res.pass).length,
-	// 			'Failed Count':
-	// 				student.testsTaken - student.testResults.filter((res) => res.pass).length,
-	// 			'Test Details': student.testResults
-	// 				.map(
-	// 					(res) =>
-	// 						`${res.testName}: ${res.pass ? 'Pass' : 'Fail'} (Marks: ${
-	// 							res.marks
-	// 						}, Time: ${res.timeTaken})`,
-	// 				)
-	// 				.join(', '),
-	// 		};
-	// 	});
-
-	// 	const ws = XLSX.utils.json_to_sheet(sheetData);
-	// 	const wb = XLSX.utils.book_new();
-	// 	XLSX.utils.book_append_sheet(wb, ws, 'Department Analytics');
-	// 	XLSX.writeFile(wb, 'department-analytics.xlsx');
-	// };
+		const ws = XLSX.utils.json_to_sheet(sheetData);
+		const wb = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Department Analytics');
+		XLSX.writeFile(wb, 'department-analytics.xlsx');
+	};
 
 	// rowSelection object indicates the need for row selection
 	const rowSelection: TableProps<ReportDepartment.StudentDetails>['rowSelection'] = {
@@ -219,6 +184,7 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 			selectedRows: ReportDepartment.StudentDetails[],
 		) => {
 			console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+			setSelectedStudentDetails(selectedRows);
 		},
 		getCheckboxProps: (record: ReportDepartment.StudentDetails) => ({
 			disabled: record.studentName === 'Disabled User', // Column configuration not to be checked
@@ -231,76 +197,63 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 			getReportDepartment.data?.studentDetails as ReportDepartment.StudentDetails[],
 		);
 	}, [getReportDepartment.data, pagination]);
-	// useEffect(() => {
-	// 	axios
-	// 		.get(
-	// 			`https://quiz-server-sigma.vercel.app/responses/analytics/department/${department}`,
-	// 			{ headers },
-	// 		)
-	// 		.then((response) => {
-	// 			setAnalytics(response.data);
-	// 			setStudentDetails(response?.data?.studentDetails);
-	// 			setTestTaken(response?.data?.totalTestsTaken);
-	// 			setLoading(false);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error('Error fetching analytics:', error);
-	// 			setLoading(false);
-	// 		});
-	// }, [department]);
 
 	return (
-		<div className="flex flex-col w-full h-full gap-5 rounded-lg md:p-5 overflow-y-scroll overflow-x-clip">
+		<div className="flex flex-col w-full h-full gap-5 overflow-y-scroll rounded-lg md:p-5 overflow-x-clip">
 			<div className="flex flex-col gap-3">
-				<div className="w-full flex justify-between">
-					<p className="text-lg md:text-xl lg:text-2xl font-semibold ">
+				<div className="flex justify-between w-full">
+					<p className="text-lg font-semibold md:text-xl lg:text-2xl ">
 						Department Analytics
 					</p>
-					<p className="hidden md:flex gap-2 text-xs md:text-lg lg:text-2xl font-semibold ">
+					<p className="hidden gap-2 text-xs font-semibold md:flex md:text-lg lg:text-2xl ">
 						Department:{' '}
-						<span className="bg-text-gradient bg-clip-text text-transparent">
+						<span className="text-transparent bg-text-gradient bg-clip-text">
 							{findDepartment?.Abbreviation}
 						</span>
 					</p>
 				</div>
-				<div className="lg:p-5 lg:bg-white rounded-lg lg:shadow-md grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
-					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+				<div className="grid grid-cols-2 gap-3 rounded-lg lg:p-5 lg:bg-white lg:shadow-md md:grid-cols-3 xl:grid-cols-6">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Total Students</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Pass Average</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Fail Average</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Total Assessment</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Completed Assessment</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
-					<div className="flex flex-col px-4 py-3 md:py-5 gap-1 justify-center bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md">
+					<div className="flex flex-col justify-center gap-1 px-4 py-3 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Incomplete Assessment</p>
 						<p className="text-3xl font-semibold text-teal-600">12</p>
 					</div>
 				</div>
 			</div>
 			<div className="flex flex-col gap-5">
-				<div className="w-full flex justify-between items-center">
+				<div className="flex items-center justify-between w-full">
 					<p className="text-lg font-semibold lg:text-2xl">Students Analytics</p>
-					<PrimaryButton text="Export All as XLSX" className="rounded-md" />
+					<PrimaryButton
+						text="Export All as XLSX"
+						className="rounded-md"
+						onClick={exportAllAsXLSX}
+					/>
 				</div>
-				<div className=" bg-white rounded-lg shadow-lg">
+				<div className="bg-white rounded-lg shadow-lg ">
 					<Table
 						columns={columns}
 						dataSource={studentDetails}
 						rowKey="registrationNumber"
-						className='border border-gray-300 rounded-lg'
+						className="border border-gray-300 rounded-lg"
 						scroll={{ x: '100%' }}
 						pagination={{
 							...pagination,
