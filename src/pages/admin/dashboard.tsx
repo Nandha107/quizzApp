@@ -46,18 +46,18 @@ const StaffDashboard = () => {
 
 			{/* Content based on paramValue */}
 			{paramValue === 'assessments' && (
-				<div className="flex flex-col w-full h-[92%] rounded-xl border border-gray-300 relative">
+				<div className="flex flex-col w-full h-[92%] rounded-xl md:border md:border-gray-300 relative">
 					<div className="hidden px-3 py-5 lg:flex lg:items-center border-b border-gray-300">
 						<p className="text-lg font-semibold lg:text-2xl ">Assessments</p>
 					</div>
-					<div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 w-full overflow-y-scroll px-7 py-5 md:p-5">
+					<div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 w-full overflow-y-scroll py-5 md:p-5">
 						{getAllAssessments.isLoading ||
 						getAllAssessments.isFetching ||
 						getAllAssessments.isRefetching ? (
 							[...Array(8)].map((_, index) => (
 								<div
 									key={index}
-									className="relative min-h-[180px] max-h-[180px] md:min-h-[200px] md:max-h-[200px] xl:min-h-[225px] xl:max-h-[225px] rounded-lg"
+									className="relative min-h-[190px] max-h-[190px] md:min-h-[200px] md:max-h-[200px] xl:min-h-[225px] xl:max-h-[225px] rounded-lg"
 								>
 									<Skeleton
 										key={index}
@@ -98,10 +98,9 @@ const StaffDashboard = () => {
 								return (
 									<div
 										key={index}
-										className="relative min-h-[180px] max-h-[180px] md:min-h-[200px] md:max-h-[200px] xl:min-h-[225px] xl:max-h-[225px] rounded-lg"
+										className="relative min-h-[190px] max-h-[190px] md:min-h-[200px] md:max-h-[200px] xl:min-h-[225px] xl:max-h-[225px] rounded-lg"
 									>
 										<div className="flex flex-col w-full h-full bg-white border border-teal-600 rounded-lg shadow-md bg-gradient-to-br from-teal-600/50 via-teal-600/20 to-teal-600/50 hover:bg-teal-600/20">
-											{/* <div className="rounded-t-lg px-4 py-3 border border-red-900"> */}
 											<div className="rounded-t-lg px-4 py-3 border-b border-gray-400/30">
 												<div className="flex flex-col gap-5 md:gap-8 w-full">
 													<div className="flex flex-col">
@@ -137,7 +136,7 @@ const StaffDashboard = () => {
 																}{' '}
 																seconds
 															</p>
-															<div className="justify-center gap-2 flex py-2 px-7 items-center bg-white rounded-lg">
+															<div className="justify-center gap-2 flex py-2 px-5 items-center bg-white rounded-lg">
 																<FaCalendar/>
 																<p className="text-sm font-semibold">
 																	{formattedDate}
@@ -175,11 +174,11 @@ const StaffDashboard = () => {
 					</div>
 				</div>
 			)}
-			<div className="absolute md:hidden flex bottom-8 right-8 z-[1000]">
+			<div className="absolute md:hidden flex bottom-20 right-8 z-[1000]">
 				<button
 					className="w-16 h-16 flex gap-2 items-center justify-center text-xl font-medium text-white rounded-full bg-btn-gradient shadow-lg"
 					onClick={() => {
-						navigate(`/staff-dashboard/${dept}/create-assessment`);
+						navigate(`/create-assessment/${dept}`);
 					}}
 				>
 					<span className="text-3xl">+</span>
