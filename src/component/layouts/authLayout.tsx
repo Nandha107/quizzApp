@@ -25,7 +25,7 @@ export const AuthLayout: React.FC<AuthLayout> = ({}) => {
 		return <LoadingSpinner text="You are being logged out" className="text-teal-600" />;
 
 	return (
-		<div className="flex flex-col w-full h-full overflow-y-auto border border-blue-800">
+		<div className="flex flex-col w-full h-full overflow-y-auto">
 			<div className="h-[7%] w-full px-2 md:px-5 shadow-lg bg-white">
 				<Header />
 			</div>
