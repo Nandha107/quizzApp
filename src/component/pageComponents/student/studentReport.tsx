@@ -5,7 +5,6 @@ import React from 'react';
 // }
 
 const StudentAnalyticPage: React.FC = () => {
-
 	return (
 		<div className="flex flex-col w-full h-full gap-5 rounded-lg md:p-5 overflow-y-scroll overflow-x-clip">
 			<div className="flex flex-col gap-3">
@@ -41,9 +40,7 @@ const StudentAnalyticPage: React.FC = () => {
 					</div>
 				</div>
 			</div>
-			<div className="flex flex-col gap-3">
-				
-			</div>
+			<div className="flex flex-col gap-3"></div>
 		</div>
 	);
 };

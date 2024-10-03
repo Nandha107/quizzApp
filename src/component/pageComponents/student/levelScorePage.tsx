@@ -217,7 +217,7 @@ const LevelsScorePage: React.FC<LevelsScorePageProps> = ({
 							);
 						})}
 					</div>
-					<div className='w-full flex justify-end px-5'>
+					<div className="w-full flex justify-end px-5">
 						<PrimaryButton text="Next Level" onClick={onClick} />
 					</div>
 				</div>

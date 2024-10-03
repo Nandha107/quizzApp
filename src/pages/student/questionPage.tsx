@@ -50,7 +50,7 @@ const QuestionPage = () => {
 	const [isTabFocused, setIsTabFocused] = useState(true);
 	const [termsAccepted, setTermsAccepted] = useState(false);
 	const [submittedPage, setSubmitted] = useState(false);
-	const [textarea,setTextAreaValue] = useState("")
+	const [textarea, setTextAreaValue] = useState('');
 
 	const navigate = useNavigate();
 
@@ -165,7 +165,7 @@ const QuestionPage = () => {
 	};
 
 	const handleNext = () => {
-		setTextAreaValue("")
+		setTextAreaValue('');
 		if (questions && currentQuestionIndex < questions.length - 1) {
 			setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
 		} else {
@@ -266,7 +266,7 @@ const QuestionPage = () => {
 
 				console.log(res);
 
-				Test.refetch()
+				Test.refetch();
 				// if(!res.create){
 				//   console.log(1)
 				//   alert(res.message)
@@ -299,8 +299,7 @@ const QuestionPage = () => {
 	};
 
 	const handleTextareaChange = (value: string, currentQuestionId: string) => {
-
-		setTextAreaValue(value)
+		setTextAreaValue(value);
 		const levelKey = `test-${testId}-level-${currentLevelIndex}-responses`;
 		const responses = JSON.parse(localStorage.getItem(levelKey) || '[]');
 
@@ -318,7 +317,6 @@ const QuestionPage = () => {
 
 		localStorage.setItem(levelKey, JSON.stringify(responses));
 		setSelectedOption(value);
-		
 	};
 
 	const handleOptionSelect = (option: string, questionId: string) => {

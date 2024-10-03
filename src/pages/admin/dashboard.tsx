@@ -137,7 +137,7 @@ const StaffDashboard = () => {
 																seconds
 															</p>
 															<div className="justify-center gap-2 flex py-2 px-5 items-center bg-white rounded-lg">
-																<FaCalendar/>
+																<FaCalendar />
 																<p className="text-sm font-semibold">
 																	{formattedDate}
 																</p>
