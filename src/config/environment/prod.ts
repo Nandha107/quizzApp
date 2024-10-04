@@ -3,5 +3,5 @@ export const productionConfig: ApplicationConfiguration.environment = {
 
 	API_ENDPOINT: 'https://dev-quizz-api.vercel.app',
 
-	APP_URL: '',
+	APP_URL: 'http://quizz-app-v1.vercel.app',
 };

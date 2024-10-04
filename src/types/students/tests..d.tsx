@@ -53,7 +53,7 @@ export type Level = {
 export type Question = {
 	id: string;
 	question: string;
-	type: 'CHOICE' | 'TEXTAREA';
+	questionType: 'CHOICE' | 'TEXTAREA';
 	options: { value: string }[];
 	answer: string;
 	timer: {

@@ -3,5 +3,5 @@ export const developmentConfig: ApplicationConfiguration.environment = {
 
 	API_ENDPOINT: 'https://dev-quizz-api.vercel.app',
 
-	APP_URL: 'http://localhost:3000/',
+	APP_URL: 'http://localhost:5173',
 };

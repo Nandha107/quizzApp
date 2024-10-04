@@ -37,7 +37,7 @@ const QuestionPage = () => {
 		studentId = decodedToken.sub;
 	}
 	const [showResult, setShowResult] = useState(false);
-	console.log({ testId, studentId });
+	// console.log({ testId, studentId });
 	const Test = getTestById(testId, studentId);
 	const [timeTaken, setTimeTaken] = useState<string>('00:00');
 	const [triggerSubmit, setTrigger] = useState(false);
@@ -63,7 +63,11 @@ const QuestionPage = () => {
 	const totalTestTime = 10000;
 	const questionTime = currentQuestion?.timer.overAllSeconds;
 
-	const levelResult = getResultByLevel((currentLevel as any)?.id, studentId);
+	const levelResult = getResultByLevel(
+		(currentLevel as any)?.id,
+		studentId,
+		currentLevel?.completed as boolean,
+	);
 
 	const isFirstRun = useRef(true);
 
@@ -346,6 +350,7 @@ const QuestionPage = () => {
 	if (submittedPage || (Test as any).data?.completed) {
 		return (
 			<ResultSubmittedPage
+				// onClick={() => navigate(`/result/${(Test as any).data?.userMarks[0].id}`)}
 				onClick={() => {
 					window.open(
 						`${Config.environment.APP_URL}/result/${(Test as any).data?.userMarks[0].id}`,
@@ -359,7 +364,7 @@ const QuestionPage = () => {
 
 	if (instruction)
 		return (
-			<div className="w-full flex flex-col items-center lg:flex-row gap-2 h-full">
+			<div className="flex flex-col items-center w-full h-full gap-2 lg:flex-row">
 				<div className="w-full h-[40%] md:h-[35%] lg:h-full lg:bg-gradient-to-br from-teal-600/60 via-teal-600/20 to-teal-600/60 lg:w-[40%] flex justify-center flex-col items-center">
 					<img
 						alt=""
@@ -369,10 +374,10 @@ const QuestionPage = () => {
 				</div>
 				<div className="w-full h-[60%] lg:w-[60%] flex flex-col gap-3 lg:justify-center md:px-10 px-5">
 					<div className="flex flex-col gap-2 md:px-5">
-						<p className="text-2xl md:text-3xl font-bold text-teal-700 text-left">
+						<p className="text-2xl font-bold text-left text-teal-700 md:text-3xl">
 							Class Assessment Instructions
 						</p>
-						<p className="text-gray-600 text-left text-sm md:text-base">
+						<p className="text-sm text-left text-gray-600 md:text-base">
 							Welcome to the {Test.data.name} Test Assessment. This assessment
 							consists of {Test.data.levelsCount} levels that progressively
 							evaluate your understanding of the material. Please ensure you read
@@ -380,15 +385,15 @@ const QuestionPage = () => {
 						</p>
 					</div>
 					<div className="flex flex-col gap-2 md:px-5">
-						<p className="text-lg md:text-xl font-semibold text-teal-700 mb-2 text-left">
+						<p className="mb-2 text-lg font-semibold text-left text-teal-700 md:text-xl">
 							General Information
 						</p>
-						<p className="text-gray-600 mb-6 text-left text-sm md:text-base">
+						<p className="mb-6 text-sm text-left text-gray-600 md:text-base">
 							You will have {Test.data.duration.hours} hour to complete all
 							levels of the assessment. Time for each level will vary, and the
 							timer will not stop between levels.
 						</p>
-						<p className="text-gray-600 mb-6 flex flex-col text-left text-sm md:text-base">
+						<p className="flex flex-col mb-6 text-sm text-left text-gray-600 md:text-base">
 							{Test.data.levels.map((le, index) => (
 								<span key={index}>
 									{le.levelNo}. {le.levelName}
@@ -404,12 +409,12 @@ const QuestionPage = () => {
 							checked={termsAccepted}
 							onChange={(e) => setTermsAccepted(e.target.checked)}
 						/>
-						<label htmlFor="terms" className="text-gray-600 text-sm md:text-base">
+						<label htmlFor="terms" className="text-sm text-gray-600 md:text-base">
 							I agree to the rules and conditions.
 						</label>
 					</div>
 
-					<div className="flex justify-center md:justify-end w-full md:px-5">
+					<div className="flex justify-center w-full md:justify-end md:px-5">
 						<PrimaryButton
 							text="Get Started"
 							disabled={!termsAccepted}
@@ -425,7 +430,7 @@ const QuestionPage = () => {
 
 			// <div className="justify-center flex flex-col h-[80vh] items-center text-center">
 			//   {Test.data.instructions}{' '}
-			//   <button className="bg-blue-500 py-2 px-6 rounded-lg" onClick={() => setInstruction(false)}>
+			//   <button className="px-6 py-2 bg-blue-500 rounded-lg" onClick={() => setInstruction(false)}>
 			//     Start
 			//   </button>
 			// </div>
@@ -434,7 +439,7 @@ const QuestionPage = () => {
 	if (Test.data.completedLevelIndexes.includes(currentLevelIndex) || showResult) {
 		return (
 			// <div className="justify-center flex flex-col h-[80vh] items-center text-center">
-			// 	<h2 className="text-2xl font-bold mb-4">
+			// 	<h2 className="mb-4 text-2xl font-bold">
 			// 		Level {currentLevelIndex + 1} Results
 			// 	</h2>
 			// 	<p className="text-lg">You mark is {levelResult.data?.score} .</p>
@@ -456,7 +461,7 @@ const QuestionPage = () => {
 			// 		})}
 			// 	</span>
 			// 	<button
-			// 		className="bg-blue-500 py-2 px-6 rounded-lg mt-4"
+			// 		className="px-6 py-2 mt-4 bg-blue-500 rounded-lg"
 			// 		onClick={handleNextLevel}
 			// 		disabled={currentLevelIndex >= currentLevelLength - 1}
 			// 	>
@@ -476,12 +481,12 @@ const QuestionPage = () => {
 	}
 
 	return (
-		<div className="justify-center items-center w-full h-full bg-white flex flex-col ">
+		<div className="flex flex-col items-center justify-center w-full h-full bg-white ">
 			<div className=" items-center w-full h-[90%] flex flex-col">
 				{' '}
-				<div className="flex justify-between items-center px-5 md:px-9 py-3 w-full cursor-pointer">
+				<div className="flex items-center justify-between w-full px-5 py-3 cursor-pointer md:px-9">
 					<span
-						className="flex gap-3 font-bold items-center"
+						className="flex items-center gap-3 font-bold"
 						onClick={() => navigate('/student-dashboard?tab=assessment')}
 					>
 						<div
@@ -492,10 +497,10 @@ const QuestionPage = () => {
 						</div>
 						<p className="text-xl">{Test.data.name}</p>
 					</span>
-					<span className="flex gap-2 items-center">
+					<span className="flex items-center gap-2">
 						{timerType === true && timeRemaining !== null && (
-							<div className="font-bold flex  items-center justify-center  gap-2 ">
-								<BsClockHistory className="h-6 w-6" />
+							<div className="flex items-center justify-center gap-2 font-bold ">
+								<BsClockHistory className="w-6 h-6" />
 								Time Remaining (Test): {Math.floor(timeRemaining / 60)}:
 								{timeRemaining % 60 < 10 ? '0' : ''}
 								{timeRemaining % 60}
@@ -503,7 +508,7 @@ const QuestionPage = () => {
 						)}
 
 						{timerType === false && questionTimeRemaining !== null && (
-							<div className=" font-bold ">
+							<div className="font-bold ">
 								Time Remaining (Question):{' '}
 								{Math.floor(questionTimeRemaining / 60)}:
 								{questionTimeRemaining % 60 < 10 ? '0' : ''}
@@ -512,8 +517,8 @@ const QuestionPage = () => {
 						)}
 					</span>
 				</div>
-				<div className="w-full bg-teal-600/30 flex px-5 gap-5 md:gap-10 lg:px-24 py-4 lg:gap-24 items-center">
-					<span className=" font-bold text-lg items-start">
+				<div className="flex items-center w-full gap-5 px-5 py-4 bg-teal-600/30 md:gap-10 lg:px-24 lg:gap-24">
+					<span className="items-start text-lg font-bold ">
 						{currentLevelIndex + 1}. {currentLevel?.levelName}
 					</span>
 					<LevelBar
@@ -523,12 +528,12 @@ const QuestionPage = () => {
 					/>
 				</div>
 				{currentQuestion && (
-					<div className="w-full h-full flex justify-center items-center p-5">
+					<div className="flex items-center justify-center w-full h-full p-5">
 						<div className=" rounded-lg p-4 w-full lg:w-[60%] gap-3">
-							<h2 className="text-lg font-bold mb-2">
+							<h2 className="mb-2 text-lg font-bold">
 								{currentQuestionIndex + 1}. {currentQuestion.question}
 							</h2>
-							{currentQuestion.type === 'TEXTAREA' ? (
+							{currentQuestion.questionType === 'TEXTAREA' ? (
 								<textarea
 									className={`border transition-all duration-200 resize-none min-h-[200px] max-h-[200px] w-full px-3 py-4 rounded-lg outline-none focus:border-primary`}
 									value={textarea}
@@ -540,7 +545,7 @@ const QuestionPage = () => {
 									}
 								/>
 							) : (
-								<div className=" rounded-lg p-2 grid grid-cols-2 gap-2">
+								<div className="grid grid-cols-2 gap-2 p-2 rounded-lg ">
 									{currentQuestion.options.map((option, index: number) => {
 										return (
 											<div key={index} className="my-2">
@@ -569,7 +574,7 @@ const QuestionPage = () => {
 														}
 														className="hidden"
 													/>
-													<span className="font-bold border rounded-md bg-teal-600/30  py-2 px-3">
+													<span className="px-3 py-2 font-bold border rounded-md bg-teal-600/30">
 														{String.fromCharCode(65 + index)}
 													</span>
 													<span className="ml-2">
@@ -594,7 +599,7 @@ const QuestionPage = () => {
 					}
 					icon={
 						CreateResponse.isPending ? (
-							<FaSpinner className="animate-spin mr-2" />
+							<FaSpinner className="mr-2 animate-spin" />
 						) : null
 					}
 					className="w-[40%] md:w-[30%] lg:w-[15%] md:text-xl"

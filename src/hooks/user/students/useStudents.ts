@@ -45,7 +45,8 @@ export function useStudents() {
 				}
 			},
 			enabled: Boolean(testId) && Boolean(studentId),
-			staleTime: 60000,
+			refetchInterval : false,
+			// staleTime: 600000000000,
 		});
 
 	const getLevelByTestId = (testId: string) =>
@@ -61,7 +62,8 @@ export function useStudents() {
 				}
 			},
 			enabled: Boolean(testId),
-			staleTime: 30000,
+			refetchInterval : false,
+			// staleTime: 30000,
 		});
 	const getLevelById = (levelId: string) =>
 		useQuery({
@@ -76,7 +78,8 @@ export function useStudents() {
 				}
 			},
 			enabled: Boolean(levelId),
-			staleTime: 30000,
+			refetchInterval : false,
+			// staleTime: 30000,
 		});
 	const CreateResponse = useMutation({
 		mutationFn: async (responseData: CreateResponseType) => {
@@ -122,11 +125,12 @@ export function useStudents() {
 				}
 			},
 			enabled: !!userMarksId && !!studentId,
-			staleTime: 300000,
+			refetchInterval : false,
+			// staleTime: 300000,
 		});
 	};
 
-	const getResultByLevel = (levelId: string, studentId: string) =>
+	const getResultByLevel = (levelId: string, studentId: string, status: boolean) =>
 		useQuery({
 			queryKey: ['level-scores', levelId, studentId],
 			queryFn: async () => {
@@ -140,8 +144,9 @@ export function useStudents() {
 				}
 			},
 			retry: false,
-			enabled: !!levelId && !!studentId,
-			staleTime: 600000,
+			enabled: !!levelId && !!studentId && status,
+			refetchInterval : false,
+			// staleTime: 600000,
 		});
 	return {
 		tests,

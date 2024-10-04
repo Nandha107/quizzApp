@@ -60,47 +60,46 @@ const LevelsScorePage: React.FC<LevelsScorePageProps> = ({
 		return <SkeletonLoader />;
 	}
 	return (
-		<div className="w-full h-full bg-white">
+		<div className="flex flex-col w-full h-full bg-white">
 			<div
-				className={`${answerShow ? 'hidden' : ''} lg:flex w-full gap-2 h-full lg:h-[90%] md:gap-9 p-8 border border-green-900`}
+				className={`${answerShow ? 'hidden' : ''} lg:flex w-full h-[90%] gap-2`}
 			>
 				<div className="md:w-[60%] w-full flex flex-col justify-center items-center ">
 					<img
 						src="https://i.imghippo.com/files/0ZriP1727259026.png"
-						className="h-64 w-64"
+						className="w-64 h-64"
 						alt="Assessment"
 					/>
 					<div className="flex flex-col gap-3">
-						<span className="font-bold text-2xl md:text-3xl w-full justify-center text-center">
+						<span className="justify-center w-full text-2xl font-bold text-center md:text-3xl">
 							Assessment completed!
 						</span>
 						{/* <span className="flex justify-between w-full text-sm md:text-base">
 							<p>Given Time: {(givenTime)}</p>
 							<p>Taken Time: {(timeTaken)}</p>
 							</span> */}
-						<div className="bg-teal-600/30 border text-start border-teal-600/30 rounded-xl p-5">
+						<div className="p-5 border bg-teal-600/30 text-start border-teal-600/30 rounded-xl">
 							SCORE: {percentage}%
 						</div>
 					</div>
 				</div>
 
 				{/* Right Section */}
-				<div className=" justify-center flex mt-5 md:m-0 flex-col w-full overflow-y-auto">
-					<div className="mb-4 p-4 border rounded-lg shadow-md">
-						<h3 className="text-lg md:text-xl font-semibold mb-2">
-							{level.levelName}
-						</h3>
-						<span className="block text-gray-700 text-sm md:text-base">
+				<div className="flex flex-col w-full h-full gap-5 p-5">
+					<div className="flex flex-col gap-3 p-5 border rounded-lg shadow-md">
+						<h3 className="text-lg font-semibold md:text-xl">{level.levelName}</h3>
+						<span className="block text-sm text-gray-700 md:text-base">
 							Level Score: <span className="font-bold">{score}</span>
 						</span>
-
+					</div>
+					<div className="flex flex-col gap-3 px-4 py-5 overflow-y-auto border border-gray-300 rounded-lg shadow-lg">
 						{level.Response.map((res, resIndex) => {
 							const answerTooLong = res.selectedOption.length > 50;
 							const correctAnswerTooLong = res.question.answer.length > 50;
 							return (
 								<div
 									key={resIndex}
-									className={`mt-2 hidden lg:flex p-3 sm:p-4 rounded-md ${
+									className={`hidden lg:flex lg:flex-col p-3 sm:p-4 rounded-md ${
 										res.isCorrect
 											? 'bg-green-50 border border-green-200'
 											: 'bg-red-50 border border-red-100'
@@ -149,7 +148,7 @@ const LevelsScorePage: React.FC<LevelsScorePageProps> = ({
 							);
 						})}
 					</div>
-					<div className="flex lg:hidden border border-red-900 w-full">
+					<div className="flex w-full lg:hidden">
 						<PrimaryButton
 							text="View Answer"
 							className="w-full"
@@ -159,7 +158,7 @@ const LevelsScorePage: React.FC<LevelsScorePageProps> = ({
 				</div>
 			</div>
 			{answerShow ? (
-				<div className="lg:hidden flex h-full flex-col gap-5 justify-center items-center">
+				<div className="flex flex-col items-center justify-center h-full gap-5 lg:hidden">
 					<p className="text-lg font-bold">Answer Board</p>
 					<div className="w-full p-5 text-center">
 						{level.Response.map((res, resIndex) => {
@@ -217,14 +216,14 @@ const LevelsScorePage: React.FC<LevelsScorePageProps> = ({
 							);
 						})}
 					</div>
-					<div className="w-full flex justify-end px-5">
+					<div className="flex justify-end w-full px-5">
 						<PrimaryButton text="Next Level" onClick={onClick} />
 					</div>
 				</div>
 			) : null}
 
 			{/* Footer or Bottom Section */}
-			<div className="bg-emerald-50 h-[10%] hidden px-5 lg:flex items-center justify-end border-2 border-red-900">
+			<div className="bg-emerald-50 h-[10%] hidden px-5 lg:flex items-center justify-end">
 				<PrimaryButton text="Next Level" onClick={onClick} />
 			</div>
 		</div>
