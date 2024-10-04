@@ -1,4 +1,6 @@
-declare module AssessmentsStoreTypes {
+import { Dayjs } from "dayjs";
+
+export namespace AssessmentsStoreTypes {
 	type AssessmentStore = AssessmentData & AssessmentStoreReducer;
 
 	interface AssessmentData {
@@ -10,8 +12,11 @@ declare module AssessmentsStoreTypes {
 		instructions: Instructions;
 		category: string;
 		levelsCount: number;
-		startTime: number;
-		endTime: number;
+		dateRange: {
+			range: [Dayjs | null, Dayjs | null]
+			startTime: number;
+			endTime: number;
+		};
 		totalParticipants: number;
 		levels: Level[];
 	}
@@ -34,25 +39,34 @@ declare module AssessmentsStoreTypes {
 		testId: string;
 		marks: number;
 		minusMarks: number;
+		// createdAt: string;
+		// updatedAt: string;
+		// deletedAt: string;
 		questions: Questions[];
 	}
 
 	interface Questions {
+		id: string;
 		question: string;
+		// type: string;
+		questionType: 'CHOICE' | 'TEXTAREA';
+		options: { value: string }[];
+		answer: string;
 		timer: {
 			hours: number;
 			minutes: number;
 			overAllSeconds: number;
 		};
-		type: string;
-		options: { value: string }[];
-		answer: string;
+		levelId: string;
+		// createdAt: string;
+		// updatedAt: string;
+		// deletedAt: string;
 	}
 
 	interface AssessmentStoreReducer {
 		setCreateAssessment: (value: AssessmentData) => void;
 
-		// populate: (props: Campaign.prompt, source: string | number) => void;
+		populate: (props: Assessments.GetAssessmentResponse) => void;
 
 		resetAssessmentStore: () => void;
 	}

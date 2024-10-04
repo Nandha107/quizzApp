@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ProfileDropdown from './profileModal';
 import { Config } from '../../config';
 import { jwtDecode } from 'jwt-decode';
@@ -10,7 +10,11 @@ import { useClickOutside } from '../../hooks/useClickOutSide';
 const Header: React.FC = () => {
 	const navigate = useNavigate();
 
-	const { dept, assessmentId } = useParams();
+	const { dept } = useParams();
+
+	const [searchParams, _] = useSearchParams();
+
+	const assessmentId = searchParams.get('assessmentId');
 
 	const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
@@ -43,7 +47,7 @@ const Header: React.FC = () => {
 	return (
 		<div
 			ref={clickOutSideRef}
-			className="bg-white h-full w-full flex justify-center items-center"
+			className="flex items-center justify-center w-full h-full bg-white"
 		>
 			<div className="flex flex-col justify-center w-[50%] text-xl text-primary font-bold">
 				<p className="">
@@ -56,7 +60,7 @@ const Header: React.FC = () => {
 			</div>
 			<div className="w-[50%] flex justify-end items-center gap-5">
 				{dept && !assessmentId ? (
-					<div className="hidden md:flex rounded-lg justify-center items-center">
+					<div className="items-center justify-center hidden rounded-lg md:flex">
 						<PrimaryButton
 							text="Create Assessment"
 							icon={<PlusIcon />}
@@ -76,7 +80,7 @@ const Header: React.FC = () => {
 						onClick={toggleProfileDropdown}
 						className="relative text-gray-900 dark:text-white"
 					>
-						<div className="flex items-center justify-center w-11 h-11 md:h-12 md:w-12 text-teal-600 border-2 border-teal-600 rounded-full bg-teal-600/25">
+						<div className="flex items-center justify-center text-teal-600 border-2 border-teal-600 rounded-full w-11 h-11 md:h-12 md:w-12 bg-teal-600/25">
 							<span className="text-lg font-semibold">
 								{userDetails?.name?.charAt(0) || 'U'}
 							</span>

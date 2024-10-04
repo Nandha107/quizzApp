@@ -41,8 +41,8 @@ declare module Assessments {
 	interface QuestionsResponse {
 		id: string;
 		question: string;
-		type: CHOICE | TEXTAREA;
-		options: string[];
+		questionType: CHOICE | TEXTAREA;
+		options: { value: string }[];
 		answer: string;
 		timer: {
 			hours: number;
@@ -115,27 +115,6 @@ declare module Assessments {
 		levelsCount: number;
 	}
 
-	interface CreateAssessmentResponse {
-		id: string;
-		name: string;
-		timerForWholeTest: boolean;
-		publish: boolean;
-		duration: number;
-		instructions: {
-			heading: string;
-			description: string;
-		};
-		category: string;
-		levelsCount: number;
-		startTime: number | null;
-		endTime: number | null;
-		createdAt: string;
-		updatedAt: string;
-		deletedAt: string | null;
-		totalParticipants: number;
-		levels: QuestionsLevelResponse[] | [];
-	}
-
 	interface UpdateAssessmentLevelPayload {
 		levelNo: number;
 		levelName: string;
@@ -155,4 +134,25 @@ declare module Assessments {
 			overAllSeconds: number;
 		};
 	}
+
+	// interface CreateAssessmentResponse {
+	// 	id: string;
+	// 	name: string;
+	// 	timerForWholeTest: boolean;
+	// 	publish: boolean;
+	// 	duration: number;
+	// 	instructions: {
+	// 		heading: string;
+	// 		description: string;
+	// 	};
+	// 	category: string;
+	// 	levelsCount: number;
+	// 	startTime: number | null;
+	// 	endTime: number | null;
+	// 	createdAt: string;
+	// 	updatedAt: string;
+	// 	deletedAt: string | null;
+	// 	totalParticipants: number;
+	// 	levels: QuestionsLevelResponse[] | [];
+	// }
 }

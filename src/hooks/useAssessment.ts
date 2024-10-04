@@ -1,14 +1,20 @@
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { AssessmentClient } from '../services/staff/Assessments/assessmentClient';
 import toast from 'react-hot-toast';
+import { useEffect } from 'react';
+import { assessmentStore } from '../store/staff/assessments';
 
 export const useAssessments = ({
 	course,
 	assessmentId,
+	levelId
 }: {
 	course?: string;
 	assessmentId?: string;
+	levelId?: string;
 }) => {
+	const storeAssessment = assessmentStore();
+
 	const queryClient = new QueryClient();
 
 	const getAllAssessments = useQuery({
@@ -25,6 +31,13 @@ export const useAssessments = ({
 		enabled: Boolean(assessmentId) && Boolean(!course),
 	});
 
+	const getAssessmentLevel = useQuery({
+		queryKey: ['getAssessmentLevel', levelId!],
+		queryFn: () => AssessmentClient.getAssessmentLevel(levelId!),
+		staleTime: 600000,
+		enabled: Boolean(levelId),
+	});
+
 	const getAssessmentAnalytics = useQuery({
 		queryKey: ['getAssessmentAnalytics', assessmentId!],
 		queryFn: () => AssessmentClient.getAssessmentAnalytics(assessmentId!),
@@ -37,7 +50,11 @@ export const useAssessments = ({
 			AssessmentClient.createAssessment(body),
 		onSuccess: () => {
 			toast.success('Assessment has successfully Created...');
-			queryClient.invalidateQueries(['allAssessments', JSON.stringify(course)] as any);
+			queryClient.invalidateQueries({
+				queryKey: ['allAssessments', JSON.stringify(course)],
+				exact: true, // Optional, if you want to match the exact key
+			});
+			// queryClient.invalidateQueries(['allAssessments', JSON.stringify(course)] as any);
 		},
 		onError: (error) => {
 			toast.error(
@@ -53,7 +70,14 @@ export const useAssessments = ({
 		}) => AssessmentClient.updateAssessmentLevel(payload.levelId, payload.body),
 		onSuccess: () => {
 			toast.success('Assessment has successfully updated...');
-			queryClient.invalidateQueries(['allAssessments', JSON.stringify(course)] as any);
+			queryClient.invalidateQueries({
+				queryKey: ['getAssessment'],
+				exact: true, // Optional, if you want to match the exact key
+			});
+			queryClient.invalidateQueries({
+				queryKey: ['allAssessments', JSON.stringify(course)],
+				exact: true, // Optional, if you want to match the exact key
+			});
 		},
 		onError: (error) => {
 			toast.error(
@@ -62,11 +86,35 @@ export const useAssessments = ({
 		},
 	});
 
+	// const getAssessmentLevel = useMutation({
+	// 	mutationFn: (payload: { levelId: string }) =>
+	// 		AssessmentClient.getAssessmentLevel(payload.levelId),
+	// 	onSuccess: () => {
+	// 		toast.success('Assessment has successfully updated...');
+	// 		queryClient.invalidateQueries({
+	// 			queryKey: ['getAssessmentLevel'],
+	// 			exact: true, // Optional, if you want to match the exact key
+	// 		});
+	// 	},
+	// 	onError: (error) => {
+	// 		toast.error(
+	// 			error.message ?? 'Sorry, Failed to Update a Assessment, please try again',
+	// 		);
+	// 	},
+	// });
+
+	useEffect(() => {
+		if (getAssessment.data && assessmentId) {
+			storeAssessment.populate({ ...getAssessment.data });
+		}
+	}, [JSON.stringify(getAssessment.data), assessmentId]);
+
 	return {
 		getAllAssessments,
 		getAssessment,
 		getAssessmentAnalytics,
 		createAssessment,
 		updateAssessment,
+		getAssessmentLevel
 	};
 };

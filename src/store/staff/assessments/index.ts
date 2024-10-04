@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { AssessmentsStoreTypes } from '../../../types/store/assessments';
+import { AssessmentAdaptors } from './adoptor';
 
 const initAssessmentStore: AssessmentsStoreTypes.AssessmentData = {
 	id: '',
@@ -11,13 +13,16 @@ const initAssessmentStore: AssessmentsStoreTypes.AssessmentData = {
 		minutes: 0,
 		overAllSeconds: 0,
 	},
-	startTime: 0,
-	endTime: 0,
+	dateRange: {
+		range: [null, null],
+		startTime: 0,
+		endTime: 0,
+	},
 	instructions: {
 		heading: '',
 		description: '',
 	},
-	levelsCount: 0,
+	levelsCount: 1,
 	publish: false,
 	totalParticipants: 0,
 	levels: [
@@ -30,15 +35,17 @@ const initAssessmentStore: AssessmentsStoreTypes.AssessmentData = {
 			minusMarks: 1,
 			questions: [
 				{
+					id: '',
 					question: '',
+					questionType: 'CHOICE',
+					options: [],
+					answer: '',
 					timer: {
 						hours: 0,
 						minutes: 0,
 						overAllSeconds: 0,
 					},
-					type: '',
-					options: [{ value: '' }],
-					answer: '',
+					levelId: '',
 				},
 			],
 		},
@@ -55,9 +62,9 @@ export const assessmentStore = create<AssessmentsStoreTypes.AssessmentStore>()(
 					...value,
 				}));
 			},
-			// populate: (props) => {
-			// 	set((state) => ({ ...state, ...AssessmentAdaptor(props) }));
-			// },
+			populate: (props) => {
+				set((state) => ({ ...state, ...AssessmentAdaptors(props) }));
+			},
 			resetAssessmentStore: () => {
 				set({ ...initAssessmentStore });
 			},
