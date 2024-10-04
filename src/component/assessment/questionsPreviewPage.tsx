@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import { useAssessments } from '../../hooks/useAssessment';
-import { assessmentStore } from '../../store/staff/assessments';
+// import { assessmentStore } from '../../store/staff/assessments';
 import { AssessmentsStoreTypes } from '../../types/store/assessments';
 import { TextArea } from '../inputs/textArea';
 
@@ -11,7 +11,7 @@ type createQuestionPayload = AssessmentsStoreTypes.Questions;
 type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
 
 export const QuestionsPreviewPart = () => {
-	const storeAssessment = assessmentStore();
+	// const storeAssessment = assessmentStore();
 
 	const [searchParams, _] = useSearchParams();
 
