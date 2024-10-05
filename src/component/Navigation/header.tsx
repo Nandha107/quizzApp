@@ -63,7 +63,7 @@ const Header: React.FC = () => {
 				<p className="text-xs text-teal-950/50">Welcome to Assessment</p>
 			</div>
 			<div className="w-[50%] flex justify-end items-center gap-5">
-				{!showNavBtn && !assessmentId ? (
+				{userDetails?.role !== 'STUDENT' && (!showNavBtn && !assessmentId) ? (
 					<div className="items-center justify-center hidden rounded-lg md:flex">
 						<PrimaryButton
 							text="Create Assessment"
