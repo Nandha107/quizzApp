@@ -1,6 +1,6 @@
 import { Radio, Tabs, TabsProps } from 'antd';
 import { assessmentStore } from '../../store/staff/assessments';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Input } from '../inputs/input';
 import TimeDurationSelect from '../inputs/timePicker';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
@@ -22,6 +22,8 @@ type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'
 export const AssessmentQuestionsPart = () => {
 	const storeAssessment = assessmentStore();
 
+	const navigate = useNavigate();
+
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	const assessmentId = searchParams.get('assessmentId') as string;
@@ -41,9 +43,11 @@ export const AssessmentQuestionsPart = () => {
 
 	let currentLevelIndex = items.findIndex((item) => item.id === currentLevelId);
 
+	console.log(items.length);
+
 	let saveLevelBtnText = `Save Level ${currentLevelIndex + 1}`;
 
-	console.log({ levelIndex: currentLevelIndex });
+	// console.log({ levelIndex: currentLevelIndex });
 
 	// Function to add new search parameters
 	const addSearchParam = (key: string) => {
@@ -82,9 +86,8 @@ export const AssessmentQuestionsPart = () => {
 		});
 
 	const chooseQuestionType = watch('questionType');
-	// const chooseQuestionType = getValues('type');
 
-	console.log({ chooseQuestionType });
+	// console.log({ chooseQuestionType });
 
 	const { fields, append, remove } = useFieldArray({
 		// const { fields, append, remove, update } = useFieldArray({
@@ -93,13 +96,14 @@ export const AssessmentQuestionsPart = () => {
 	});
 
 	const handleCreateAssessmentQuestions = (data: OmittedCreateQuestionPayload) => {
-		console.log(watch('questionType'));
-		console.log({ data });
+		// console.log(watch('questionType'));
+		// console.log({ data });
 		const storedQuestions = localStorage.getItem('createQuestions');
 		const questions = storedQuestions ? JSON.parse(storedQuestions) : [];
 
 		localStorage.setItem(`createQuestions`, JSON.stringify([...questions, data]));
 		reset();
+		window.location.reload();
 	};
 
 	const handleSaveLevel = () => {
@@ -130,6 +134,9 @@ export const AssessmentQuestionsPart = () => {
 						currentLevelIndex = currentLevelIndex + 1 + 1;
 						saveLevelBtnText = `Save Level ${currentLevelIndex + 1 + 1}`;
 						addSearchParam(`${currentLevelIndex}`);
+					}
+					if(items.length === currentLevelIndex+1) {
+						navigate('/staff-dashboard/mech?tab=assessments')
 					}
 				})
 				.catch((err) => {

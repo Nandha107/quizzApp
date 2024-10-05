@@ -45,7 +45,7 @@ export class AssessmentClient {
 	static async createAssessment(body: Assessments.CreateAssessmentPayload) {
 		try {
 			const res = await axios.post<Assessments.GetAssessmentResponse>(`/tests`, body);
-			console.log({ ApiCreateTest: res });
+			// console.log({ ApiCreateTest: res });
 			return res.data;
 		} catch (error) {
 			console.log('original error while creating assessment', error);
@@ -64,7 +64,7 @@ export class AssessmentClient {
 				`/tests/levels/${LevelId}`,
 				body,
 			);
-			console.log({ ApiUpdateTest: res });
+			// console.log({ ApiUpdateTest: res });
 			return res.data;
 		} catch (error) {
 			console.log('original error while updating assessment', error);
@@ -76,11 +76,11 @@ export class AssessmentClient {
 
 	static async getAssessmentLevel(levelId: string) {
 		try {
-			console.log({ apiGet: levelId });
+			// console.log({ apiGet: levelId });
 			const res = await axios.get<Assessments.QuestionsLevelResponse>(
 				`/tests/levels/${levelId}`,
 			);
-			console.log({ ApiGetLevelTest: res });
+			// console.log({ ApiGetLevelTest: res });
 			return res.data;
 		} catch (error) {
 			console.log('original error while get assessment level', error);

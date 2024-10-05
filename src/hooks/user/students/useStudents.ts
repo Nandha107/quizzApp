@@ -130,7 +130,7 @@ export function useStudents() {
 		});
 	};
 
-	const getResultByLevel = (levelId: string, studentId: string, status: boolean) =>
+	const getResultByLevel = (levelId: string, studentId: string) =>
 		useQuery({
 			queryKey: ['level-scores', levelId, studentId],
 			queryFn: async () => {
@@ -144,7 +144,7 @@ export function useStudents() {
 				}
 			},
 			retry: false,
-			enabled: !!levelId && !!studentId && status,
+			enabled: !!levelId && !!studentId,
 			refetchInterval: false,
 			// staleTime: 600000,
 		});

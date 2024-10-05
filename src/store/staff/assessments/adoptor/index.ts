@@ -5,20 +5,20 @@ export const AssessmentAdaptors = (
 	params: Assessments.GetAssessmentResponse,
 ): AssessmentsStoreTypes.AssessmentData => {
 	const onDateRangeConvert = (startTime: number, endTime: number) => {
-		console.log({ startTime, endTime });
+		// console.log({ startTime, endTime });
 		// Ensure that startTime and endTime are in milliseconds
 		const convertedStartDate = dayjs(startTime); // Automatically handles if it's in milliseconds
 		const convertedEndDate = dayjs(endTime);
 
 		// Formatting the converted dates
-		console.log('Converted Start Date:', convertedStartDate.format('YYYY-MM-DD'));
-		console.log('Converted End Date:', convertedEndDate.format('YYYY-MM-DD'));
+		// console.log('Converted Start Date:', convertedStartDate.format('YYYY-MM-DD'));
+		// console.log('Converted End Date:', convertedEndDate.format('YYYY-MM-DD'));
 
 		// Create an array with the new Dayjs objects
 		const newDateRange: Dayjs[] = [convertedStartDate, convertedEndDate];
 
 		// Log the new date range array for verification
-		console.log('New Date Range:', newDateRange);
+		// console.log('New Date Range:', newDateRange);
 
 		return newDateRange; // Return the new date range array
 	};

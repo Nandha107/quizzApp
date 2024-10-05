@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ProfileDropdown from './profileModal';
 import { Config } from '../../config';
 import { jwtDecode } from 'jwt-decode';
@@ -10,11 +10,15 @@ import { useClickOutside } from '../../hooks/useClickOutSide';
 const Header: React.FC = () => {
 	const navigate = useNavigate();
 
+	const location = useLocation();
+
 	const { dept } = useParams();
 
 	const [searchParams, _] = useSearchParams();
 
 	const assessmentId = searchParams.get('assessmentId');
+
+	const showNavBtn = location.pathname === '/create-assessment/mech';
 
 	const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
@@ -59,7 +63,7 @@ const Header: React.FC = () => {
 				<p className="text-xs text-teal-950/50">Welcome to Assessment</p>
 			</div>
 			<div className="w-[50%] flex justify-end items-center gap-5">
-				{dept && !assessmentId ? (
+				{!showNavBtn && !assessmentId ? (
 					<div className="items-center justify-center hidden rounded-lg md:flex">
 						<PrimaryButton
 							text="Create Assessment"

@@ -66,7 +66,7 @@ const QuestionPage = () => {
 	const levelResult = getResultByLevel(
 		(currentLevel as any)?.id,
 		studentId,
-		currentLevel?.completed as boolean,
+		// currentLevel?.completed as boolean,
 	);
 
 	const isFirstRun = useRef(true);

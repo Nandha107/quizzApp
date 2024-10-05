@@ -5,6 +5,8 @@ import { AssessmentQuestionsPart } from './createQuestionsPage';
 import { useAssessments } from '../../hooks/useAssessment';
 import { assessmentStore } from '../../store/staff/assessments';
 import { QuestionsPreviewPart } from './questionsPreviewPage';
+import { useEffect } from 'react';
+import { LoadingSpinner } from '../spinner/loadingSpinner';
 
 export const CreateAssessment = () => {
 	const navigate = useNavigate();
@@ -19,13 +21,24 @@ export const CreateAssessment = () => {
 
 	const { getAssessment } = useAssessments({ assessmentId: assessmentId });
 
-	console.log(getAssessment.data);
+	const element = document.getElementById('create_ques_part');
 
-	console.log({ storeAssessment });
+	const dataIsLoading =
+		getAssessment.isFetching || getAssessment.isLoading || getAssessment.isRefetching;
+
+	useEffect(() => {
+		if (element) {
+			element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
+	}, [element]);
+
+	console.log('33333333---------> ', localStorage.getItem('createQuestions'))
 
 	return (
-		<div className="flex w-full h-full bg-white">
-			<div className="w-full lg:w-[60%] flex flex-col h-full">
+		<div className="relative flex w-full h-full bg-white">
+			<div
+				className={`w-full ${assessmentId ? 'lg:w-[60%]' : 'w-full'} flex flex-col h-full`}
+			>
 				<div className="flex items-center gap-3 h-[7%] p-5">
 					<div
 						className="px-2 py-2 border border-gray-500 rounded-lg hover:cursor-pointer hover:bg-gray-300"
@@ -53,7 +66,7 @@ export const CreateAssessment = () => {
 							</div>
 						) : null}
 					</div>
-					{getAssessment.data?.levels.length ? (
+					{!dataIsLoading && getAssessment.data?.levels.length ? (
 						<div
 							id={'create_ques_part'}
 							className="flex flex-col gap-2 px-5 py-4 border border-gray-400 rounded-lg"
@@ -64,9 +77,19 @@ export const CreateAssessment = () => {
 					) : null}
 				</div>
 			</div>
-			<div className="hidden w-full lg:w-[40%] h-full lg:flex">
-				<QuestionsPreviewPart />
-			</div>
+			{dataIsLoading ? (
+				<div className="absolute bg-gray-600/70 w-full h-full flex justify-center items-center">
+					<LoadingSpinner
+						text="Fetching assessment data..."
+						className="text-white font-bold"
+					/>
+				</div>
+			) : null}
+			{assessmentId ? (
+				<div className="hidden w-full lg:w-[40%] h-full lg:flex">
+					<QuestionsPreviewPart />
+				</div>
+			) : null}
 		</div>
 	);
 };

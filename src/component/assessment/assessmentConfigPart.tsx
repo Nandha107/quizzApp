@@ -50,8 +50,8 @@ export const AssessmentConfigPart = () => {
 			const epochStartDate = dateRange[0]?.valueOf(); // Start date in epoch time
 			const epochEndDate = dateRange[1]?.valueOf(); // End date in epoch time
 
-			console.log('Epoch Start Date:', epochStartDate);
-			console.log('Epoch End Date:', epochEndDate);
+			// console.log('Epoch Start Date:', epochStartDate);
+			// console.log('Epoch End Date:', epochEndDate);
 
 			storeAssessment.setCreateAssessment({
 				...storeAssessment,
@@ -62,10 +62,10 @@ export const AssessmentConfigPart = () => {
 				},
 			});
 
-			const formattedStartDate = dateRange[0]?.format('YYYY-MM-DD');
-			const formattedEndDate = dateRange[1]?.format('YYYY-MM-DD');
-			console.log('Start Date:', formattedStartDate);
-			console.log('End Date:', formattedEndDate);
+			// const formattedStartDate = dateRange[0]?.format('YYYY-MM-DD');
+			// const formattedEndDate = dateRange[1]?.format('YYYY-MM-DD');
+			// console.log('Start Date:', formattedStartDate);
+			// console.log('End Date:', formattedEndDate);
 		}
 	};
 
@@ -108,9 +108,10 @@ export const AssessmentConfigPart = () => {
 				{ id: 'Toast' },
 			);
 
-			const res = await createNewAssessment;
+			await createNewAssessment;
+			// const res = await createNewAssessment;
 
-			console.log({ createAssessment: res });
+			// console.log({ createAssessment: res });
 		} catch (err) {
 			console.log('Cannot Create Assessment ====> ', err);
 		}
@@ -173,7 +174,10 @@ export const AssessmentConfigPart = () => {
 						>
 							Time Duration <span className="text-xl text-danger">*</span>
 						</label>
-						<TimeDurationSelect onDataChange={onTimeChange} />
+						<TimeDurationSelect
+							// reset={Boolean(_.get('levelId'))}
+							onDataChange={onTimeChange}
+						/>
 					</div>
 				) : null}
 			</div>
