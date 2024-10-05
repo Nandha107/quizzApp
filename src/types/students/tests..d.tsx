@@ -149,3 +149,17 @@ export type ResponseAllLevelType = {
 	selectedOption: string;
 	levelId: string;
 };
+export type StudentTestData = {
+	studentName: string;
+	registrationNumber: number;
+	department: string;
+	collegeName: string;
+	totalTests: number;
+	bendingTests: number;
+	totalTestsTaken: number;
+	passedTests: number;
+	failedTests: number;
+	totalScore: number;
+	rank: number;
+  };
+  

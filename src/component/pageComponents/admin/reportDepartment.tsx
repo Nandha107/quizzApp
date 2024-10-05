@@ -54,7 +54,6 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 		}
 	}
 
-
 	const findDepartment = CoursesData.find((course) => course.path === department);
 
 	const columns: TableColumnsType<ReportDepartment.StudentDetails> = [
@@ -114,15 +113,15 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 	];
 	const exportStudentAsPDF = (student: ReportDepartment.StudentDetails) => {
 		const doc = new jsPDF();
-	
+
 		// Add title with styling
 		doc.setFontSize(18);
 		doc.text('Student Report', 105, 10, { align: 'center' });
-	
+
 		// Add student details with design
 		doc.setFontSize(12);
 		doc.setTextColor(0, 0, 0); // Black color
-	
+
 		// Highlighted Student Name
 		doc.setFontSize(14);
 		doc.setTextColor(0, 102, 204); // Change color for highlight
@@ -132,7 +131,7 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 		doc.text(`Department: ${student.department}`, 10, 30);
 		doc.text(`Registration Number: ${student.registrationNumber}`, 10, 40);
 		doc.text(`College: ${student.collegeName}`, 10, 50);
-	
+
 		// Add Assigned Person
 
 		// Preparing test results data
@@ -143,10 +142,10 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 			formatTime(test.timeTaken), // Format the time taken
 			test.pass ? 'Pass' : 'Fail', // Pass/Fail text
 		]);
-	
+
 		// Padding configuration
 		const cellPadding = 1; // Padding for the cell
-	
+
 		// Table with Pass/Fail buttons
 		autoTable(doc, {
 			head: [['Test Name', 'Assigned Person', 'Marks', 'Time Taken', 'Pass/Fail']],
@@ -156,29 +155,55 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 				// Check if the column is the 'Pass/Fail' column (index 4)
 				if (data.column.index === 4) {
 					const value = data.cell.raw;
-	
+
 					// Adjusting cell's background considering the padding
 					const cellX = data.cell.x + cellPadding; // X-coordinate with padding
 					const cellY = data.cell.y + cellPadding; // Y-coordinate with padding
 					const cellWidth = data.cell.width - 2 * cellPadding; // Width minus padding
 					const cellHeight = data.cell.height - 2 * cellPadding; // Height minus padding
-	
+
 					// Simulate rounded corners with filled rectangles
 					const radius = 3; // Border-radius value
-	
+
 					// Draw 'Pass' button (light green background with dark green text)
 					if (value === 'Pass') {
 						doc.setFillColor(204, 255, 204); // Light green background
-						doc.roundedRect(cellX, cellY, cellWidth, cellHeight, radius, radius, 'F'); // Draw rounded rectangle
+						doc.roundedRect(
+							cellX,
+							cellY,
+							cellWidth,
+							cellHeight,
+							radius,
+							radius,
+							'F',
+						); // Draw rounded rectangle
 						doc.setTextColor(0, 128, 0); // Dark green text for Pass
-						doc.text('Pass', data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2 + 1.5, { align: 'center' });
+						doc.text(
+							'Pass',
+							data.cell.x + data.cell.width / 2,
+							data.cell.y + data.cell.height / 2 + 1.5,
+							{ align: 'center' },
+						);
 					}
 					// Draw 'Fail' button (light red background with dark red text)
 					else if (value === 'Fail') {
 						doc.setFillColor(255, 204, 204); // Light red background
-						doc.roundedRect(cellX, cellY, cellWidth, cellHeight, radius, radius, 'F'); // Draw rounded rectangle
+						doc.roundedRect(
+							cellX,
+							cellY,
+							cellWidth,
+							cellHeight,
+							radius,
+							radius,
+							'F',
+						); // Draw rounded rectangle
 						doc.setTextColor(204, 0, 0); // Dark red text for Fail
-						doc.text('Fail', data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2 + 1.5, { align: 'center' });
+						doc.text(
+							'Fail',
+							data.cell.x + data.cell.width / 2,
+							data.cell.y + data.cell.height / 2 + 1.5,
+							{ align: 'center' },
+						);
 					}
 				}
 			},
@@ -196,21 +221,19 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 			},
 			theme: 'striped', // Optional theme
 		});
-	
+
 		// Save the PDF with the student's name
 		doc.save(`${student.studentName}-details.pdf`);
 	};
-	
+
 	// Function to format time taken from seconds to HH:MM:SS
-	const formatTime = (totalSeconds:any) => {
+	const formatTime = (totalSeconds: any) => {
 		const hours = Math.floor(totalSeconds / 3600);
 		const minutes = Math.floor((totalSeconds % 3600) / 60);
 		const seconds = totalSeconds % 60;
-	
+
 		return `${hours}h ${minutes}m ${seconds}s`;
 	};
-	
-	  
 
 	const exportAllAsXLSX = () => {
 		if (!studentDetails.length) return;
@@ -287,7 +310,7 @@ const AnalyticPage: React.FC<Props> = ({ department }) => {
 			getReportDepartment.data?.studentDetails as ReportDepartment.StudentDetails[],
 		);
 	}, [getReportDepartment.data, pagination]);
-console.log(getReportDepartment.data)
+	console.log(getReportDepartment.data);
 	return (
 		<div className="flex flex-col w-full h-full gap-5 overflow-y-scroll rounded-lg md:p-5 overflow-x-clip">
 			<div className="flex flex-col gap-3">
@@ -305,27 +328,39 @@ console.log(getReportDepartment.data)
 				<div className="grid grid-cols-2 gap-3 rounded-lg lg:p-5 lg:bg-white lg:shadow-md md:grid-cols-3 xl:grid-cols-6">
 					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Total Students</p>
-						<p className="text-3xl font-semibold text-teal-600">{getReportDepartment.data.totalStudents}</p>
+						<p className="text-3xl font-semibold text-teal-600">
+							{getReportDepartment.data.totalStudents}
+						</p>
 					</div>
 					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Pass Average</p>
-						<p className="text-3xl font-semibold text-teal-600">{getReportDepartment.data.passAverage}</p>
+						<p className="text-3xl font-semibold text-teal-600">
+							{getReportDepartment.data.passAverage}
+						</p>
 					</div>
 					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Fail Average</p>
-						<p className="text-3xl font-semibold text-teal-600">{getReportDepartment.data.failAverage}</p>
+						<p className="text-3xl font-semibold text-teal-600">
+							{getReportDepartment.data.failAverage}
+						</p>
 					</div>
 					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Total Assessment</p>
-						<p className="text-3xl font-semibold text-teal-600">{getReportDepartment.data.totalTest}</p>
+						<p className="text-3xl font-semibold text-teal-600">
+							{getReportDepartment.data.totalTest}
+						</p>
 					</div>
 					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Completed Assessment</p>
-						<p className="text-3xl font-semibold text-teal-600">{getReportDepartment.data.totalCompletedTests}</p>
+						<p className="text-3xl font-semibold text-teal-600">
+							{getReportDepartment.data.totalCompletedTests}
+						</p>
 					</div>
 					<div className="flex flex-col justify-center gap-1 px-4 py-3 border border-teal-600 rounded-md md:py-5 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5">
 						<p className="text-sm font-medium">Incomplete Assessment</p>
-						<p className="text-3xl font-semibold text-teal-600">{getReportDepartment.data.totalIncompleteTests}</p>
+						<p className="text-3xl font-semibold text-teal-600">
+							{getReportDepartment.data.totalIncompleteTests}
+						</p>
 					</div>
 				</div>
 			</div>

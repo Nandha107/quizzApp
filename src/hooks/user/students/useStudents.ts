@@ -7,6 +7,7 @@ import {
 	CreateAllLevelResponseType,
 	UserMarks,
 	StudentResult,
+	StudentTestData,
 } from '../../../types/students/tests..d';
 export function useStudents() {
 	const queryClient = useQueryClient();
@@ -132,7 +133,7 @@ export function useStudents() {
 
 	const getResultByLevel = (levelId: string, studentId: string, status: boolean) =>
 		useQuery({
-			queryKey: ['level-scores', levelId, studentId],
+			queryKey: ['level-scores'],
 			queryFn: async () => {
 				try {
 					const response = await axios.get(`/responses/level/scores`, {
@@ -145,9 +146,28 @@ export function useStudents() {
 			},
 			retry: false,
 			enabled: !!levelId && !!studentId && status,
-			refetchInterval: false,
+			refetchInterval:false
 			// staleTime: 600000,
 		});
+		const studentDetails = ({ studentId }:{studentId:string}) =>
+			useQuery({
+				queryKey: ['tests-students', studentId],
+				queryFn: async () => {
+					try {
+						const response = await axios.get(
+							`/responses/student/details/${studentId}`,
+						
+						);
+						return response.data as StudentTestData
+
+					} catch (error) {
+						console.error('Error fetching tests for student:', error);
+						throw error;
+					}
+				},
+				enabled: Boolean(studentId),
+				staleTime: 60000,
+			});
 	return {
 		tests,
 		CreateResponse,
@@ -156,6 +176,7 @@ export function useStudents() {
 		getLevelByTestId,
 		getLevelById,
 		useUserMarks,
+		studentDetails,
 		CreateAllLevelResponse,
 		queryClient,
 	};
