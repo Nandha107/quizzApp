@@ -184,7 +184,7 @@ const SignUp: React.FC = () => {
 									type="text"
 									placeholder="Enter Your College Name"
 									isRequired
-									className="col-span-2 justify-self-center"
+									className="col-span-2 justify-self-center w-full"
 									value={collegeName}
 									onChange={(e) => setCollegeName(e.target.value)}
 								/>
