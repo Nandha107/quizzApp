@@ -185,7 +185,7 @@ const StudentDashboard = () => {
 												></Badge.Ribbon>
 											</div>
 										) : null}
-										{test.enableResponseReceiving && test.completed ? (
+										{test.enableResponseReceiving || test.completed ? (
 											<div className="absolute bottom-0 bg-teal-900/50 w-full h-full z-100 rounded-lg">
 												<Badge.Ribbon
 													text="Completed"
