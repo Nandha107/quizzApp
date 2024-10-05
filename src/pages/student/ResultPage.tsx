@@ -267,7 +267,7 @@ const ResultPage = () => {
 					}}
 					className={`bg-gradient-to-r from-emerald-500 to-emerald-900 text-white py-2 px-9 rounded-lg `}
 				>
-					Submit
+					View Status
 				</button>
 			</div>
 		</div>
