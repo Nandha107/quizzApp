@@ -16,7 +16,7 @@ const LandingPage = () => {
 				</div>
 				<div className="flex justify-center">
 					<button
-						onClick={() => navigate('/student-login')}
+						onClick={() => navigate('/login-types')}
 						className="bg-white text-teal-600 m-plus-rounded-1c-thin tracking-[0.2em] font-semibold border-teal-500 border py-2 px-4 md:px-6 mr-2 md:mr-4 transition hover:scale-105"
 					>
 						Login

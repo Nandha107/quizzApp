@@ -1,4 +1,4 @@
-import { Dayjs } from "dayjs";
+import { Dayjs } from 'dayjs';
 
 export namespace AssessmentsStoreTypes {
 	type AssessmentStore = AssessmentData & AssessmentStoreReducer;
@@ -13,7 +13,7 @@ export namespace AssessmentsStoreTypes {
 		category: string;
 		levelsCount: number;
 		dateRange: {
-			range: [Dayjs | null, Dayjs | null]
+			range: [Dayjs | null, Dayjs | null];
 			startTime: number;
 			endTime: number;
 		};

@@ -45,7 +45,7 @@ export function useStudents() {
 				}
 			},
 			enabled: Boolean(testId) && Boolean(studentId),
-			refetchInterval : false,
+			refetchInterval: false,
 			// staleTime: 600000000000,
 		});
 
@@ -62,7 +62,7 @@ export function useStudents() {
 				}
 			},
 			enabled: Boolean(testId),
-			refetchInterval : false,
+			refetchInterval: false,
 			// staleTime: 30000,
 		});
 	const getLevelById = (levelId: string) =>
@@ -78,7 +78,7 @@ export function useStudents() {
 				}
 			},
 			enabled: Boolean(levelId),
-			refetchInterval : false,
+			refetchInterval: false,
 			// staleTime: 30000,
 		});
 	const CreateResponse = useMutation({
@@ -125,7 +125,7 @@ export function useStudents() {
 				}
 			},
 			enabled: !!userMarksId && !!studentId,
-			refetchInterval : false,
+			refetchInterval: false,
 			// staleTime: 300000,
 		});
 	};
@@ -145,7 +145,7 @@ export function useStudents() {
 			},
 			retry: false,
 			enabled: !!levelId && !!studentId && status,
-			refetchInterval : false,
+			refetchInterval: false,
 			// staleTime: 600000,
 		});
 	return {

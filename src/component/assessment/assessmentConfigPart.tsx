@@ -57,8 +57,8 @@ export const AssessmentConfigPart = () => {
 				...storeAssessment,
 				dateRange: {
 					range: dateRange as [Dayjs, Dayjs],
-					startTime: epochStartDate/1000,
-					endTime: epochEndDate/1000,
+					startTime: epochStartDate / 1000,
+					endTime: epochEndDate / 1000,
 				},
 			});
 
@@ -87,7 +87,7 @@ export const AssessmentConfigPart = () => {
 				.then((res) => {
 					setIsLoading(false);
 					// console.log({ newAssessment: res });
-                    setSearchParams({ assessmentId: res.id, levelId: res.levels?.[0]?.id });
+					setSearchParams({ assessmentId: res.id, levelId: res.levels?.[0]?.id });
 				})
 				.catch((err) => {
 					console.log(err);

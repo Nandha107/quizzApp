@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
 					},
 					{
 						path: 'create-assessment/:dept',
-						element: <CreateAssessment/>,
+						element: <CreateAssessment />,
 					},
 					// {
 					// 	path: 'create-assessment/:dept',

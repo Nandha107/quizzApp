@@ -79,7 +79,11 @@ export const QuestionsPreviewPart = () => {
 														},
 													)
 												) : (
-													<TextArea key={index} placeholder='Enter Your Answer' disabled/>
+													<TextArea
+														key={index}
+														placeholder="Enter Your Answer"
+														disabled
+													/>
 												)}
 											</div>
 										</div>

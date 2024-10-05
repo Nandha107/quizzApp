@@ -7,7 +7,7 @@ import { assessmentStore } from '../store/staff/assessments';
 export const useAssessments = ({
 	course,
 	assessmentId,
-	levelId
+	levelId,
 }: {
 	course?: string;
 	assessmentId?: string;
@@ -115,6 +115,6 @@ export const useAssessments = ({
 		getAssessmentAnalytics,
 		createAssessment,
 		updateAssessment,
-		getAssessmentLevel
+		getAssessmentLevel,
 	};
 };

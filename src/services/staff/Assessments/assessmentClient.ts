@@ -76,7 +76,7 @@ export class AssessmentClient {
 
 	static async getAssessmentLevel(levelId: string) {
 		try {
-			console.log({apiGet: levelId})
+			console.log({ apiGet: levelId });
 			const res = await axios.get<Assessments.QuestionsLevelResponse>(
 				`/tests/levels/${levelId}`,
 			);

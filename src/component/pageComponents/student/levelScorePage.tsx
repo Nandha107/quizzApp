@@ -61,9 +61,7 @@ const LevelsScorePage: React.FC<LevelsScorePageProps> = ({
 	}
 	return (
 		<div className="flex flex-col w-full h-full bg-white">
-			<div
-				className={`${answerShow ? 'hidden' : ''} lg:flex w-full h-[90%] gap-2`}
-			>
+			<div className={`${answerShow ? 'hidden' : ''} lg:flex w-full h-[90%] gap-2`}>
 				<div className="md:w-[60%] w-full flex flex-col justify-center items-center ">
 					<img
 						src="https://i.imghippo.com/files/0ZriP1727259026.png"
