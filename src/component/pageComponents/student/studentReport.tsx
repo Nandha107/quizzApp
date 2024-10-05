@@ -33,27 +33,27 @@ const StudentAnalyticPage: React.FC = () => {
 				<div className="lg:p-5 lg:bg-white rounded-lg lg:shadow-md grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5">
 					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
 						<p className="text-base font-medium">Total Assessments</p>
-						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData.data?.totalTests}</p>
+						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData?.isLoading?"...":studentDetailsData.data?.totalTests}</p>
 					</div>
 					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
 						<p className="text-base font-medium">Completed Assessments</p>
-						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData.data?.totalTestsTaken}</p>
+						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData?.isLoading?"...":studentDetailsData.data?.totalTestsTaken}</p>
 					</div>
 					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
 						<p className="text-base font-medium">Incomplete Assessments</p>
-						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData.data?.bendingTests}</p>
+						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData?.isLoading?"...":studentDetailsData.data?.bendingTests}</p>
 					</div>
 					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
 						<p className="text-base font-medium">My Rank</p>
-						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData.data?.rank}</p>
+						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData?.isLoading?"...":studentDetailsData.data?.rank}</p>
 					</div>
 					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
 						<p className="text-base font-medium">Total Fail Assessments</p>
-						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData.data?.failedTests}</p>
+						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData?.isLoading?"...":studentDetailsData.data?.failedTests}</p>
 					</div>
 					<div className="flex flex-col px-6 py-5 justify-center gap-3 bg-gradient-to-br from-teal-600/30 via-teal-600/20 to-teal-600/5 rounded-md min-h-[69px] max-h-[70px] md:min-h-[99px] md:max-h-[100px]">
 						<p className="text-base font-medium">Total Pass Assessments</p>
-						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData.data?.passedTests}</p>
+						<p className="text-3xl font-semibold text-teal-600">{studentDetailsData?.isLoading?"...":studentDetailsData.data?.passedTests}</p>
 					</div>
 				</div>
 			</div>
