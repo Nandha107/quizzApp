@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import Skeleton from 'react-loading-skeleton';
 import { PrimaryButton } from '../../component/buttons/primaryButton';
 import StudentAnalyticPage from '../../component/pageComponents/student/studentReport';
+import { convertMillisecondsToTimeOnly } from '../../utils/timeConverter';
 // import { FaCalendar } from 'react-icons/fa';
 
 export interface user {
@@ -98,6 +99,9 @@ const StudentDashboard = () => {
 							</div>
 						) : (
 							Tests.data?.map((test, index) => {
+								const testTimeDuration = convertMillisecondsToTimeOnly(
+									test.duration.overAllSeconds,
+								);
 								const date = new Date(test.createdAt);
 								const monthNames = [
 									'Jan',
@@ -150,9 +154,9 @@ const StudentDashboard = () => {
 														</p>
 														<div className="flex justify-between items-center">
 															<p className="text-xs font-semibold text-[#64748B]">
-																Total time:{' '}
-																{test.duration.overAllSeconds}{' '}
-																seconds
+																Total time: {testTimeDuration}
+																{/* {test.duration.overAllSeconds}{' '}
+																seconds */}
 															</p>
 														</div>
 													</div>

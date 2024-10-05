@@ -5,6 +5,7 @@ import { useAssessments } from '../../hooks/useAssessment';
 import { FaCalendar, FaEllipsisV } from 'react-icons/fa';
 import { PrimaryButton } from '../../component/buttons/primaryButton';
 import AnalyticPage from '../../component/pageComponents/admin/reportDepartment';
+import { convertMillisecondsToTimeOnly } from '../../utils/timeConverter';
 
 type Align = 'assessment' | 'completed' | 'report';
 
@@ -75,6 +76,9 @@ const StaffDashboard = () => {
 							</div>
 						) : (
 							getAllAssessments.data.map((assessment, index) => {
+								const testTimeDuration = convertMillisecondsToTimeOnly(
+									assessment.duration.overAllSeconds,
+								);
 								// Convert ISO string to Date object
 								const date = new Date(assessment.createdAt);
 								const monthNames = [
@@ -129,11 +133,11 @@ const StaffDashboard = () => {
 														</p>
 														<div className="flex justify-between items-center">
 															<p className="text-xs font-semibold text-[#64748B]">
-																Total time:{' '}
-																{
+																Total time: {testTimeDuration}
+																{/* {
 																	assessment.duration
 																		.overAllSeconds
-																}{' '}
+																}{' '} */}
 																seconds
 															</p>
 															<div className="justify-center gap-2 flex py-2 px-5 items-center bg-white rounded-lg">
