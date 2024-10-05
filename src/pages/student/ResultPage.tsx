@@ -42,7 +42,7 @@ const ResultPage = () => {
 	if (PassResult) {
 		return (
 			<div className="flex flex-col items-center justify-center h-full">
-				{!Result.data?.pass ? <ConfettiComponent /> : null}
+				{Result.data?.pass ? <ConfettiComponent /> : null}
 				<div className="flex flex-col h-[90%] items-center justify-center gap-3 p-16">
 					<span>This is your approximate level for {Result.data?.testName}.</span>
 
@@ -52,10 +52,10 @@ const ResultPage = () => {
 							Result.data?.pass ? 'text-green-600' : 'text-[#FF3D00]'
 						}`}
 					>
-						{!Result.data?.pass ? 'PASS' : 'FAIL'}
+						{Result.data?.pass ? 'PASS' : 'FAIL'}
 					</span>
 					<span className="text-xl font-bold">
-						{!Result.data?.pass ? (
+						{Result.data?.pass ? (
 							<img src="https://i.imghippo.com/files/P9UBo1727262425.png" />
 						) : (
 							<img src="https://i.ibb.co/cKBMD9H/OBJECTS.png" alt="OBJECTS" />
