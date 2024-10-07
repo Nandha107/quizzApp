@@ -38,7 +38,7 @@ export const QuestionsPreviewPart = () => {
 	// console.log({ getLevelQues });
 	return (
 		<div className="flex flex-col w-full h-full pr-5">
-			<div className='flex items-center h-[7%]'>
+			<div className="flex items-center h-[7%]">
 				<p className="text-2xl font-semibold">Preview</p>
 			</div>
 			<div className="flex flex-col h-[91.5%] items-center gap-3 px-16 py-8 overflow-y-scroll border border-gray-300 rounded-lg bg-gray-300/15">

@@ -28,12 +28,11 @@ const TimeDurationSelect: React.FC<ChildProps> = ({ onDataChange }) => {
 	// useEffect(() => {
 	// 	if(reset){
 	// 		setTimeDuration({ hours: '0', minutes: '0' });
-    //         onDataChange(timeDuration);
-    //         console.log('Resetting Time Duration');
-            // reset = false; // reset the state variable to false after resetting the time duration.
-		// }
+	//         onDataChange(timeDuration);
+	//         console.log('Resetting Time Duration');
+	// reset = false; // reset the state variable to false after resetting the time duration.
+	// }
 	// }, [reset]);
-	
 
 	// const handleSetTimeDuration = () => {
 	// 	console.log(

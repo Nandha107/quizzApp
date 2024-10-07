@@ -26,19 +26,17 @@ const formatTimeMS = (seconds: number): string => {
 	const minutes = Math.floor(seconds / 60);
 	const remainingSeconds = seconds % 60;
 	return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-  const formatTimeHMS = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
+};
+const formatTimeHMS = (seconds: number): string => {
+	const hours = Math.floor(seconds / 3600);
+	const minutes = Math.floor((seconds % 3600) / 60);
+	const remainingSeconds = seconds % 60;
 
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+	return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
-
 // Example usage
- // Output: "01:31:40"
-
+// Output: "01:31:40"
 
 const QuestionPage = () => {
 	const { testId } = useParams() as { testId: string };
@@ -130,7 +128,7 @@ const QuestionPage = () => {
 							return prevTime - 1;
 						} else {
 							setTrigger(true);
-							console.log("object")
+							console.log('object');
 							// Time's up! Move to next question
 							return 0; // Set to zero to prevent further processing
 						}
@@ -265,7 +263,7 @@ const QuestionPage = () => {
 					testId: testId,
 					selectedOption: response.selectedOption,
 				}));
-console.log(triggerSubmit,"totaltimer")
+				console.log(triggerSubmit, 'totaltimer');
 				const res = triggerSubmitForTotalTimer
 					? await CreateAllLevelResponse.mutateAsync({
 							studentId: studentId,
@@ -528,7 +526,7 @@ console.log(triggerSubmit,"totaltimer")
 							<div className="flex items-center justify-center gap-2 font-bold ">
 								<BsClockHistory className="w-6 h-6" />
 								Time Remaining (Test):{formatTimeHMS(timeRemaining)}
-								 {/* {Math.floor(timeRemaining / 60)}:
+								{/* {Math.floor(timeRemaining / 60)}:
 								{timeRemaining % 60 < 10 ? '0' : ''}
 								{timeRemaining % 60} */}
 							</div>

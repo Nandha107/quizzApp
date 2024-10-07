@@ -135,8 +135,8 @@ export const AssessmentQuestionsPart = () => {
 						saveLevelBtnText = `Save Level ${currentLevelIndex + 1 + 1}`;
 						addSearchParam(`${currentLevelIndex}`);
 					}
-					if(items.length === currentLevelIndex+1) {
-						navigate('/staff-dashboard/mech?tab=assessments')
+					if (items.length === currentLevelIndex + 1) {
+						navigate('/staff-dashboard/mech?tab=assessments');
 					}
 				})
 				.catch((err) => {

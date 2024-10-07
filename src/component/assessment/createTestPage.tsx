@@ -32,7 +32,7 @@ export const CreateAssessment = () => {
 		}
 	}, [element]);
 
-	console.log('33333333---------> ', localStorage.getItem('createQuestions'))
+	console.log('33333333---------> ', localStorage.getItem('createQuestions'));
 
 	return (
 		<div className="relative flex w-full h-full bg-white">

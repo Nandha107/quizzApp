@@ -149,25 +149,23 @@ export function useStudents() {
 			// refetchInterval: false,
 			staleTime: 60000,
 		});
-		const studentDetails = ({ studentId }:{studentId:string}) =>
-			useQuery({
-				queryKey: ['tests-students', studentId],
-				queryFn: async () => {
-					try {
-						const response = await axios.get(
-							`/responses/student/details/${studentId}`,
-						
-						);
-						return response.data as StudentTestData
-
-					} catch (error) {
-						console.error('Error fetching tests for student:', error);
-						throw error;
-					}
-				},
-				enabled: Boolean(studentId),
-				staleTime: 60000,
-			});
+	const studentDetails = ({ studentId }: { studentId: string }) =>
+		useQuery({
+			queryKey: ['tests-students', studentId],
+			queryFn: async () => {
+				try {
+					const response = await axios.get(
+						`/responses/student/details/${studentId}`,
+					);
+					return response.data as StudentTestData;
+				} catch (error) {
+					console.error('Error fetching tests for student:', error);
+					throw error;
+				}
+			},
+			enabled: Boolean(studentId),
+			staleTime: 60000,
+		});
 	return {
 		tests,
 		CreateResponse,
