@@ -3,6 +3,7 @@ import { AssessmentClient } from '../services/staff/Assessments/assessmentClient
 import toast from 'react-hot-toast';
 import { useEffect } from 'react';
 import { assessmentStore } from '../store/staff/assessments';
+import axios from 'axios';
 
 export const useAssessments = ({
 	course,
@@ -102,7 +103,67 @@ export const useAssessments = ({
 	// 		);
 	// 	},
 	// });
+	const uploadImage = useMutation({
+		mutationFn: async (param: { file: FormData }) => {
+			try {
+				console.log(param);
+				const res = await axios.post<any>(`/tests/upload-image`, param.file);
+				return res.data;
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
 
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
+		},
+		onError: (error) => {
+			toast.error(error.message ?? 'Sorry, Failed to Update a image please try again');
+		},
+	});
+	const updateImage = useMutation({
+		mutationFn: async (param: { file: FormData; oldKey: string }) => {
+			try {
+				console.log(param);
+				const res = await axios.put<any>(`/tests/update/image`, param.file, {
+					params: {
+						oldKey: param.oldKey,
+					},
+				});
+				return res.data;
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
+
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
+		},
+		onError: (error) => {
+			toast.error(error.message ?? 'Sorry, Failed to Update a image please try again');
+		},
+	});
+	const deleteImage = useMutation({
+		mutationFn: async (param: { fileKey: string }) => {
+			try {
+				console.log(param);
+				const res = await axios.delete<any>(`/tests/delete/image`, { params: param });
+				return res.data;
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
+
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
+		},
+		onError: (error) => {
+			toast.error(error.message ?? 'Sorry, Failed to Update a image please try again');
+		},
+	});
 	useEffect(() => {
 		if (getAssessment.data && assessmentId) {
 			storeAssessment.populate({ ...getAssessment.data });
@@ -116,5 +177,8 @@ export const useAssessments = ({
 		createAssessment,
 		updateAssessment,
 		getAssessmentLevel,
+		uploadImage,
+		updateImage,
+		deleteImage,
 	};
 };
