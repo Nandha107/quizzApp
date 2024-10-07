@@ -50,9 +50,9 @@ export const QuestionsPreviewPart = () => {
 									return (
 										<div key={index} className="flex flex-col gap-4">
 											<p className="px-2 text-xl font-bold">
-												{' '}
 												{index + 1}. {question.question}
 											</p>
+											{question.enableImage?<img src={question.imageUrl}/>:null}
 											<div className="flex flex-col gap-2 min-w-[80%] max-w-full">
 												{question.options.length ? (
 													question.options.map(
