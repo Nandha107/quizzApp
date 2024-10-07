@@ -1,8 +1,12 @@
-import { useSearchParams } from 'react-router-dom';
-import { useAssessments } from '../../hooks/useAssessment';
-// import { assessmentStore } from '../../store/staff/assessments';
+import toast from 'react-hot-toast';
 import { AssessmentsStoreTypes } from '../../types/store/assessments';
+import { PrimaryButton } from '../buttons/primaryButton';
 import { TextArea } from '../inputs/textArea';
+import { useAssessments } from '../../hooks/useAssessment';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { assessmentStore } from '../../store/staff/assessments';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 // Assuming `AssessmentsStoreTypes.AssessmentData` has certain keys
 type createQuestionPayload = AssessmentsStoreTypes.Questions;
@@ -10,42 +14,115 @@ type createQuestionPayload = AssessmentsStoreTypes.Questions;
 // Omit specific keys from the type
 type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
 
-export const QuestionsPreviewPart = () => {
-	// const storeAssessment = assessmentStore();
+export const QuestionsPreviewPart = ({
+	previewData,
+}: {
+	previewData: OmittedCreateQuestionPayload[];
+}) => {
+	const { levels, levelsCount, resetAssessmentStore } = assessmentStore();
 
-	const [searchParams, _] = useSearchParams();
+	const navigate = useNavigate();
 
-	const getLevelId = searchParams.get('levelId');
+	const { dept } = useParams();
 
-	console.log({ getLevelId });
+	const [searchParams, setSearchParams] = useSearchParams();
 
-	const { getAssessmentLevel } = useAssessments({ levelId: getLevelId as string });
+	const [btnText, setBtnText] = useState('Save');
 
-	const getLocalStorageQuestionsItem = localStorage.getItem('createQuestions');
+	const assessmentId = searchParams.get('assessmentId') as string;
 
-	const localStorageQuestions = JSON.parse(getLocalStorageQuestionsItem as string);
+	const levelId = searchParams.get('levelId') as string;
 
-	console.log({ localStorageQuestions });
+	const { updateAssessment } = useAssessments({ assessmentId });
 
-	const getLevelQues = getAssessmentLevel.data?.questions as OmittedCreateQuestionPayload[];
+	const currentLevelIndex = levels?.findIndex((level) => level?.id === levelId) + 1;
 
-	console.log({ getLevelQues });
+	const nextLevelIndex = levels?.findIndex((level) => level?.id === levelId) + 1 + 1;
 
-	const quesPreview = localStorageQuestions?.length ? localStorageQuestions : getLevelQues;
+	const nextLevel = levels[currentLevelIndex];
 
-	console.log({ quesPreview });
+	const handleSaveLevel = (e: React.FormEvent) => {
+		e.preventDefault();
 
-	// console.log({ getLevelQues });
+		const storedQuestions = localStorage.getItem(`createQuestions`);
+
+		if (!storedQuestions) return;
+
+		const questions = JSON.parse(storedQuestions);
+
+		try {
+			const updateAssessmentLevel = updateAssessment
+				.mutateAsync({
+					levelId: levelId as string,
+					body: {
+						levelName: `Level ${currentLevelIndex}`,
+						levelNo: currentLevelIndex,
+						marks: 1,
+						minusMarks: 1,
+						questions: [...questions],
+					},
+				})
+				.then((res) => {
+					console.log('updateAssessmentLevel res', res);
+					localStorage.removeItem(`createQuestions`);
+
+					console.log({ itemsLength: levels.length });
+					console.log({ currentLevelIndex });
+
+					if (levelsCount > currentLevelIndex) {
+						const updatedParams = new URLSearchParams(searchParams);
+						updatedParams.set('levelId', `${nextLevel.id}`); // Adding 'levelId' parameter
+						setSearchParams(updatedParams);
+					} else {
+						if (levelsCount === currentLevelIndex) {
+							resetAssessmentStore();
+							navigate(`/staff-dashboard/${dept}?tab=assessments`);
+						}
+					}
+				})
+				.catch((err) => {
+					console.log('updateAssessmentLevel err', err);
+				});
+
+			toast.promise(
+				updateAssessmentLevel,
+				{
+					loading: 'Assessment Level Updating...',
+					success: 'Assessment Level Updated Successfully',
+					error: () =>
+						updateAssessment.isError
+							? (updateAssessment.error as any).message
+							: 'Sorry! failed to Update Assessment Level, please try again later',
+				},
+
+				{ id: 'Toast' },
+			);
+		} catch (err) {
+			console.log('Cannot Create Levels and Questions Assessment ====> ', err);
+		}
+	};
+
+	useEffect(() => {
+		if (levelsCount > currentLevelIndex) {
+			setBtnText(`Save & Go To Level ${nextLevelIndex}`);
+		} else {
+			if (levelsCount === currentLevelIndex) {
+				setBtnText('Ready to Publish');
+			}
+		}
+	}, [levelId, levels.length]);
+
 	return (
 		<div className="flex flex-col w-full h-full pr-5">
 			<div className="flex items-center h-[7%]">
 				<p className="text-2xl font-semibold">Preview</p>
 			</div>
-			<div className="flex flex-col h-[91.5%] items-center gap-3 px-16 py-8 overflow-y-scroll border border-gray-300 rounded-lg bg-gray-300/15">
+			<div className="flex flex-col h-[86%] items-center gap-3 px-16 py-8 overflow-y-scroll border border-gray-300 rounded-lg bg-gray-300/15">
+				{/* <div className="flex flex-col h-[91.5%] items-center gap-3 px-16 py-8 overflow-y-scroll border border-gray-300 rounded-lg bg-gray-300/15"> */}
 				<div className="flex flex-col w-full gap-3">
-					{quesPreview ? (
+					{previewData?.length ? (
 						<>
-							{quesPreview.map(
+							{previewData.map(
 								(question: OmittedCreateQuestionPayload, index: number) => {
 									return (
 										<div key={index} className="flex flex-col gap-4">
@@ -96,6 +173,14 @@ export const QuestionsPreviewPart = () => {
 						<>No More Questions...</>
 					)}
 				</div>
+			</div>
+			<div className=" h-[7%] flex items-center justify-end">
+				<PrimaryButton
+					text={btnText}
+					type="button"
+					className="h-[5rem] max-h-[5rem] md:h-[3rem] md:max-h-[3rem]"
+					onClick={handleSaveLevel}
+				/>
 			</div>
 		</div>
 	);

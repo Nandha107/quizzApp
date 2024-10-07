@@ -42,6 +42,8 @@ declare module Assessments {
 		id: string;
 		question: string;
 		questionType: CHOICE | TEXTAREA;
+		imageUrl: string;
+		enableImage: boolean;
 		options: { value: string }[];
 		answer: string;
 		timer: {

@@ -1,6 +1,6 @@
 import { Radio, Tabs, TabsProps } from 'antd';
 import { assessmentStore } from '../../store/staff/assessments';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Input } from '../inputs/input';
 import TimeDurationSelect from '../inputs/timePicker';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
@@ -8,9 +8,7 @@ import { AssessmentsStoreTypes } from '../../types/store/assessments';
 import { FaPlus, FaTimes } from 'react-icons/fa';
 import { TextArea } from '../inputs/textArea';
 import { PrimaryOutlineButton } from '../buttons/primaryOutlineButton';
-import { PrimaryButton } from '../buttons/primaryButton';
 import { useAssessments } from '../../hooks/useAssessment';
-import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import ImageUploader from '../ImageUploder/main';
 
@@ -20,16 +18,18 @@ type createQuestionPayload = AssessmentsStoreTypes.Questions;
 // Omit specific keys from the type
 type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
 
-export const AssessmentQuestionsPart = () => {
+export const AssessmentQuestionsPart = ({
+	onSubmit,
+}: {
+	onSubmit: (newData: OmittedCreateQuestionPayload) => void;
+}) => {
 	const storeAssessment = assessmentStore();
-
-	const navigate = useNavigate();
 
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	const assessmentId = searchParams.get('assessmentId') as string;
 
-	const { updateAssessment, uploadImage, deleteImage, updateImage } = useAssessments({
+	const { uploadImage, deleteImage, updateImage } = useAssessments({
 		assessmentId,
 	});
 
@@ -51,14 +51,6 @@ export const AssessmentQuestionsPart = () => {
 	}));
 
 	const currentTab = items?.find((item) => item.id === currentLevelId);
-
-	let currentLevelIndex = items.findIndex((item) => item.id === currentLevelId);
-
-	console.log(items.length);
-
-	let saveLevelBtnText = `Save Level ${currentLevelIndex + 1}`;
-
-	// console.log({ levelIndex: currentLevelIndex });
 
 	// Function to add new search parameters
 	const addSearchParam = (key: string) => {
@@ -98,8 +90,6 @@ export const AssessmentQuestionsPart = () => {
 
 	const chooseQuestionType = watch('questionType');
 
-	// console.log({ chooseQuestionType });
-
 	const { fields, append, remove } = useFieldArray({
 		// const { fields, append, remove, update } = useFieldArray({
 		control, // Pass control to useFieldArray hook
@@ -107,20 +97,8 @@ export const AssessmentQuestionsPart = () => {
 	});
 
 	const handleCreateAssessmentQuestions = (data: OmittedCreateQuestionPayload) => {
-		// console.log(watch('questionType'));
-		// console.log({ data });
-		const storedQuestions = localStorage.getItem('createQuestions');
-		const questions = storedQuestions ? JSON.parse(storedQuestions) : [];
-		console.log(data);
-		localStorage.setItem(
-			`createQuestions`,
-			JSON.stringify([
-				...questions,
-				{ ...data, imageUrl: uploaded ? imageUrl : '', enableImage: uploaded },
-			]),
-		);
+		onSubmit({ ...data, imageUrl: uploaded ? imageUrl : '', enableImage: uploaded });
 		reset();
-		window.location.reload();
 	};
 
 	const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -225,71 +203,12 @@ export const AssessmentQuestionsPart = () => {
 	const handleDragLeave = () => {
 		setDragging(false);
 	};
-	console.log(imageUrl);
-
-	const handleSaveLevel = () => {
-		const storedQuestions = localStorage.getItem(`createQuestions`);
-
-		if (!storedQuestions) return;
-
-		const questions = JSON.parse(storedQuestions);
-
-		try {
-			const updateAssessmentLevel = updateAssessment
-				.mutateAsync({
-					levelId: currentLevelId as string,
-					body: {
-						levelName: `Level ${currentLevelIndex + 1}`,
-						levelNo: currentLevelIndex + 1,
-						marks: 1,
-						minusMarks: 1,
-						questions: [...questions],
-					},
-				})
-				.then((res) => {
-					console.log('updateAssessmentLevel res', res);
-					localStorage.removeItem(`createQuestions`);
-
-					if (storeAssessment.levelsCount > currentLevelIndex + 1) {
-						console.log(111111444444);
-						currentLevelIndex = currentLevelIndex + 1 + 1;
-						saveLevelBtnText = `Save Level ${currentLevelIndex + 1 + 1}`;
-						addSearchParam(`${currentLevelIndex}`);
-					}
-					if (items.length === currentLevelIndex + 1) {
-						navigate('/staff-dashboard/mech?tab=assessments');
-					}
-				})
-				.catch((err) => {
-					console.log('updateAssessmentLevel err', err);
-				});
-
-			toast.promise(
-				updateAssessmentLevel,
-				{
-					loading: 'Assessment Level Updating...',
-					success: 'Assessment Level Updated Successfully',
-					error: () =>
-						updateAssessment.isError
-							? (updateAssessment.error as any).message
-							: 'Sorry! failed to Update Assessment Level, please try again later',
-				},
-
-				{ id: 'Toast' },
-			);
-		} catch (err) {
-			console.log('Cannot Create Levels and Questions Assessment ====> ', err);
-		}
-	};
 
 	useEffect(() => {
 		if (chooseQuestionType === 'TEXTAREA') {
 			setValue('options', []);
 		}
 	}, [chooseQuestionType]);
-	const url = 'https://questions-image.s3.eu-north-1.amazonaws.com//a52a9168a5986195b0c5';
-	const id = url.split('/').pop();
-	console.log(id);
 	return (
 		<form
 			className="flex flex-col w-full h-full gap-5 p-3"
@@ -309,7 +228,7 @@ export const AssessmentQuestionsPart = () => {
 				/>
 
 				<div className="flex flex-col w-full gap-5">
-					<div className='w-full'>
+					<div className="w-full">
 						<ImageUploader
 							handleRemoveImage={handleRemoveImage}
 							handleUpdateImage={handleUpdateImage}
@@ -430,17 +349,11 @@ export const AssessmentQuestionsPart = () => {
 				</div>
 			</div>
 			{/* Submit Buttons */}
-			<div className="flex justify-between w-full lg:mt-auto">
+			<div className="flex justify-end w-full">
 				<PrimaryOutlineButton
 					text={`Add Question`}
 					type="submit"
 					className="h-[5rem] max-h-[5rem] md:h-[3rem] md:max-h-[3rem] w-[45%] md:w-[25%]"
-				/>
-				<PrimaryButton
-					text={saveLevelBtnText}
-					type="button"
-					className="h-[5rem] max-h-[5rem] md:h-[3rem] md:max-h-[3rem] w-[45%] md:w-[25%]"
-					onClick={handleSaveLevel}
 				/>
 			</div>
 		</form>
