@@ -11,7 +11,8 @@ import { PrimaryOutlineButton } from '../buttons/primaryOutlineButton';
 import { PrimaryButton } from '../buttons/primaryButton';
 import { useAssessments } from '../../hooks/useAssessment';
 import toast from 'react-hot-toast';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import ImageUploader from '../ImageUploder/main';
 
 // Assuming `AssessmentsStoreTypes.AssessmentData` has certain keys
 type createQuestionPayload = AssessmentsStoreTypes.Questions;
@@ -28,7 +29,17 @@ export const AssessmentQuestionsPart = () => {
 
 	const assessmentId = searchParams.get('assessmentId') as string;
 
-	const { updateAssessment } = useAssessments({ assessmentId });
+	const { updateAssessment, uploadImage, deleteImage, updateImage } = useAssessments({
+		assessmentId,
+	});
+
+	const [imageUrl, setImageUrl] = useState('https://i.ibb.co/fDZxHTp/Vector-1.png');
+
+	const [dragging, setDragging] = useState(false);
+
+	const [uploaded, setUploaded] = useState(false);
+
+	const [error, setError] = useState<string | null>(null);
 
 	const currentLevelId = searchParams.get('levelId') as string;
 
@@ -100,11 +111,121 @@ export const AssessmentQuestionsPart = () => {
 		// console.log({ data });
 		const storedQuestions = localStorage.getItem('createQuestions');
 		const questions = storedQuestions ? JSON.parse(storedQuestions) : [];
-
-		localStorage.setItem(`createQuestions`, JSON.stringify([...questions, data]));
+		console.log(data);
+		localStorage.setItem(
+			`createQuestions`,
+			JSON.stringify([
+				...questions,
+				{ ...data, imageUrl: uploaded ? imageUrl : '', enableImage: uploaded },
+			]),
+		);
 		reset();
 		window.location.reload();
 	};
+
+	const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			if (file.size > 1 * 1024 * 1024) {
+				// 10 MB size limit
+				setError('File size should be less than 1 MB');
+				return;
+			}
+
+			const reader = new FileReader();
+			reader.onloadend = async () => {
+				setImageUrl(reader.result as string);
+
+				const formData = new FormData();
+
+				const FormattedFile = file;
+
+				formData.append('file', FormattedFile);
+
+				await uploadImage.mutateAsync({ file: formData }).then((res) => {
+					setImageUrl(res.url);
+					setUploaded(true);
+				});
+
+				setError(null);
+			};
+
+			reader.readAsDataURL(file);
+		}
+	};
+	const handleUpdateImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			if (file.size > 1 * 1024 * 1024) {
+				// 10 MB size limit
+				setError('File size should be less than 1 MB');
+				return;
+			}
+
+			const reader = new FileReader();
+			reader.onloadend = async () => {
+				setImageUrl(reader.result as string);
+
+				const formData = new FormData();
+
+				const FormattedFile = file;
+
+				formData.append('file', FormattedFile);
+
+				await updateImage
+					.mutateAsync({ file: formData, oldKey: imageUrl.split('/').pop() as any })
+					.then((res) => {
+						setImageUrl(res.url);
+						setUploaded(true);
+					});
+
+				setError(null);
+			};
+
+			reader.readAsDataURL(file);
+		}
+	};
+	const handleRemoveImage = async () => {
+		await deleteImage
+			.mutateAsync({ fileKey: imageUrl.split('/').pop() as any })
+			.then(() => {
+				setUploaded(false);
+				setImageUrl('https://i.ibb.co/fDZxHTp/Vector-1.png');
+			});
+	};
+	const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		setDragging(false);
+		const file = e.dataTransfer.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = async (e) => {
+				setImageUrl(e.target?.result as string);
+
+				const formData = new FormData();
+
+				const FormattedFile = file;
+
+				formData.append('file', FormattedFile);
+
+				await uploadImage.mutateAsync({ file: formData }).then((res) => {
+					setImageUrl(res.url);
+					setUploaded(true);
+				});
+			};
+			reader.readAsDataURL(file);
+		}
+	};
+
+	const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		setDragging(true);
+	};
+
+	const handleDragLeave = () => {
+		setDragging(false);
+	};
+	console.log(imageUrl);
 
 	const handleSaveLevel = () => {
 		const storedQuestions = localStorage.getItem(`createQuestions`);
@@ -135,8 +256,8 @@ export const AssessmentQuestionsPart = () => {
 						saveLevelBtnText = `Save Level ${currentLevelIndex + 1 + 1}`;
 						addSearchParam(`${currentLevelIndex}`);
 					}
-					if(items.length === currentLevelIndex+1) {
-						navigate('/staff-dashboard/mech?tab=assessments')
+					if (items.length === currentLevelIndex + 1) {
+						navigate('/staff-dashboard/mech?tab=assessments');
 					}
 				})
 				.catch((err) => {
@@ -166,7 +287,9 @@ export const AssessmentQuestionsPart = () => {
 			setValue('options', []);
 		}
 	}, [chooseQuestionType]);
-
+	const url = 'https://questions-image.s3.eu-north-1.amazonaws.com//a52a9168a5986195b0c5';
+	const id = url.split('/').pop();
+	console.log(id);
 	return (
 		<form
 			className="flex flex-col w-full h-full gap-5 p-3"
@@ -184,7 +307,20 @@ export const AssessmentQuestionsPart = () => {
 					}}
 					className="items-center justify-center w-full custom-tabs "
 				/>
+
 				<div className="flex flex-col w-full gap-5">
+					<ImageUploader
+						handleRemoveImage={handleRemoveImage}
+						handleUpdateImage={handleUpdateImage}
+						uploaded={uploaded}
+						imageUrl={imageUrl}
+						handleImageChange={handleImageChange}
+						handleDrop={handleDrop}
+						handleDragOver={handleDragOver}
+						handleDragLeave={handleDragLeave}
+						dragging={dragging}
+						loading={uploadImage.isPending}
+					/>
 					{/* Question Input */}
 					<Input
 						label="Add Questions"

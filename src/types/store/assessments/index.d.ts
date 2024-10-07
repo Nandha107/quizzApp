@@ -49,6 +49,8 @@ export namespace AssessmentsStoreTypes {
 		id: string;
 		question: string;
 		// type: string;
+		imageUrl: string;
+		enableImage: boolean;
 		questionType: 'CHOICE' | 'TEXTAREA';
 		options: { value: string }[];
 		answer: string;
