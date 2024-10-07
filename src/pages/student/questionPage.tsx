@@ -13,6 +13,7 @@ import QuizReminderPopup from './reminderPopup';
 import LevelsScorePage from '../../component/pageComponents/student/levelScorePage';
 import { PrimaryButton } from '../../component/buttons/primaryButton';
 import { BackArrow } from '../../assets/svg/backArrow';
+import { LoadingSpinner } from '../../component/spinner/loadingSpinner';
 const formatTime = (seconds: number): string => {
 	const minutes = Math.floor(seconds / 60);
 	const remainingSeconds = seconds % 60;
@@ -20,6 +21,24 @@ const formatTime = (seconds: number): string => {
 		.toString()
 		.padStart(2, '0')}`;
 };
+
+const formatTimeMS = (seconds: number): string => {
+	const minutes = Math.floor(seconds / 60);
+	const remainingSeconds = seconds % 60;
+	return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+  const formatTimeHMS = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
+
+
+// Example usage
+ // Output: "01:31:40"
+
 
 const QuestionPage = () => {
 	const { testId } = useParams() as { testId: string };
@@ -60,9 +79,8 @@ const QuestionPage = () => {
 	const currentLevelLength: any = Test?.data?.levels.length;
 
 	const timerType = Test.data?.timerForWholeTest;
-	const totalTestTime = 10000;
-	const questionTime = currentQuestion?.timer.overAllSeconds;
-
+	const totalTestTime = Test.data?.duration.overAllSeconds;
+	const questionTime = 10;
 	const levelResult = getResultByLevel(
 		(currentLevel as any)?.id,
 		studentId,
@@ -111,9 +129,9 @@ const QuestionPage = () => {
 						if (prevTime && prevTime > 0) {
 							return prevTime - 1;
 						} else {
-							// Time's up! Move to next question
-							handleNext();
 							setTrigger(true);
+							console.log("object")
+							// Time's up! Move to next question
 							return 0; // Set to zero to prevent further processing
 						}
 					});
@@ -131,6 +149,9 @@ const QuestionPage = () => {
 		timerType,
 	]);
 
+	useEffect(() => {
+		handleNext();
+	}, [triggerSubmit, !Test.data?.completed]);
 	useEffect(() => {
 		const handleVisibilityChange = () => {
 			if (document.visibilityState === 'visible') {
@@ -244,7 +265,7 @@ const QuestionPage = () => {
 					testId: testId,
 					selectedOption: response.selectedOption,
 				}));
-
+console.log(triggerSubmit,"totaltimer")
 				const res = triggerSubmitForTotalTimer
 					? await CreateAllLevelResponse.mutateAsync({
 							studentId: studentId,
@@ -345,7 +366,12 @@ const QuestionPage = () => {
 		localStorage.setItem(levelKey, JSON.stringify(responses));
 	};
 
-	if (!Test.data) return <div>Loading...</div>;
+	if (!Test.data)
+		return (
+			<div className="bsolute bg-gray-600/70 w-full h-full flex justify-center items-center">
+				<LoadingSpinner className="text-white font-bold" text="Loading.." />
+			</div>
+		);
 
 	if (submittedPage || (Test as any).data?.completed) {
 		return (
@@ -501,18 +527,21 @@ const QuestionPage = () => {
 						{timerType === true && timeRemaining !== null && (
 							<div className="flex items-center justify-center gap-2 font-bold ">
 								<BsClockHistory className="w-6 h-6" />
-								Time Remaining (Test): {Math.floor(timeRemaining / 60)}:
+								Time Remaining (Test):{formatTimeHMS(timeRemaining)}
+								 {/* {Math.floor(timeRemaining / 60)}:
 								{timeRemaining % 60 < 10 ? '0' : ''}
-								{timeRemaining % 60}
+								{timeRemaining % 60} */}
 							</div>
 						)}
 
 						{timerType === false && questionTimeRemaining !== null && (
-							<div className="font-bold ">
-								Time Remaining (Question):{' '}
-								{Math.floor(questionTimeRemaining / 60)}:
-								{questionTimeRemaining % 60 < 10 ? '0' : ''}
-								{questionTimeRemaining % 60}
+							<div className="font-bold">
+								Time Remaining (Question):{formatTimeMS(questionTimeRemaining)}
+								{/* {String(Math.floor(questionTimeRemaining / 60)).padStart(
+									2,
+									'0',
+								)}
+								:{String(questionTimeRemaining % 60).padStart(2, '0')} */}
 							</div>
 						)}
 					</span>

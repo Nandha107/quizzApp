@@ -50,20 +50,17 @@ const SignUp: React.FC = () => {
 		}
 
 		try {
-			const response = await axios.post(
-				'https://quiz-server-sigma.vercel.app/auth/signup',
-				{
-					name,
-					email,
-					phoneNumber: phone,
-					password,
-					role: 'STUDENT',
-					collegeName,
-					department,
-					GraduationYear: parseInt(graduationYear),
-					RegiterNo: parseInt(registerNo), // Include Register No in the API request
-				},
-			);
+			const response = await axios.post('/auth/signup', {
+				name,
+				email,
+				phoneNumber: phone,
+				password,
+				role: 'STUDENT',
+				collegeName,
+				department,
+				graduationYear: parseInt(graduationYear),
+				registerNo: parseInt(registerNo), // Include Register No in the API request
+			});
 			console.log('Sign-up response:', response.data);
 			navigate('/student-login');
 		} catch (error) {
