@@ -309,18 +309,21 @@ export const AssessmentQuestionsPart = () => {
 				/>
 
 				<div className="flex flex-col w-full gap-5">
-					<ImageUploader
-						handleRemoveImage={handleRemoveImage}
-						handleUpdateImage={handleUpdateImage}
-						uploaded={uploaded}
-						imageUrl={imageUrl}
-						handleImageChange={handleImageChange}
-						handleDrop={handleDrop}
-						handleDragOver={handleDragOver}
-						handleDragLeave={handleDragLeave}
-						dragging={dragging}
-						loading={uploadImage.isPending}
-					/>
+					<div className='w-full'>
+						<ImageUploader
+							handleRemoveImage={handleRemoveImage}
+							handleUpdateImage={handleUpdateImage}
+							uploaded={uploaded}
+							imageUrl={imageUrl}
+							handleImageChange={handleImageChange}
+							handleDrop={handleDrop}
+							handleDragOver={handleDragOver}
+							handleDragLeave={handleDragLeave}
+							dragging={dragging}
+							loading={uploadImage.isPending}
+						/>
+						{error && <p>{error}</p>}
+					</div>
 					{/* Question Input */}
 					<Input
 						label="Add Questions"
