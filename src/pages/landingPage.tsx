@@ -4,7 +4,7 @@ const LandingPage = () => {
 	const navigate = useNavigate();
 
 	return (
-		<div className="min-h-screen absolute background-foam w-full flex flex-col">
+		<div className="min-h-screen absolute w-full flex flex-col">
 			<div className="sphere"></div>
 			<div className="sphere"></div>
 			<div className="sphere"></div>
@@ -29,19 +29,21 @@ const LandingPage = () => {
 					</button>
 				</div>
 			</header>
-			<div className="h-[1px] w-full ml-20 bg-gray-300 absolute bottom-[65px]"></div>
+			{/* <div className="h-[1px] w-full ml-20 bg-gray-300 absolute bottom-[65px] border-4 border-red-900 p-5"></div> */}
 
 			{/* Main Content */}
-			<div className="min-h-[88vh] border-b border-gradient-to-r from-emerald-100 to-emerald-50 relative flex flex-col lg:flex-row">
+			<div className="min-h-[88vh] border-b border-gradient-to-r from-teal-800 to-teal-800 relative flex flex-col lg:flex-row">
+			{/* <div className="min-h-[88vh] border-b border-gradient-to-r from-emerald-100 to-emerald-50 relative flex flex-col lg:flex-row"> */}
 				{/* Left Section */}
-				<div className="h-[410vh] w-[1px] ml-20 bg-gray-300 absolute -top-0"></div>
+				<div className="h-[279vh] w-[1px] ml-20 bg-gray-300 absolute -top-0"></div>
 				<div className="h-[88vh] w-[1px] ml-20 bg-gray-200 absolute left-48 "></div>
-				<div className="h-[410vh] w-[1px] ml-20 bg-gray-300 absolute right-12"></div>
+				<div className="h-[279vh] w-[1px] ml-20 bg-gray-300 absolute right-12"></div>
 				<div className="h-[10vh] w-[1px] ml-20 bg-emerald-500 absolute -left-10 top-20"></div>
 
-				<div className="bg-gradient-to-r from-emerald-100 to-emerald-50 w-full rounded-tr-[150px] lg:rounded-tr-[407px] lg:w-[70%] flex flex-col justify-center pl-6 md:pl-12 lg:pl-28 py-8 lg:py-0">
+				<div className="bg-gradient-to-r from-teal-600/40 to-teal-600/20 w-full rounded-tr-[150px] lg:rounded-tr-[407px] lg:w-[80%] flex flex-col justify-center pl-6 md:pl-12 lg:pl-28 py-8 lg:py-0">
+				{/* <div className="bg-gradient-to-r from-emerald-100 to-emerald-50 w-full rounded-tr-[150px] lg:rounded-tr-[407px] lg:w-[70%] flex flex-col justify-center pl-6 md:pl-12 lg:pl-28 py-8 lg:py-0"> */}
 					<div className="w-[80%] lg:w-[63%]">
-						<h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-emerald-800 to-emerald-500 bg-clip-text text-transparent mb-4">
+						<h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-emerald-800 to-teal-500 bg-clip-text text-transparent mb-4">
 							Welcome to Assessment
 						</h1>
 						<p className="text-black mb-6 m-plus-rounded-1c-thin text-lg tracking-[0.2em] md:text-base">
@@ -51,7 +53,7 @@ const LandingPage = () => {
 						</p>
 						<button
 							onClick={() => navigate('/student-signup')}
-							className="bg-gradient-to-r absolute  z-50 transition hover:scale-105 cursor-pointer from-emerald-500 to-emerald-900 text-white px-6 py-2"
+							className="bg-gradient-to-r absolute z-50 transition hover:scale-105 cursor-pointer from-emerald-500 to-emerald-900 text-white px-6 py-2"
 						>
 							Get Started <i className="fas fa-arrow-right ml-2"></i>
 						</button>
@@ -67,11 +69,11 @@ const LandingPage = () => {
 				{/* Right Section (Overlapping Boxes) */}
 				<div className="lg:absolute top-[60px] right-0 lg:right-[780px]">
 					<div className="bg-orange-300 relative w-full lg:w-[100%]">
-						<div className="h-[40vh] lg:h-[70vh] w-[90vw] lg:w-[750px] rounded-bl-[100px] lg:rounded-bl-[200px] border border-gray-300 absolute z-10 top-7 left-4 lg:left-12 flex items-center justify-center text-white text-base font-medium">
+						<div className="h-[40vh] lg:h-[70vh] w-[50vw] lg:w-[735px] rounded-bl-[100px] lg:rounded-bl-[200px] border border-gray-300 absolute z-10 top-7 left-4 lg:left-12 flex items-center justify-center text-white text-base font-medium">
 							z-10
 						</div>
 						<div className="h-[40vh] lg:h-[70vh] w-[90vw] lg:w-[700px] rounded-bl-[200px] lg:rounded-bl-[200px] border absolute z-20 top-0 left-8 lg:left-20 flex items-center justify-center text-white text-base font-medium animate-slide-in">
-							<div className="relative overflow-hidden rounded-bl-[100px] lg:rounded-bl-[200px] h-[40vh] lg:h-[70vh] w-[90vw] lg:w-[700px]">
+							<div className="relative overflow-hidden rounded-bl-[100px] lg:rounded-bl-[180px] h-[40vh] lg:h-[70vh] w-[90vw] lg:w-[700px]">
 								<img
 									src="https://storage.googleapis.com/a1aa/image/ukoFQUTyseShTiNgXvHVxEeOUYhH8PINiGZnKH8DCc4PlrfmA.jpg"
 									alt="Students taking a quiz in a classroom"
