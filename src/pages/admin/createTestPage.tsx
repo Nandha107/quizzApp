@@ -1,16 +1,16 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { BackArrow } from '../../assets/svg/backArrow';
-import { AssessmentConfigPart } from './assessmentConfigPart';
-import { AssessmentQuestionsPart } from './createQuestionsPage';
+import { AssessmentConfigPart } from '../../component/assessment/assessmentConfigPart';
+import { AssessmentQuestionsPart } from '../../component/assessment/createQuestionsPage';
 import { useAssessments } from '../../hooks/useAssessment';
 import { assessmentStore } from '../../store/staff/assessments';
-import { QuestionsPreviewPart } from './questionsPreviewPage';
+import { QuestionsPreviewPart } from '../../component/assessment/questionsPreviewPage';
 import { useEffect, useState } from 'react';
-import { LoadingSpinner } from '../spinner/loadingSpinner';
+import { LoadingSpinner } from '../../component/spinner/loadingSpinner';
 import { AssessmentsStoreTypes } from '../../types/store/assessments';
-import { PrimaryButton } from '../buttons/primaryButton';
+import { PrimaryButton } from '../../component/buttons/primaryButton';
 import { AiFillAlert } from 'react-icons/ai';
-import AiGenerateQuestionPopup from './aiGenerateQuestionPopup';
+import AiGenerateQuestionPopup from '../../component/assessment/aiGenerateQuestionPopup';
 import { extractCodeFromResponse } from '../../utils/extractQuestionsFromAiResponse';
 import { Config } from '../../config';
 
@@ -242,7 +242,7 @@ export const CreateAssessment = () => {
 			) : null}
 
 			   {/* AI Generate Question Popup */}
-			   <AiGenerateQuestionPopup loding={generateAiQuestions.isPending} handleGenerate={handleGenerate} isOpen={isPopupOpen} onClose={closeAiPopup} />
+			   <AiGenerateQuestionPopup loading={generateAiQuestions.isPending} handleGenerate={handleGenerate} isOpen={isPopupOpen} onClose={closeAiPopup} />
 		</div>
 	);
 };

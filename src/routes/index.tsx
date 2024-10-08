@@ -8,7 +8,7 @@ import CoursesPage from '../pages/admin/coursesPage';
 import QuestionPage from '../pages/student/questionPage';
 import ResultPage from '../pages/student/ResultPage';
 import { insecureRoutes } from './insecureRoutes';
-import { CreateAssessment } from '../component/assessment/createTestPage';
+import { CreateAssessment } from '../pages/admin/createTestPage';
 
 export const router = createBrowserRouter([
 	{

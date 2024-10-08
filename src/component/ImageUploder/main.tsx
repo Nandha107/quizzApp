@@ -41,7 +41,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 					<img
 						src={imageUrl || ''} // Use empty string if imageUrl is undefined
 						alt="Preview"
-						className={`mx-auto h-40 w-40 object-cover rounded ${loading ? 'animate-pulse' : ''}`}
+						className={`h-40 w-40 object-cover rounded ${loading ? 'animate-pulse' : ''}`}
 					/>
 					<div className="flex flex-col items-center gap-2">
 						<p className="text-gray-700">Drag & Drop image here</p>

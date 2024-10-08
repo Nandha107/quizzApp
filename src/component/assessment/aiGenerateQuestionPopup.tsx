@@ -13,12 +13,12 @@ type handleGenerateProps = {
 
 interface PopupProps {
   isOpen: boolean;
-  loding:boolean,
+  loading:boolean,
   onClose: () => void;
   handleGenerate: (value: handleGenerateProps) => void;
 }
 
-const AiGenerateQuestionPopup: React.FC<PopupProps> = ({ isOpen, onClose, handleGenerate,loding }) => {
+const AiGenerateQuestionPopup: React.FC<PopupProps> = ({ isOpen, onClose, handleGenerate,loading: loding }) => {
   const [topic, setTopic] = useState<string>('');
   const [generateImage, setGenerateImage] = useState<boolean>(false);
   const [numberOfQuestions, setNumberOfQuestions] = useState<number>(5);
