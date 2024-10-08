@@ -5,8 +5,6 @@ import StaffDashboard from '../pages/admin/dashboard';
 import StudentDashboard from '../pages/student/dashboard';
 import AssessmentDetails from '../component/assessment/assessmentDetails';
 import CoursesPage from '../pages/admin/coursesPage';
-import CreateTestPage from '../pages/admin/createTest';
-// import AssessmentCreateModal from '../component/assessment/assessmentCreateModal';
 import QuestionPage from '../pages/student/questionPage';
 import ResultPage from '../pages/student/ResultPage';
 import { insecureRoutes } from './insecureRoutes';
@@ -33,14 +31,6 @@ export const router = createBrowserRouter([
 					{
 						path: 'create-assessment/:dept',
 						element: <CreateAssessment />,
-					},
-					// {
-					// 	path: 'create-assessment/:dept',
-					// 	element: <AssessmentCreateModal />,
-					// },
-					{
-						path: 'staff-dashboard/:dept/:assessmentId/create-level',
-						element: <CreateTestPage />,
 					},
 					{
 						path: 'assessment-analytics/:assessmentId',
