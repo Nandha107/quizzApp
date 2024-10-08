@@ -4,6 +4,8 @@ import toast from 'react-hot-toast';
 import { useEffect } from 'react';
 import { assessmentStore } from '../store/staff/assessments';
 import axios from 'axios';
+import GenerativeAI from '../utils/gemini-ai'
+
 
 export const useAssessments = ({
 	course,
@@ -164,6 +166,29 @@ export const useAssessments = ({
 			toast.error(error.message ?? 'Sorry, Failed to Update a image please try again');
 		},
 	});
+
+	const generateAiQuestions = useMutation({
+		mutationFn: async (param: { prompt: string }) => {
+			try {
+				console.log(param.prompt);
+				const res = await GenerativeAI.generateContent(param.prompt)
+
+				return res;
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
+
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: ['ai-questions'] });
+			toast.success( 'Generate ai support questions succesfully :)');
+
+		},
+		onError: (error) => {
+			toast.error(error.message ?? 'Sorry, Failed to Generate ai support questions please try again');
+		},
+	});
 	useEffect(() => {
 		if (getAssessment.data && assessmentId) {
 			storeAssessment.populate({ ...getAssessment.data });
@@ -180,5 +205,6 @@ export const useAssessments = ({
 		uploadImage,
 		updateImage,
 		deleteImage,
+		generateAiQuestions
 	};
 };

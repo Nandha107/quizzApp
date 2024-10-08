@@ -8,6 +8,11 @@ import { QuestionsPreviewPart } from './questionsPreviewPage';
 import { useEffect, useState } from 'react';
 import { LoadingSpinner } from '../spinner/loadingSpinner';
 import { AssessmentsStoreTypes } from '../../types/store/assessments';
+import { PrimaryButton } from '../buttons/primaryButton';
+import { AiFillAlert } from 'react-icons/ai';
+import AiGenerateQuestionPopup from './aiGenerateQuestionPopup';
+import { extractCodeFromResponse } from '../../utils/extractQuestionsFromAiResponse';
+import { Config } from '../../config';
 
 // Assuming `AssessmentsStoreTypes.AssessmentData` has certain keys
 type createQuestionPayload = AssessmentsStoreTypes.Questions;
@@ -15,6 +20,15 @@ type createQuestionPayload = AssessmentsStoreTypes.Questions;
 // Omit specific keys from the type
 type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
 
+type  handleGenerateProps = {
+    topic:string,
+    generateImage?:boolean,
+    numberOfQuestions:number,
+    answerTypeOptions:boolean,
+    answerTypeTextArea:boolean,
+    timeDurationType:string
+
+}
 export const CreateAssessment = () => {
 	const navigate = useNavigate();
 
@@ -24,13 +38,41 @@ export const CreateAssessment = () => {
 
 	const storeAssessment = assessmentStore();
 
+
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+
+
+	const openAiPopup = () => {
+	  setIsPopupOpen(true);
+	};
+  
+	const closeAiPopup = () => {
+	  setIsPopupOpen(false);
+	};
+	const [edit, setEdit] = useState(false);
+
+	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+	const [formValues, setFormValues] = useState<OmittedCreateQuestionPayload>({
+		question: '',
+		timer: { hours: 0, minutes: 1, overAllSeconds: 0 },
+		questionType: 'CHOICE',
+		options: [{ value: '' }],
+		answer: '',
+		enableImage: false,
+		imageUrl: '',
+		// correctAnswer: '', // Uncomment if needed
+	});
+
+
 	const assessmentId = searchParams.get('assessmentId') as string;
 
 	const levelId = searchParams.get('levelId') as string;
 
 	const getAssessmentLevel = storeAssessment.levels.find((level) => level.id === levelId);
 
-	const { getAssessment } = useAssessments({ assessmentId: assessmentId });
+	const { getAssessment,generateAiQuestions } = useAssessments({ assessmentId: assessmentId });
 
 	const element = document.getElementById('create_ques_part');
 
@@ -48,9 +90,9 @@ export const CreateAssessment = () => {
 	useEffect(() => {
 		const questions = getAssessmentLevel?.questions as OmittedCreateQuestionPayload[];
 
-		if (questions?.length ) {
+		if (questions?.length) {
 			setPreviewData([...questions]);
-		}else {
+		} else {
 			setPreviewData([]);
 		}
 	}, [levelId, storeAssessment.id]);
@@ -62,13 +104,80 @@ export const CreateAssessment = () => {
 
 		setPreviewData([...storedQuestions]);
 	};
+	const handleUpdateQuestion = (data: OmittedCreateQuestionPayload) => {
+		console.log(data);
+		const questionsData = localStorage.getItem('createQuestions');
+	
+		if (questionsData) {
+			let questionsArray: OmittedCreateQuestionPayload[] = JSON.parse(questionsData);
 
+			questionsArray[currentQuestionIndex as number] = data;
+
+			localStorage.setItem('createQuestions', JSON.stringify(questionsArray));
+
+			setPreviewData([...questionsArray]);
+			setFormValues({
+				question: '',
+				timer: { hours: 0, minutes: 1, overAllSeconds: 0 },
+				questionType: 'CHOICE',
+				options: [{ value: '' }],
+				answer: '',
+				enableImage: false,
+				imageUrl: '',
+			})
+			setEdit(false)
+			setCurrentQuestionIndex(0)
+
+		} else {
+			console.error('No questions found in local storage.');
+		}
+	};
+	
+	const handleDeleteQuestion = (index: number) => {
+		const questionsData = localStorage.getItem('createQuestions');
+	
+		if (questionsData) {
+			let questionsArray: OmittedCreateQuestionPayload[] = JSON.parse(questionsData);
+	
+			if (index >= 0 && index < questionsArray.length) {
+				questionsArray.splice(index, 1);
+	
+				localStorage.setItem('createQuestions', JSON.stringify(questionsArray));
+	
+				setPreviewData([...questionsArray]);
+			} else {
+				console.error('Invalid index provided for deletion.');
+			}
+		} else {
+			console.error('No questions found in local storage.');
+		}
+	};
+	
+
+	const handleGenerate = async (data:handleGenerateProps) =>{
+
+
+		const prompt = `create ${dept} ${data.topic} questions count ${data.numberOfQuestions} and ${data.answerTypeOptions&&data.answerTypeTextArea ==false?"only choice questions":""}  ${data.answerTypeTextArea&&data.answerTypeOptions ==false?"only choice textarea":""} ${data.generateImage?"":"Could not add any image url and could not enableImage"} ${data.timeDurationType=='single'?"add timer for every questions":""}`;
+		try {
+			 generateAiQuestions.mutateAsync({prompt:prompt}).then((res) =>{
+			const data = extractCodeFromResponse(res as any) as [];
+			const ParsedData = JSON.parse((data as any)[0]) as OmittedCreateQuestionPayload[];
+			localStorage.setItem('createQuestions', JSON.stringify(ParsedData));
+			setPreviewData([...ParsedData]);
+			setIsPopupOpen(false)
+			});
+			
+		} catch (error) {
+			console.error('Error generating content:', error);
+		} finally {
+		}
+	}
 	return (
 		<div className="relative flex w-full h-full bg-white">
 			<div
-				className={`w-full ${assessmentId ? 'lg:w-[60%]' : 'w-full'} flex flex-col h-full`}
+				className={`w-full ${assessmentId ? 'lg:w-[60%]' : 'w-full'}  flex flex-col h-full`}
 			>
-				<div className="flex items-center gap-3 h-[7%] p-5">
+				<div className="flex items-center gap-3 h-[8%] p-5 ">
 					<div
 						className="px-2 py-2 border border-gray-500 rounded-lg hover:cursor-pointer hover:bg-gray-300"
 						onClick={() => {
@@ -78,7 +187,10 @@ export const CreateAssessment = () => {
 					>
 						<BackArrow />
 					</div>
-					<p className="text-xl font-bold">Create Assessment</p>
+				<div className='flex justify-between w-[92%]'>
+				<p className="text-xl font-bold">Create Assessment</p>
+             {window.location.href===`${Config.environment.APP_URL}/create-assessment/${dept}`?null: <PrimaryButton  onClick={() =>openAiPopup()} icon={<AiFillAlert/>} text={generateAiQuestions.isPending?"Loading..":"Generate with AI"}/>}  
+				</div>
 				</div>
 				<div className="flex flex-col gap-5 px-5 py-3 overflow-auto bg-white">
 					<div className="relative flex flex-col gap-2 px-5 pt-4 border border-gray-400 rounded-lg">
@@ -100,7 +212,11 @@ export const CreateAssessment = () => {
 							className="flex flex-col gap-2 px-5 py-4 border border-gray-400 rounded-lg"
 						>
 							<p className="font-semibold">Create Questions</p>
-							<AssessmentQuestionsPart onSubmit={handleFormSubmit} />
+							<AssessmentQuestionsPart
+						     	onSubmit={edit?handleUpdateQuestion:handleFormSubmit}
+								edit={edit}
+								defaultValues={formValues}
+							/>
 						</div>
 					) : null}
 				</div>
@@ -115,9 +231,18 @@ export const CreateAssessment = () => {
 			) : null}
 			{assessmentId ? (
 				<div className="hidden w-full lg:w-[40%] h-full lg:flex">
-					<QuestionsPreviewPart previewData={previewData} />
+					<QuestionsPreviewPart
+					     handleDelete = {handleDeleteQuestion}
+				     	previewData={previewData}
+						setCurrentQuestionIndex={setCurrentQuestionIndex}
+						setEdit={setEdit}
+						setFormValues={setFormValues}
+					/>
 				</div>
 			) : null}
+
+			   {/* AI Generate Question Popup */}
+			   <AiGenerateQuestionPopup loding={generateAiQuestions.isPending} handleGenerate={handleGenerate} isOpen={isPopupOpen} onClose={closeAiPopup} />
 		</div>
 	);
 };

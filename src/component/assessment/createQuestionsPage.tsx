@@ -11,6 +11,7 @@ import { PrimaryOutlineButton } from '../buttons/primaryOutlineButton';
 import { useAssessments } from '../../hooks/useAssessment';
 import { useEffect, useState } from 'react';
 import ImageUploader from '../ImageUploder/main';
+import { PrimaryButton } from '../buttons/primaryButton';
 
 // Assuming `AssessmentsStoreTypes.AssessmentData` has certain keys
 type createQuestionPayload = AssessmentsStoreTypes.Questions;
@@ -18,11 +19,12 @@ type createQuestionPayload = AssessmentsStoreTypes.Questions;
 // Omit specific keys from the type
 type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
 
-export const AssessmentQuestionsPart = ({
-	onSubmit,
-}: {
-	onSubmit: (newData: OmittedCreateQuestionPayload) => void;
-}) => {
+type Props = {
+	defaultValues: OmittedCreateQuestionPayload;
+	edit: boolean;
+	onSubmit:(newData:OmittedCreateQuestionPayload) =>void
+};
+export const AssessmentQuestionsPart:React.FC<Props>= ({defaultValues,edit,onSubmit}) => {
 	const storeAssessment = assessmentStore();
 
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -32,6 +34,15 @@ export const AssessmentQuestionsPart = ({
 	const { uploadImage, deleteImage, updateImage } = useAssessments({
 		assessmentId,
 	});
+	useEffect(() => {
+		reset(defaultValues);
+		setImageUrl(
+			defaultValues.enableImage
+				? defaultValues.imageUrl
+				: 'https://i.ibb.co/fDZxHTp/Vector-1.png',
+		);
+		setUploaded(defaultValues.enableImage);
+	}, [defaultValues,edit,]);
 
 	const [imageUrl, setImageUrl] = useState('https://i.ibb.co/fDZxHTp/Vector-1.png');
 
@@ -79,11 +90,12 @@ export const AssessmentQuestionsPart = ({
 	const { register, setValue, watch, control, reset, handleSubmit } =
 		useForm<OmittedCreateQuestionPayload>({
 			defaultValues: {
-				question: '',
-				timer: { hours: 0, minutes: 0, overAllSeconds: 0 },
-				questionType: 'CHOICE',
-				options: [{ value: '' }],
-				answer: '',
+				question: defaultValues.question,
+				timer: defaultValues.timer,
+				questionType: defaultValues.questionType,
+				options: defaultValues.options,
+				answer: defaultValues.answer,
+				// ...defaultValues
 				// correctAnswer: '',
 			},
 		});
@@ -209,11 +221,14 @@ export const AssessmentQuestionsPart = ({
 			setValue('options', []);
 		}
 	}, [chooseQuestionType]);
+
+	console.log(edit,"oppoopop")
 	return (
 		<form
 			className="flex flex-col w-full h-full gap-5 p-3"
-			onSubmit={handleSubmit(handleCreateAssessmentQuestions)}
-		>
+			onSubmit={
+					handleSubmit(handleCreateAssessmentQuestions)
+			}		>
 			<div className="">
 				<Tabs
 					items={items}
@@ -349,12 +364,17 @@ export const AssessmentQuestionsPart = ({
 				</div>
 			</div>
 			{/* Submit Buttons */}
-			<div className="flex justify-end w-full">
+			<div className="flex justify-end w-full">{edit?	<PrimaryButton
+					text={'Update Question'}
+					type="submit"
+					className="h-[5rem] max-h-[5rem]  md:h-[3rem] md:max-h-[3rem] w-[45%] md:w-[25%]"
+				/>:
 				<PrimaryOutlineButton
 					text={`Add Question`}
 					type="submit"
 					className="h-[5rem] max-h-[5rem] md:h-[3rem] md:max-h-[3rem] w-[45%] md:w-[25%]"
-				/>
+				/>}
+				
 			</div>
 		</form>
 	);

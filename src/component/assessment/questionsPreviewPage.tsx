@@ -13,11 +13,23 @@ type createQuestionPayload = AssessmentsStoreTypes.Questions;
 
 // Omit specific keys from the type
 type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
+type props = {
+	setFormValues: (value: OmittedCreateQuestionPayload) => void;
 
-export const QuestionsPreviewPart = ({
-	previewData,
-}: {
+	setEdit: (value: boolean) => void;
+
 	previewData: OmittedCreateQuestionPayload[];
+
+	setCurrentQuestionIndex: (value: number) => void;
+
+	handleDelete: (value: number) => void;
+};
+export const QuestionsPreviewPart: React.FC<props> = ({
+	previewData,
+	handleDelete,
+	setCurrentQuestionIndex,
+	setEdit,
+	setFormValues,
 }) => {
 	const { levels, levelsCount, resetAssessmentStore } = assessmentStore();
 
@@ -129,7 +141,9 @@ export const QuestionsPreviewPart = ({
 											<p className="px-2 text-xl font-bold">
 												{index + 1}. {question.question}
 											</p>
-											{question.enableImage?<img src={question.imageUrl}/>:null}
+											{question.enableImage ? (
+												<img src={question.imageUrl} />
+											) : null}
 											<div className="flex flex-col gap-2 min-w-[80%] max-w-full">
 												{question.options.length ? (
 													question.options.map(
@@ -164,6 +178,32 @@ export const QuestionsPreviewPart = ({
 													/>
 												)}
 											</div>
+
+											<div className='flex gap-2 w-full '><p
+												onClick={() => {
+													setCurrentQuestionIndex(index);
+													setEdit(true);
+
+													setFormValues({
+														answer: question.answer,
+														enableImage: question.enableImage,
+														imageUrl: question.imageUrl,
+														options: question.options,
+														question: question.question,
+														questionType: question.questionType,
+														timer: question.timer,
+													});
+												}}
+												className="bg-green-400 p-4 w-full cursor-pointer"
+											>
+												edit
+											</p>
+											<p
+												className="bg-red-400 p-4 w-full cursor-pointer"
+												onClick={() => handleDelete(index)}
+											>
+												delete
+											</p></div>
 										</div>
 									);
 								},

@@ -61,6 +61,8 @@ export type Question = {
 		minutes: number;
 		overAllSeconds: number;
 	};
+	imageUrl:string,
+	enableImage:boolean,
 	levelId: string;
 	createdAt: string;
 	updatedAt: string;
