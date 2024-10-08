@@ -222,7 +222,6 @@ export const AssessmentQuestionsPart:React.FC<Props>= ({defaultValues,edit,onSub
 		}
 	}, [chooseQuestionType]);
 
-	console.log(edit,"oppoopop")
 	return (
 		<form
 			className="flex flex-col w-full h-full gap-5 p-3"
@@ -236,7 +235,6 @@ export const AssessmentQuestionsPart:React.FC<Props>= ({defaultValues,edit,onSub
 					defaultActiveKey={currentTab?.key}
 					activeKey={currentTab?.key}
 					onChange={(key) => {
-						console.log({ key });
 						addSearchParam(key);
 					}}
 					className="items-center justify-center w-full custom-tabs "

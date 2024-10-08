@@ -50,9 +50,6 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 
 	const { updateAssessment } = useAssessments({ assessmentId });
 
-	console.log({ levelsCount });
-	console.log({ currentLevelIndex });
-
 	const nextLevel = levels[currentLevelIndex];
 
 	const handleSaveLevel = (e: React.FormEvent) => {
@@ -79,9 +76,6 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 				.then((res) => {
 					console.log('updateAssessmentLevel res', res);
 					localStorage.removeItem(`createQuestions`);
-
-					console.log({ itemsLength: levels.length });
-					console.log({ currentLevelIndex });
 
 					if (levelsCount > currentLevelIndex) {
 						const updatedParams = new URLSearchParams(searchParams);
