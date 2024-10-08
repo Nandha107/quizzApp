@@ -33,6 +33,9 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 }) => {
 	const { levels, levelsCount, resetAssessmentStore } = assessmentStore();
 
+	const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
+	const [nextLevelIndex, setNextLevelIndex] = useState(1);
+
 	const navigate = useNavigate();
 
 	const { dept } = useParams();
@@ -47,9 +50,8 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 
 	const { updateAssessment } = useAssessments({ assessmentId });
 
-	const currentLevelIndex = levels?.findIndex((level) => level?.id === levelId) + 1;
-
-	const nextLevelIndex = levels?.findIndex((level) => level?.id === levelId) + 1 + 1;
+	console.log({ levelsCount });
+	console.log({ currentLevelIndex });
 
 	const nextLevel = levels[currentLevelIndex];
 
@@ -115,6 +117,16 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 	};
 
 	useEffect(() => {
+		if (levels?.length) {
+			const LevelIndex = levels?.findIndex((level) => level?.id === levelId) + 1;
+			setCurrentLevelIndex(LevelIndex);
+
+			const nextIndex = levels?.findIndex((level) => level?.id === levelId) + 1 + 1;
+			setNextLevelIndex(nextIndex);
+		}
+	}, [levels]);
+
+	useEffect(() => {
 		if (levelsCount > currentLevelIndex) {
 			setBtnText(`Save & Go To Level ${nextLevelIndex}`);
 		} else {
@@ -122,7 +134,7 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 				setBtnText('Ready to Publish');
 			}
 		}
-	}, [levelId, levels.length]);
+	}, [levelId, levels.length, currentLevelIndex]);
 
 	return (
 		<div className="flex flex-col w-full h-full pr-5">
@@ -179,31 +191,34 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 												)}
 											</div>
 
-											<div className='flex gap-2 w-full '><p
-												onClick={() => {
-													setCurrentQuestionIndex(index);
-													setEdit(true);
+											<div className="flex gap-2 w-full ">
+												<p
+													onClick={() => {
+														setCurrentQuestionIndex(index);
+														setEdit(true);
 
-													setFormValues({
-														answer: question.answer,
-														enableImage: question.enableImage,
-														imageUrl: question.imageUrl,
-														options: question.options,
-														question: question.question,
-														questionType: question.questionType,
-														timer: question.timer,
-													});
-												}}
-												className="bg-green-400 p-4 w-full cursor-pointer"
-											>
-												edit
-											</p>
-											<p
-												className="bg-red-400 p-4 w-full cursor-pointer"
-												onClick={() => handleDelete(index)}
-											>
-												delete
-											</p></div>
+														setFormValues({
+															answer: question.answer,
+															enableImage: question.enableImage,
+															imageUrl: question.imageUrl,
+															options: question.options,
+															question: question.question,
+															questionType:
+																question.questionType,
+															timer: question.timer,
+														});
+													}}
+													className="bg-green-400 p-4 w-full cursor-pointer"
+												>
+													edit
+												</p>
+												<p
+													className="bg-red-400 p-4 w-full cursor-pointer"
+													onClick={() => handleDelete(index)}
+												>
+													delete
+												</p>
+											</div>
 										</div>
 									);
 								},
