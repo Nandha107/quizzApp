@@ -20,15 +20,14 @@ type createQuestionPayload = AssessmentsStoreTypes.Questions;
 // Omit specific keys from the type
 type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
 
-type  handleGenerateProps = {
-    topic:string,
-    generateImage?:boolean,
-    numberOfQuestions:number,
-    answerTypeOptions:boolean,
-    answerTypeTextArea:boolean,
-    timeDurationType:string
-
-}
+type handleGenerateProps = {
+	topic: string;
+	generateImage?: boolean;
+	numberOfQuestions: number;
+	answerTypeOptions: boolean;
+	answerTypeTextArea: boolean;
+	timeDurationType: string;
+};
 export const CreateAssessment = () => {
 	const navigate = useNavigate();
 
@@ -38,17 +37,14 @@ export const CreateAssessment = () => {
 
 	const storeAssessment = assessmentStore();
 
-
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-
-
 	const openAiPopup = () => {
-	  setIsPopupOpen(true);
+		setIsPopupOpen(true);
 	};
-  
+
 	const closeAiPopup = () => {
-	  setIsPopupOpen(false);
+		setIsPopupOpen(false);
 	};
 	const [edit, setEdit] = useState(false);
 
@@ -65,14 +61,15 @@ export const CreateAssessment = () => {
 		// correctAnswer: '', // Uncomment if needed
 	});
 
-
 	const assessmentId = searchParams.get('assessmentId') as string;
 
 	const levelId = searchParams.get('levelId') as string;
 
 	const getAssessmentLevel = storeAssessment.levels.find((level) => level.id === levelId);
 
-	const { getAssessment,generateAiQuestions } = useAssessments({ assessmentId: assessmentId });
+	const { getAssessment, generateAiQuestions } = useAssessments({
+		assessmentId: assessmentId,
+	});
 
 	const element = document.getElementById('create_ques_part');
 
@@ -107,7 +104,7 @@ export const CreateAssessment = () => {
 	const handleUpdateQuestion = (data: OmittedCreateQuestionPayload) => {
 		console.log(data);
 		const questionsData = localStorage.getItem('createQuestions');
-	
+
 		if (questionsData) {
 			let questionsArray: OmittedCreateQuestionPayload[] = JSON.parse(questionsData);
 
@@ -124,26 +121,25 @@ export const CreateAssessment = () => {
 				answer: '',
 				enableImage: false,
 				imageUrl: '',
-			})
-			setEdit(false)
-			setCurrentQuestionIndex(0)
-
+			});
+			setEdit(false);
+			setCurrentQuestionIndex(0);
 		} else {
 			console.error('No questions found in local storage.');
 		}
 	};
-	
+
 	const handleDeleteQuestion = (index: number) => {
 		const questionsData = localStorage.getItem('createQuestions');
-	
+
 		if (questionsData) {
 			let questionsArray: OmittedCreateQuestionPayload[] = JSON.parse(questionsData);
-	
+
 			if (index >= 0 && index < questionsArray.length) {
 				questionsArray.splice(index, 1);
-	
+
 				localStorage.setItem('createQuestions', JSON.stringify(questionsArray));
-	
+
 				setPreviewData([...questionsArray]);
 			} else {
 				console.error('Invalid index provided for deletion.');
@@ -152,45 +148,56 @@ export const CreateAssessment = () => {
 			console.error('No questions found in local storage.');
 		}
 	};
-	
 
-	const handleGenerate = async (data:handleGenerateProps) =>{
-
-
-		const prompt = `create ${dept} ${data.topic} questions count ${data.numberOfQuestions} and ${data.answerTypeOptions&&data.answerTypeTextArea ==false?"only choice questions":""}  ${data.answerTypeTextArea&&data.answerTypeOptions ==false?"only choice textarea":""} ${data.generateImage?"":"Could not add any image url and could not enableImage"} ${data.timeDurationType=='single'?"add timer for every questions":""}`;
+	const handleGenerate = async (data: handleGenerateProps) => {
+		const prompt = `create ${dept} ${data.topic} questions count ${data.numberOfQuestions} and ${data.answerTypeOptions && data.answerTypeTextArea == false ? 'only choice questions' : ''}  ${data.answerTypeTextArea && data.answerTypeOptions == false ? 'only choice textarea' : ''} ${data.generateImage ? '' : 'Could not add any image url and could not enableImage'} ${data.timeDurationType == 'single' ? 'add timer for every questions' : ''}`;
 		try {
-			 generateAiQuestions.mutateAsync({prompt:prompt}).then((res) =>{
-			const data = extractCodeFromResponse(res as any) as [];
-			const ParsedData = JSON.parse((data as any)[0]) as OmittedCreateQuestionPayload[];
-			localStorage.setItem('createQuestions', JSON.stringify(ParsedData));
-			setPreviewData([...ParsedData]);
-			setIsPopupOpen(false)
+			generateAiQuestions.mutateAsync({ prompt: prompt }).then((res) => {
+				const data = extractCodeFromResponse(res as any) as [];
+				const ParsedData = JSON.parse(
+					(data as any)[0],
+				) as OmittedCreateQuestionPayload[];
+				localStorage.setItem('createQuestions', JSON.stringify(ParsedData));
+				setPreviewData([...ParsedData]);
+				setIsPopupOpen(false);
 			});
-			
 		} catch (error) {
 			console.error('Error generating content:', error);
 		} finally {
 		}
-	}
+	};
 	return (
 		<div className="relative flex w-full h-full bg-white">
 			<div
 				className={`w-full ${assessmentId ? 'lg:w-[60%]' : 'w-full'}  flex flex-col h-full`}
 			>
-				<div className="flex items-center gap-3 h-[8%] p-5 ">
-					<div
-						className="px-2 py-2 border border-gray-500 rounded-lg hover:cursor-pointer hover:bg-gray-300"
-						onClick={() => {
-							storeAssessment.resetAssessmentStore();
-							navigate(`/staff-dashboard/${dept}?tab=assessments`);
-						}}
-					>
-						<BackArrow />
+				<div className="flex justify-between items-center gap-3 h-[8%] p-5">
+					<div className='flex items-center gap-3 '>
+						<div
+							className="px-2 py-2 border border-gray-500 rounded-lg hover:cursor-pointer hover:bg-gray-300"
+							onClick={() => {
+								storeAssessment.resetAssessmentStore();
+								navigate(`/staff-dashboard/${dept}?tab=assessments`);
+							}}
+						>
+							<BackArrow />
+						</div>
+						<div className="flex justify-between">
+							<p className="text-xl font-bold">Create Assessment</p>
+						</div>
 					</div>
-				<div className='flex justify-between w-[92%]'>
-				<p className="text-xl font-bold">Create Assessment</p>
-             {window.location.href===`${Config.environment.APP_URL}/create-assessment/${dept}`?null: <PrimaryButton  onClick={() =>openAiPopup()} icon={<AiFillAlert/>} text={generateAiQuestions.isPending?"Loading..":"Generate with AI"}/>}  
-				</div>
+					{window.location.href ===
+					`${Config.environment.APP_URL}/create-assessment/${dept}` ? null : (
+						<PrimaryButton
+							onClick={() => openAiPopup()}
+							icon={<AiFillAlert />}
+							text={
+								generateAiQuestions.isPending
+									? 'Loading..'
+									: 'Generate with AI'
+							}
+						/>
+					)}
 				</div>
 				<div className="flex flex-col gap-5 px-5 py-3 overflow-auto bg-white">
 					<div className="relative flex flex-col gap-2 px-5 pt-4 border border-gray-400 rounded-lg">
@@ -213,7 +220,7 @@ export const CreateAssessment = () => {
 						>
 							<p className="font-semibold">Create Questions</p>
 							<AssessmentQuestionsPart
-						     	onSubmit={edit?handleUpdateQuestion:handleFormSubmit}
+								onSubmit={edit ? handleUpdateQuestion : handleFormSubmit}
 								edit={edit}
 								defaultValues={formValues}
 							/>
@@ -232,8 +239,8 @@ export const CreateAssessment = () => {
 			{assessmentId ? (
 				<div className="hidden w-full lg:w-[40%] h-full lg:flex">
 					<QuestionsPreviewPart
-					     handleDelete = {handleDeleteQuestion}
-				     	previewData={previewData}
+						handleDelete={handleDeleteQuestion}
+						previewData={previewData}
 						setCurrentQuestionIndex={setCurrentQuestionIndex}
 						setEdit={setEdit}
 						setFormValues={setFormValues}
@@ -241,8 +248,13 @@ export const CreateAssessment = () => {
 				</div>
 			) : null}
 
-			   {/* AI Generate Question Popup */}
-			   <AiGenerateQuestionPopup loading={generateAiQuestions.isPending} handleGenerate={handleGenerate} isOpen={isPopupOpen} onClose={closeAiPopup} />
+			{/* AI Generate Question Popup */}
+			<AiGenerateQuestionPopup
+				loading={generateAiQuestions.isPending}
+				handleGenerate={handleGenerate}
+				isOpen={isPopupOpen}
+				onClose={closeAiPopup}
+			/>
 		</div>
 	);
 };

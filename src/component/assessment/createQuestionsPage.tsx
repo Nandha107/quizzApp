@@ -22,9 +22,13 @@ type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'
 type Props = {
 	defaultValues: OmittedCreateQuestionPayload;
 	edit: boolean;
-	onSubmit:(newData:OmittedCreateQuestionPayload) =>void
+	onSubmit: (newData: OmittedCreateQuestionPayload) => void;
 };
-export const AssessmentQuestionsPart:React.FC<Props>= ({defaultValues,edit,onSubmit}) => {
+export const AssessmentQuestionsPart: React.FC<Props> = ({
+	defaultValues,
+	edit,
+	onSubmit,
+}) => {
 	const storeAssessment = assessmentStore();
 
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -42,7 +46,7 @@ export const AssessmentQuestionsPart:React.FC<Props>= ({defaultValues,edit,onSub
 				: 'https://i.ibb.co/fDZxHTp/Vector-1.png',
 		);
 		setUploaded(defaultValues.enableImage);
-	}, [defaultValues,edit,]);
+	}, [defaultValues, edit]);
 
 	const [imageUrl, setImageUrl] = useState('https://i.ibb.co/fDZxHTp/Vector-1.png');
 
@@ -225,9 +229,8 @@ export const AssessmentQuestionsPart:React.FC<Props>= ({defaultValues,edit,onSub
 	return (
 		<form
 			className="flex flex-col w-full h-full gap-5 p-3"
-			onSubmit={
-					handleSubmit(handleCreateAssessmentQuestions)
-			}		>
+			onSubmit={handleSubmit(handleCreateAssessmentQuestions)}
+		>
 			<div className="">
 				<Tabs
 					items={items}
@@ -362,17 +365,20 @@ export const AssessmentQuestionsPart:React.FC<Props>= ({defaultValues,edit,onSub
 				</div>
 			</div>
 			{/* Submit Buttons */}
-			<div className="flex justify-end w-full">{edit?	<PrimaryButton
-					text={'Update Question'}
-					type="submit"
-					className="h-[5rem] max-h-[5rem]  md:h-[3rem] md:max-h-[3rem] w-[45%] md:w-[25%]"
-				/>:
-				<PrimaryOutlineButton
-					text={`Add Question`}
-					type="submit"
-					className="h-[5rem] max-h-[5rem] md:h-[3rem] md:max-h-[3rem] w-[45%] md:w-[25%]"
-				/>}
-				
+			<div className="flex justify-end w-full">
+				{edit ? (
+					<PrimaryButton
+						text={'Update Question'}
+						type="submit"
+						className="h-[5rem] max-h-[5rem]  md:h-[3rem] md:max-h-[3rem] w-[45%] md:w-[25%]"
+					/>
+				) : (
+					<PrimaryOutlineButton
+						text={`Add Question`}
+						type="submit"
+						className="h-[5rem] max-h-[5rem] md:h-[3rem] md:max-h-[3rem] w-[45%] md:w-[25%]"
+					/>
+				)}
 			</div>
 		</form>
 	);
