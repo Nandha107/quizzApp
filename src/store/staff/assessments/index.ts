@@ -46,6 +46,8 @@ const initAssessmentStore: AssessmentsStoreTypes.AssessmentData = {
 						overAllSeconds: 0,
 					},
 					levelId: '',
+					imageUrl: '',
+					enableImage: false
 				},
 			],
 		},

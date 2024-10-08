@@ -161,5 +161,4 @@ export type StudentTestData = {
 	failedTests: number;
 	totalScore: number;
 	rank: number;
-  };
-  
+};
