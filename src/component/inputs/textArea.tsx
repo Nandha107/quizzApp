@@ -17,13 +17,11 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 						</strong>
 					</label>
 				)}
-				<div className="relative w-full">
-					<textarea
-						ref={ref}
-						className={`border transition-all duration-200 resize-none min-h-[200px] max-h-[200px] w-full px-3 py-4 rounded-lg outline-none focus:border-primary ${className}`}
-						{...rest}
-					/>
-				</div>
+				<textarea
+					ref={ref}
+					className={`border resize-none min-h-[200px] max-h-[200px] w-full px-3 py-4 rounded-lg outline-none focus:border-primary ${className}`}
+					{...rest}
+				/>
 			</div>
 		);
 	},

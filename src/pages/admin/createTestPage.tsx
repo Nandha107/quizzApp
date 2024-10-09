@@ -18,7 +18,8 @@ import { Config } from '../../config';
 type createQuestionPayload = AssessmentsStoreTypes.Questions;
 
 // Omit specific keys from the type
-type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
+type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id'>;
+// type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
 
 type handleGenerateProps = {
 	topic: string;
@@ -46,20 +47,8 @@ export const CreateAssessment = () => {
 	const closeAiPopup = () => {
 		setIsPopupOpen(false);
 	};
-	const [edit, setEdit] = useState(false);
 
-	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
-	const [formValues, setFormValues] = useState<OmittedCreateQuestionPayload>({
-		question: '',
-		timer: { hours: 0, minutes: 1, overAllSeconds: 0 },
-		questionType: 'CHOICE',
-		options: [{ value: '' }],
-		answer: '',
-		enableImage: false,
-		imageUrl: '',
-		// correctAnswer: '', // Uncomment if needed
-	});
+	const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
 	const assessmentId = searchParams.get('assessmentId') as string;
 
@@ -85,52 +74,67 @@ export const CreateAssessment = () => {
 	}, [element]);
 
 	useEffect(() => {
-		const questions = getAssessmentLevel?.questions as OmittedCreateQuestionPayload[];
+		const getLevelQuestions =
+			getAssessmentLevel?.questions as OmittedCreateQuestionPayload[];
+
+		const localStoredCurrentLevelQuestions = JSON.parse(
+			localStorage.getItem(levelId) as string,
+		) as OmittedCreateQuestionPayload[];
+
+		const questions = localStoredCurrentLevelQuestions?.length
+			? localStoredCurrentLevelQuestions
+			: getLevelQuestions;
 
 		if (questions?.length) {
 			setPreviewData([...questions]);
 		} else {
 			setPreviewData([]);
 		}
-	}, [levelId, storeAssessment.id]);
+	}, [levelId, storeAssessment.levels, currentQuestionIndex]);
 
 	const handleFormSubmit = (newData: OmittedCreateQuestionPayload) => {
-		const storedQuestions = JSON.parse(localStorage.getItem('createQuestions') || '[]');
-		storedQuestions.push(newData);
-		localStorage.setItem('createQuestions', JSON.stringify(storedQuestions));
+		if (currentQuestionIndex) {
+			let questionsArray = JSON.parse(
+				localStorage.getItem(levelId) as string,
+			) as OmittedCreateQuestionPayload[];
 
-		setPreviewData([...storedQuestions]);
-	};
-	const handleUpdateQuestion = (data: OmittedCreateQuestionPayload) => {
-		console.log(data);
-		const questionsData = localStorage.getItem('createQuestions');
+			questionsArray[(currentQuestionIndex - 1) as number] = newData;
 
-		if (questionsData) {
-			let questionsArray: OmittedCreateQuestionPayload[] = JSON.parse(questionsData);
-
-			questionsArray[currentQuestionIndex as number] = data;
-
-			localStorage.setItem('createQuestions', JSON.stringify(questionsArray));
+			localStorage.setItem(levelId, JSON.stringify(questionsArray));
 
 			setPreviewData([...questionsArray]);
-			setFormValues({
-				question: '',
-				timer: { hours: 0, minutes: 1, overAllSeconds: 0 },
-				questionType: 'CHOICE',
-				options: [{ value: '' }],
-				answer: '',
-				enableImage: false,
-				imageUrl: '',
-			});
-			setEdit(false);
+
 			setCurrentQuestionIndex(0);
 		} else {
-			console.error('No questions found in local storage.');
+			const modifiedData = {
+				question: newData.question,
+				imageUrl: newData.imageUrl,
+				enableImage: newData.enableImage,
+				questionType: newData.questionType,
+				options: newData.options,
+				answer: newData.answer,
+				timer: newData.timer,
+			};
+
+			const localStoreQues = JSON.parse(localStorage.getItem(newData.levelId) as string);
+
+			const storeQues = getAssessmentLevel?.questions as OmittedCreateQuestionPayload[];
+
+			const storedQuestions = localStoreQues
+				? localStoreQues
+				: storeQues
+					? storeQues
+					: [];
+			storedQuestions.push(modifiedData);
+
+			localStorage.setItem(newData.levelId, JSON.stringify(storedQuestions));
+
+			setPreviewData([...storedQuestions]);
 		}
 	};
 
 	const handleDeleteQuestion = (index: number) => {
-		const questionsData = localStorage.getItem('createQuestions');
+		const questionsData = localStorage.getItem(levelId);
 
 		if (questionsData) {
 			let questionsArray: OmittedCreateQuestionPayload[] = JSON.parse(questionsData);
@@ -138,7 +142,7 @@ export const CreateAssessment = () => {
 			if (index >= 0 && index < questionsArray.length) {
 				questionsArray.splice(index, 1);
 
-				localStorage.setItem('createQuestions', JSON.stringify(questionsArray));
+				localStorage.setItem(levelId, JSON.stringify(questionsArray));
 
 				setPreviewData([...questionsArray]);
 			} else {
@@ -157,7 +161,7 @@ export const CreateAssessment = () => {
 				const ParsedData = JSON.parse(
 					(data as any)[0],
 				) as OmittedCreateQuestionPayload[];
-				localStorage.setItem('createQuestions', JSON.stringify(ParsedData));
+				localStorage.setItem(levelId, JSON.stringify(ParsedData));
 				setPreviewData([...ParsedData]);
 				setIsPopupOpen(false);
 			});
@@ -172,7 +176,7 @@ export const CreateAssessment = () => {
 				className={`w-full ${assessmentId ? 'lg:w-[60%]' : 'w-full'}  flex flex-col h-full`}
 			>
 				<div className="flex justify-between items-center gap-3 h-[8%] p-5">
-					<div className='flex items-center gap-3 '>
+					<div className="flex items-center gap-3 ">
 						<div
 							className="px-2 py-2 border border-gray-500 rounded-lg hover:cursor-pointer hover:bg-gray-300"
 							onClick={() => {
@@ -220,9 +224,12 @@ export const CreateAssessment = () => {
 						>
 							<p className="font-semibold">Create Questions</p>
 							<AssessmentQuestionsPart
-								onSubmit={edit ? handleUpdateQuestion : handleFormSubmit}
-								edit={edit}
-								defaultValues={formValues}
+								onSubmit={handleFormSubmit}
+								editQuestionIndex={currentQuestionIndex as number}
+								resetEditIndex={setCurrentQuestionIndex}
+								// onSubmit={edit ? handleUpdateQuestion : handleFormSubmit}
+								// edit={edit}
+								// defaultValues={formValues}
 							/>
 						</div>
 					) : null}
@@ -241,9 +248,9 @@ export const CreateAssessment = () => {
 					<QuestionsPreviewPart
 						handleDelete={handleDeleteQuestion}
 						previewData={previewData}
-						setCurrentQuestionIndex={setCurrentQuestionIndex}
-						setEdit={setEdit}
-						setFormValues={setFormValues}
+						setEditQuestionIndex={setCurrentQuestionIndex}
+						// setEdit={setEdit}
+						// setFormValues={setFormValues}
 					/>
 				</div>
 			) : null}

@@ -1,4 +1,4 @@
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AssessmentClient } from '../services/staff/Assessments/assessmentClient';
 import toast from 'react-hot-toast';
 import { useEffect } from 'react';
@@ -18,7 +18,7 @@ export const useAssessments = ({
 }) => {
 	const storeAssessment = assessmentStore();
 
-	const queryClient = new QueryClient();
+	const queryClient = useQueryClient();
 
 	const getAllAssessments = useQuery({
 		queryKey: ['allAssessments', JSON.stringify(course)],
@@ -31,7 +31,7 @@ export const useAssessments = ({
 		queryKey: ['getAssessment', assessmentId!],
 		queryFn: () => AssessmentClient.getAssessment(assessmentId!),
 		staleTime: 600000,
-		enabled: Boolean(assessmentId) && Boolean(!course),
+		enabled: Boolean(assessmentId),
 	});
 
 	const getAssessmentLevel = useQuery({
@@ -73,14 +73,8 @@ export const useAssessments = ({
 		}) => AssessmentClient.updateAssessmentLevel(payload.levelId, payload.body),
 		onSuccess: () => {
 			toast.success('Assessment has successfully updated...');
-			queryClient.invalidateQueries({
-				queryKey: ['getAssessment'],
-				exact: true, // Optional, if you want to match the exact key
-			});
-			queryClient.invalidateQueries({
-				queryKey: ['allAssessments', JSON.stringify(course)],
-				exact: true, // Optional, if you want to match the exact key
-			});
+			queryClient.invalidateQueries({queryKey: ['getAssessment', assessmentId!]});
+			queryClient.invalidateQueries({queryKey: ['allAssessments', JSON.stringify(course)]});
 		},
 		onError: (error) => {
 			toast.error(
@@ -182,7 +176,7 @@ export const useAssessments = ({
 
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: ['ai-questions'] });
-			toast.success( 'Generate ai support questions succesfully :)');
+			toast.success( 'Generate ai support questions successfully :)');
 
 		},
 		onError: (error) => {

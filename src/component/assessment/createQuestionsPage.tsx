@@ -11,22 +11,22 @@ import { PrimaryOutlineButton } from '../buttons/primaryOutlineButton';
 import { useAssessments } from '../../hooks/useAssessment';
 import { useEffect, useState } from 'react';
 import ImageUploader from '../ImageUploder/main';
-import { PrimaryButton } from '../buttons/primaryButton';
+import { SecondaryOutlineButton } from '../buttons/secondaryOutlineButton';
 
 // Assuming `AssessmentsStoreTypes.AssessmentData` has certain keys
 type createQuestionPayload = AssessmentsStoreTypes.Questions;
 
 // Omit specific keys from the type
-type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
+type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id'>;
 
 type Props = {
-	defaultValues: OmittedCreateQuestionPayload;
-	edit: boolean;
+	editQuestionIndex: number;
+	resetEditIndex: (value: number) => void;
 	onSubmit: (newData: OmittedCreateQuestionPayload) => void;
 };
 export const AssessmentQuestionsPart: React.FC<Props> = ({
-	defaultValues,
-	edit,
+	resetEditIndex,
+	editQuestionIndex,
 	onSubmit,
 }) => {
 	const storeAssessment = assessmentStore();
@@ -38,15 +38,6 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 	const { uploadImage, deleteImage, updateImage } = useAssessments({
 		assessmentId,
 	});
-	useEffect(() => {
-		reset(defaultValues);
-		setImageUrl(
-			defaultValues.enableImage
-				? defaultValues.imageUrl
-				: 'https://i.ibb.co/fDZxHTp/Vector-1.png',
-		);
-		setUploaded(defaultValues.enableImage);
-	}, [defaultValues, edit]);
 
 	const [imageUrl, setImageUrl] = useState('https://i.ibb.co/fDZxHTp/Vector-1.png');
 
@@ -91,29 +82,45 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 		});
 	};
 
-	const { register, setValue, watch, control, reset, handleSubmit } =
-		useForm<OmittedCreateQuestionPayload>({
-			defaultValues: {
-				question: defaultValues.question,
-				timer: defaultValues.timer,
-				questionType: defaultValues.questionType,
-				options: defaultValues.options,
-				answer: defaultValues.answer,
-				// ...defaultValues
-				// correctAnswer: '',
+	const {
+		register,
+		setValue,
+		watch,
+		control,
+		reset,
+		handleSubmit,
+		formState: { isDirty },
+	} = useForm<OmittedCreateQuestionPayload>({
+		defaultValues: {
+			levelId: currentLevelId,
+			question: '',
+			timer: {
+				hours: 0,
+				minutes: 1,
+				overAllSeconds: 60000,
 			},
-		});
+			questionType: 'CHOICE',
+			options: [{ value: '' }],
+			answer: '',
+			enableImage: false,
+			imageUrl: 'https://i.ibb.co/fDZxHTp/Vector-1.png',
+		},
+	});
 
 	const chooseQuestionType = watch('questionType');
 
 	const { fields, append, remove } = useFieldArray({
-		// const { fields, append, remove, update } = useFieldArray({
 		control, // Pass control to useFieldArray hook
 		name: 'options', // Name of the field to manage dynamically
 	});
 
 	const handleCreateAssessmentQuestions = (data: OmittedCreateQuestionPayload) => {
-		onSubmit({ ...data, imageUrl: uploaded ? imageUrl : '', enableImage: uploaded });
+		onSubmit({
+			...data,
+			levelId: currentLevelId,
+			imageUrl: uploaded ? imageUrl : '',
+			enableImage: uploaded,
+		});
 		reset();
 	};
 
@@ -225,6 +232,42 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 			setValue('options', []);
 		}
 	}, [chooseQuestionType]);
+
+	useEffect(() => {
+		if (editQuestionIndex) {
+			const localStoredQues = JSON.parse(
+				localStorage.getItem(currentLevelId) as string,
+			) as OmittedCreateQuestionPayload[];
+			if (!localStoredQues) {
+				const findEditLevel = storeAssessment.levels.find(
+					(level) => level.id === currentLevelId,
+				);
+				const findQues = findEditLevel?.questions?.[editQuestionIndex - 1];
+
+				localStorage.setItem(currentLevelId, JSON.stringify(findEditLevel?.questions));
+
+				reset(findQues);
+			} else {
+				const findEditQues = localStoredQues?.[editQuestionIndex - 1];
+				reset(findEditQues);
+			}
+		} else {
+			reset({
+				question: '',
+				timer: {
+					hours: 0,
+					minutes: 1,
+					overAllSeconds: 60000,
+				},
+				questionType: 'CHOICE',
+				options: [{ value: '' }],
+				answer: '',
+				enableImage: false,
+				imageUrl: '',
+				levelId: currentLevelId,
+			});
+		}
+	}, [editQuestionIndex]);
 
 	return (
 		<form
@@ -365,20 +408,47 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 				</div>
 			</div>
 			{/* Submit Buttons */}
-			<div className="flex justify-end w-full">
-				{edit ? (
-					<PrimaryButton
-						text={'Update Question'}
-						type="submit"
-						className="h-[5rem] max-h-[5rem]  md:h-[3rem] md:max-h-[3rem] w-[45%] md:w-[25%]"
+			<div className="flex justify-end w-full gap-3">
+				{editQuestionIndex ? (
+					<SecondaryOutlineButton
+						text={`Cancel Edit`}
+						type="button"
+						className="h-[5rem] max-h-[5rem] md:h-[3rem] md:max-h-[3rem] border border-gray-500"
+						onClick={() => {
+							reset({
+								question: '',
+								timer: {
+									hours: 0,
+									minutes: 1,
+									overAllSeconds: 60000,
+								},
+								questionType: 'CHOICE',
+								options: [{ value: '' }],
+								answer: '',
+								enableImage: false,
+								imageUrl: '',
+								levelId: currentLevelId,
+							});
+							const getCurrentLevelInStore = storeAssessment.levels.find(
+								(level) => level.id === currentLevelId,
+							);
+
+							const getCurrentLevelQuesLengthInStore = getCurrentLevelInStore
+								?.questions.length as number;
+
+							if (getCurrentLevelQuesLengthInStore)
+								localStorage.removeItem(currentLevelId);
+
+							resetEditIndex(0);
+						}}
 					/>
-				) : (
-					<PrimaryOutlineButton
-						text={`Add Question`}
-						type="submit"
-						className="h-[5rem] max-h-[5rem] md:h-[3rem] md:max-h-[3rem] w-[45%] md:w-[25%]"
-					/>
-				)}
+				) : null}
+				<PrimaryOutlineButton
+					text={`${editQuestionIndex ? 'Update Question' : 'Add Question'}`}
+					type="submit"
+					className="h-[5rem] max-h-[5rem] md:h-[3rem] md:max-h-[3rem]"
+					disabled={!isDirty}
+				/>
 			</div>
 		</form>
 	);
