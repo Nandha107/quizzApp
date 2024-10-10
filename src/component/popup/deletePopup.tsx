@@ -22,7 +22,7 @@ const DeletePopup: React.FC<DeletePopupProps> = ({
 	return (
 		<Popup className='flex justify-center items-center w-full p-5' onClose={onClose}>
 			<div className={`flex flex-col gap-10`}>
-				<div className="flex-col  flex  gap-2">
+				<div className="flex-col flex  gap-2">
 					<div className="font-bold text-xl ">Are you sure ?</div>
 					<div className="text-sm  break-words">
 						You're about to delete. It'll be gone forever and we won't be able to

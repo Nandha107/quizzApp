@@ -60,10 +60,10 @@ export const Popup: React.FC<Modal> = ({
 		? createPortal(
 				<div
 					ref={loading === false ? ref : null}
-					className={`w-full h-full transition-all absolute z-[100] top-0 left-0
+					className={`w-full h-full transition-all absolute top-0 left-0
                         ${
 							background ? background : 'bg-black/20'
-						} backdrop-blur-sm w-full h-full z-[1000] flex items-center justify-center overflow-y-auto`}
+						} backdrop-blur-sm z-[1000] flex items-center justify-center overflow-y-auto`}
 					style={{
 						background: 'rgba(0, 0, 0, 0.62)',
 						zIndex: 1002,
@@ -73,7 +73,7 @@ export const Popup: React.FC<Modal> = ({
 					}}
 				>
 					<motion.div
-						className="relative rounded-xl bg-white w-[40%]"
+						className="relative rounded-xl bg-white w-[90%] md:w-[50%] lg:w-[40%] xl:w-[30%]"
 						onClick={(e) => e.stopPropagation()}
 						variants={{
 							initial: { y: 50, opacity: 0.8 },
