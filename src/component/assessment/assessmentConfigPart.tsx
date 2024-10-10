@@ -18,7 +18,7 @@ export const AssessmentConfigPart = () => {
 
 	const storeAssessment = assessmentStore();
 
-	const { createAssessment } = useAssessments({});
+	const { createAssessment } = useAssessments({ course: dept?.toUpperCase() });
 
 	const [_, setSearchParams] = useSearchParams();
 

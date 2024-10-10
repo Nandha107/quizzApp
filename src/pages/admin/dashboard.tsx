@@ -2,17 +2,23 @@ import { Segmented } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAssessments } from '../../hooks/useAssessment';
-import { FaCalendar, FaEllipsisV } from 'react-icons/fa';
+import { FaCalendar } from 'react-icons/fa';
 import { PrimaryButton } from '../../component/buttons/primaryButton';
 import AnalyticPage from '../../component/pageComponents/admin/reportDepartment';
 import { convertMillisecondsToTimeOnly } from '../../utils/timeConverter';
+import SettingsDropdown from '../../component/contextMenu';
+import DeletePopup from '../../component/popup/deletePopup';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 type Align = 'assessment' | 'completed' | 'report';
 
 const StaffDashboard = () => {
 	const { dept } = useParams<{ dept: string }>();
 
-	const { getAllAssessments } = useAssessments({ course: dept!?.toUpperCase() });
+	const { getAllAssessments, deleteAssessment } = useAssessments({
+		course: dept!?.toUpperCase(),
+	});
 
 	const navigate = useNavigate();
 
@@ -20,11 +26,38 @@ const StaffDashboard = () => {
 
 	const paramValue = searchParams.get('tab');
 
+	const [deleteAssessmentId, setDeleteAssessmentId] = useState({
+		isOpen: false,
+		assessmentId: '',
+	});
+
 	const setTabParams = (value: string) => {
 		// const urls = ['?tab=assessments', '?tab=completed', '?tab=report'];
 		const urls = ['?tab=assessments', '?tab=report'];
 		urls.map((url: string) => {
 			url.split('=')?.[1] === value ? setSearchParams(url) : null;
+		});
+	};
+
+	const routeChangeToEdit = (assessmentId: string, levelId: string) => {
+		navigate(`/create-assessment/${dept}?assessmentId=${assessmentId}&levelId=${levelId}`);
+	};
+
+	const HandleDelete = (assessmentId: string) => {
+		const DeleteRequest = deleteAssessment.mutateAsync(assessmentId).then(() => {
+			setDeleteAssessmentId({
+				isOpen: false,
+				assessmentId: '',
+			});
+		});
+
+		toast.promise(DeleteRequest, {
+			loading: 'Deleting...',
+			success: 'Deleted',
+			error: () =>
+				deleteAssessment.isError
+					? (deleteAssessment.error as any).message
+					: 'Sorry! failed to Delete, please try again later',
 		});
 	};
 
@@ -117,9 +150,41 @@ const StaffDashboard = () => {
 																	{assessment.name}
 																</p>
 															</div>
-															<div className="border border-primary p-2 rounded-md cursor-pointer">
+															{/* Assessment Menu */}
+															<SettingsDropdown
+																DropDownObjects={undefined}
+																onOptionSelect={(option) => {
+																	option.label === 'Delete'
+																		? setDeleteAssessmentId(
+																				{
+																					isOpen: true,
+																					assessmentId:
+																						assessment.id,
+																				},
+																			)
+																		: null;
+
+																	option.label === 'View'
+																		? routeChangeToEdit(
+																				assessment.id,
+																				assessment
+																					.levels?.[0]
+																					?.id,
+																			)
+																		: null;
+																}}
+																onChange={() => {
+																	// HandleActive();
+																}}
+																toggleChecked={false}
+																toggle={true}
+															/>
+															{/* <div 
+																className="border border-primary p-2 rounded-md cursor-pointer"
+																onClick={()=>{}}
+															>
 																<FaEllipsisV className="text-teal-600" />
-															</div>
+															</div> */}
 														</div>
 														<p className="text-xs font-semibold text-[#64748B]">
 															Total Students:{' '}
@@ -134,11 +199,6 @@ const StaffDashboard = () => {
 														<div className="flex justify-between items-center">
 															<p className="text-xs font-semibold text-[#64748B]">
 																Total time: {testTimeDuration}
-																{/* {
-																	assessment.duration
-																		.overAllSeconds
-																}{' '} */}
-																{/* seconds */}
 															</p>
 															<div className="justify-center gap-2 flex py-2 px-5 items-center bg-white rounded-lg">
 																<FaCalendar />
@@ -188,6 +248,25 @@ const StaffDashboard = () => {
 					<span className="text-3xl">+</span>
 				</button>
 			</div>
+			{deleteAssessmentId.isOpen ? (
+				<DeletePopup
+					cancelButton={'cancel'}
+					onClose={() =>
+						deleteAssessment.isPending
+							? null
+							: setDeleteAssessmentId({
+									isOpen: false,
+									assessmentId: '',
+								})
+					}
+					confirmButton={'Yes, delete it'}
+					onClick={() => {
+						HandleDelete(deleteAssessmentId.assessmentId);
+					}}
+					loadingText="deleting..."
+					loader={deleteAssessment.isPending ? true : false}
+				/>
+			) : null}
 		</div>
 	);
 };

@@ -4,8 +4,7 @@ import toast from 'react-hot-toast';
 import { useEffect } from 'react';
 import { assessmentStore } from '../store/staff/assessments';
 import axios from 'axios';
-import GenerativeAI from '../utils/gemini-ai'
-
+import GenerativeAI from '../utils/gemini-ai';
 
 export const useAssessments = ({
 	course,
@@ -21,10 +20,10 @@ export const useAssessments = ({
 	const queryClient = useQueryClient();
 
 	const getAllAssessments = useQuery({
-		queryKey: ['allAssessments', JSON.stringify(course)],
+		queryKey: ['allAssessments', course],
 		queryFn: () => AssessmentClient.getAllAssessments(course!),
 		staleTime: 600000,
-		enabled: Boolean(course) && Boolean(!assessmentId),
+		enabled: Boolean(course),
 	});
 
 	const getAssessment = useQuery({
@@ -38,7 +37,7 @@ export const useAssessments = ({
 		queryKey: ['getAssessmentLevel', levelId!],
 		queryFn: () => AssessmentClient.getAssessmentLevel(levelId!),
 		staleTime: 600000,
-		enabled: Boolean(levelId),
+		enabled: Boolean(levelId) && Boolean(assessmentId),
 	});
 
 	const getAssessmentAnalytics = useQuery({
@@ -54,8 +53,10 @@ export const useAssessments = ({
 		onSuccess: () => {
 			toast.success('Assessment has successfully Created...');
 			queryClient.invalidateQueries({
-				queryKey: ['allAssessments', JSON.stringify(course)],
-				exact: true, // Optional, if you want to match the exact key
+				queryKey: ['allAssessments', course],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ['getAssessment'],
 			});
 			// queryClient.invalidateQueries(['allAssessments', JSON.stringify(course)] as any);
 		},
@@ -73,12 +74,29 @@ export const useAssessments = ({
 		}) => AssessmentClient.updateAssessmentLevel(payload.levelId, payload.body),
 		onSuccess: () => {
 			toast.success('Assessment has successfully updated...');
-			queryClient.invalidateQueries({queryKey: ['getAssessment', assessmentId!]});
-			queryClient.invalidateQueries({queryKey: ['allAssessments', JSON.stringify(course)]});
+			queryClient.invalidateQueries({ queryKey: ['getAssessment', assessmentId!] });
+			queryClient.invalidateQueries({
+				queryKey: ['allAssessments', course],
+			});
 		},
 		onError: (error) => {
 			toast.error(
 				error.message ?? 'Sorry, Failed to Update a Assessment, please try again',
+			);
+		},
+	});
+
+	const deleteAssessment = useMutation({
+		mutationFn: (assessmentId: string) => AssessmentClient.deleteAssessment(assessmentId),
+		onSuccess: () => {
+			toast.success('Assessment has successfully deleted...');
+			queryClient.invalidateQueries({
+				queryKey: ['allAssessments', course],
+			});
+		},
+		onError: (error) => {
+			toast.error(
+				error.message ?? 'Sorry, Failed to delete a Assessment, please try again',
 			);
 		},
 	});
@@ -165,7 +183,7 @@ export const useAssessments = ({
 		mutationFn: async (param: { prompt: string }) => {
 			try {
 				console.log(param.prompt);
-				const res = await GenerativeAI.generateContent(param.prompt)
+				const res = await GenerativeAI.generateContent(param.prompt);
 
 				return res;
 			} catch (error) {
@@ -176,11 +194,13 @@ export const useAssessments = ({
 
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: ['ai-questions'] });
-			toast.success( 'Generate ai support questions successfully :)');
-
+			toast.success('Generate ai support questions successfully :)');
 		},
 		onError: (error) => {
-			toast.error(error.message ?? 'Sorry, Failed to Generate ai support questions please try again');
+			toast.error(
+				error.message ??
+					'Sorry, Failed to Generate ai support questions please try again',
+			);
 		},
 	});
 	useEffect(() => {
@@ -195,10 +215,11 @@ export const useAssessments = ({
 		getAssessmentAnalytics,
 		createAssessment,
 		updateAssessment,
+		deleteAssessment,
 		getAssessmentLevel,
 		uploadImage,
 		updateImage,
 		deleteImage,
-		generateAiQuestions
+		generateAiQuestions,
 	};
 };

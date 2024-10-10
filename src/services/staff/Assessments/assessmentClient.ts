@@ -55,6 +55,21 @@ export class AssessmentClient {
 		}
 	}
 
+	static async deleteAssessment(assessmentId: string) {
+		try {
+			const res = await axios.delete<Assessments.GetAssessmentResponse>(
+				`/tests/${assessmentId}`,
+			);
+			// console.log({ ApiCreateTest: res });
+			return res.data;
+		} catch (error) {
+			console.log('original error while deleting assessment', error);
+			console.log({ ApiDeleteTest: error });
+
+			throw error;
+		}
+	}
+
 	static async updateAssessmentLevel(
 		LevelId: string,
 		body: Assessments.UpdateAssessmentLevelPayload,
