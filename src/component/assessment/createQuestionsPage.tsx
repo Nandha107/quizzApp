@@ -39,11 +39,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 		assessmentId,
 	});
 
-	const [imageUrl, setImageUrl] = useState('https://i.ibb.co/fDZxHTp/Vector-1.png');
-
 	const [dragging, setDragging] = useState(false);
-
-	const [uploaded, setUploaded] = useState(false);
 
 	const [error, setError] = useState<string | null>(null);
 
@@ -103,7 +99,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 			options: [{ value: '' }],
 			answer: '',
 			enableImage: false,
-			imageUrl: 'https://i.ibb.co/fDZxHTp/Vector-1.png',
+			imageUrl: "https://i.ibb.co/fDZxHTp/Vector-1.png",
 		},
 	});
 
@@ -118,8 +114,6 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 		onSubmit({
 			...data,
 			levelId: currentLevelId,
-			imageUrl: uploaded ? imageUrl : '',
-			enableImage: uploaded,
 		});
 		reset();
 	};
@@ -135,7 +129,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 
 			const reader = new FileReader();
 			reader.onloadend = async () => {
-				setImageUrl(reader.result as string);
+				setValue('imageUrl', reader.result as string);
 
 				const formData = new FormData();
 
@@ -144,8 +138,8 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 				formData.append('file', FormattedFile);
 
 				await uploadImage.mutateAsync({ file: formData }).then((res) => {
-					setImageUrl(res.url);
-					setUploaded(true);
+					setValue('imageUrl', res.url);
+					setValue('enableImage', true);
 				});
 
 				setError(null);
@@ -165,7 +159,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 
 			const reader = new FileReader();
 			reader.onloadend = async () => {
-				setImageUrl(reader.result as string);
+				setValue('imageUrl', reader.result as string);
 
 				const formData = new FormData();
 
@@ -174,10 +168,13 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 				formData.append('file', FormattedFile);
 
 				await updateImage
-					.mutateAsync({ file: formData, oldKey: imageUrl.split('/').pop() as any })
+					.mutateAsync({
+						file: formData,
+						oldKey: watch('imageUrl').split('/').pop() as any,
+					})
 					.then((res) => {
-						setImageUrl(res.url);
-						setUploaded(true);
+						setValue('imageUrl', res.url);
+						setValue('enableImage', true);
 					});
 
 				setError(null);
@@ -188,10 +185,10 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 	};
 	const handleRemoveImage = async () => {
 		await deleteImage
-			.mutateAsync({ fileKey: imageUrl.split('/').pop() as any })
+			.mutateAsync({ fileKey: watch('imageUrl').split('/').pop() as any })
 			.then(() => {
-				setUploaded(false);
-				setImageUrl('https://i.ibb.co/fDZxHTp/Vector-1.png');
+				setValue('enableImage', false);
+				setValue('imageUrl', 'https://i.ibb.co/fDZxHTp/Vector-1.png');
 			});
 	};
 	const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -201,7 +198,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 		if (file) {
 			const reader = new FileReader();
 			reader.onload = async (e) => {
-				setImageUrl(e.target?.result as string);
+				setValue('imageUrl', e.target?.result as string);
 
 				const formData = new FormData();
 
@@ -210,8 +207,8 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 				formData.append('file', FormattedFile);
 
 				await uploadImage.mutateAsync({ file: formData }).then((res) => {
-					setImageUrl(res.url);
-					setUploaded(true);
+					setValue('imageUrl', res.url);
+					setValue('enableImage', true);
 				});
 			};
 			reader.readAsDataURL(file);
@@ -225,6 +222,12 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 
 	const handleDragLeave = () => {
 		setDragging(false);
+	};
+
+	const areArraysEqual = (arr1: any[], arr2: any[]): boolean => {
+		if (arr1.length !== arr2.length) return false;
+
+		return arr1.every((obj, index) => JSON.stringify(obj) === JSON.stringify(arr2[index]));
 	};
 
 	useEffect(() => {
@@ -263,7 +266,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 				options: [{ value: '' }],
 				answer: '',
 				enableImage: false,
-				imageUrl: '',
+				imageUrl: 'https://i.ibb.co/fDZxHTp/Vector-1.png',
 				levelId: currentLevelId,
 			});
 		}
@@ -291,8 +294,8 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 						<ImageUploader
 							handleRemoveImage={handleRemoveImage}
 							handleUpdateImage={handleUpdateImage}
-							uploaded={uploaded}
-							imageUrl={imageUrl}
+							uploaded={watch('enableImage')}
+							imageUrl={watch('imageUrl')}
 							handleImageChange={handleImageChange}
 							handleDrop={handleDrop}
 							handleDragOver={handleDragOver}
@@ -433,11 +436,19 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 								(level) => level.id === currentLevelId,
 							);
 
-							const getCurrentLevelQuesLengthInStore = getCurrentLevelInStore
-								?.questions.length as number;
+							const getCurrentLevelQuesInStore =
+								getCurrentLevelInStore?.questions as OmittedCreateQuestionPayload[];
 
-							if (getCurrentLevelQuesLengthInStore)
-								localStorage.removeItem(currentLevelId);
+							const getLocalQues = JSON.parse(
+								localStorage.getItem(currentLevelId) as string,
+							) as OmittedCreateQuestionPayload[];
+
+							const isSame = areArraysEqual(
+								getCurrentLevelQuesInStore,
+								getLocalQues,
+							);
+
+							if (isSame) localStorage.removeItem(currentLevelId);
 
 							resetEditIndex(0);
 						}}

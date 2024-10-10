@@ -30,7 +30,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 		<div
 			className={`border-2 border-dashed ${
 				dragging ? 'border-teal-500' : 'border-gray-300'
-			} p-8 rounded-lg flex flex-col gap-4 text-center`}
+			} p-8 rounded-lg flex flex-col gap-4 text-center w-full md:w-[80%] lg:w-[70%]`}
 			onDrop={handleDrop}
 			onDragOver={handleDragOver}
 			onDragLeave={handleDragLeave}
@@ -50,13 +50,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 				</div>
 			) : imageUrl ? (
 				<div className="flex flex-col items-center gap-2">
-					<img
-						src={imageUrl}
-						alt="Preview"
-						className={` object-cover rounded ${loading ? 'animate-pulse' : ''}`}
-					/>
+					<div className="relative w-[100%] h-[250px] bg-gray-600/10 rounded-lg border border-gray-300">
+						<img
+							src={imageUrl}
+							alt="Preview"
+							className={`absolute inset-0 w-full h-full object-contain rounded ${loading ? 'animate-pulse' : ''}`}
+						/>
+					</div>
 					<div className="flex justify-center gap-2 mt-2">
 						<button
+							type='button'
 							onClick={handleRemoveImage}
 							className="bg-red-600 text-white py-1 px-3 rounded flex items-center gap-1"
 						>

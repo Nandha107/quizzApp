@@ -124,7 +124,7 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 		if (levelsCount > currentLevelIndex) {
 			const isAnyStoreQuesInCurrentLevel =
 				levels?.[currentLevelIndex - 1]?.questions?.length;
-				
+
 			if (storedQuestions && isAnyStoreQuesInCurrentLevel) {
 				setBtnText(`Update & Go To Level ${nextLevelIndex}`);
 			} else {
@@ -159,7 +159,13 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 											</p>
 										</div>
 										{question.enableImage ? (
-											<img src={question.imageUrl} />
+											<div className="relative w-full h-[250px] bg-gray-600/10 rounded-lg border border-gray-300">
+												<img
+													src={question.imageUrl}
+													alt="quesPreview"
+													className={`absolute inset-0 w-full h-full object-contain rounded`}
+												/>
+											</div>
 										) : null}
 										<div className="flex flex-col gap-2 min-w-[80%] max-w-full">
 											{question.options.length ? (

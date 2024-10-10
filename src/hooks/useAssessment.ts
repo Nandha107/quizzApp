@@ -120,7 +120,7 @@ export const useAssessments = ({
 	const uploadImage = useMutation({
 		mutationFn: async (param: { file: FormData }) => {
 			try {
-				console.log(param);
+				// console.log(param);
 				const res = await axios.post<any>(`/tests/upload-image`, param.file);
 				return res.data;
 			} catch (error) {
@@ -129,8 +129,9 @@ export const useAssessments = ({
 			}
 		},
 
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
+		onSuccess: () => {
+			console.log('image uploaded successfully...')
+			// queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
 		},
 		onError: (error) => {
 			toast.error(error.message ?? 'Sorry, Failed to Update a image please try again');
@@ -139,7 +140,7 @@ export const useAssessments = ({
 	const updateImage = useMutation({
 		mutationFn: async (param: { file: FormData; oldKey: string }) => {
 			try {
-				console.log(param);
+				// console.log(param);
 				const res = await axios.put<any>(`/tests/update/image`, param.file, {
 					params: {
 						oldKey: param.oldKey,
@@ -152,8 +153,9 @@ export const useAssessments = ({
 			}
 		},
 
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
+		onSuccess: () => {
+			console.log('uploaded image updated successfully...')
+			// queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
 		},
 		onError: (error) => {
 			toast.error(error.message ?? 'Sorry, Failed to Update a image please try again');
@@ -162,7 +164,7 @@ export const useAssessments = ({
 	const deleteImage = useMutation({
 		mutationFn: async (param: { fileKey: string }) => {
 			try {
-				console.log(param);
+				// console.log(param);
 				const res = await axios.delete<any>(`/tests/delete/image`, { params: param });
 				return res.data;
 			} catch (error) {
@@ -171,8 +173,9 @@ export const useAssessments = ({
 			}
 		},
 
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
+		onSuccess: () => {
+			console.log('uploaded deleted successfully...')
+			// queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
 		},
 		onError: (error) => {
 			toast.error(error.message ?? 'Sorry, Failed to Update a image please try again');
@@ -182,7 +185,7 @@ export const useAssessments = ({
 	const generateAiQuestions = useMutation({
 		mutationFn: async (param: { prompt: string }) => {
 			try {
-				console.log(param.prompt);
+				// console.log(param.prompt);
 				const res = await GenerativeAI.generateContent(param.prompt);
 
 				return res;

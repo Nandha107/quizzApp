@@ -46,7 +46,7 @@ const initAssessmentStore: AssessmentsStoreTypes.AssessmentData = {
 						overAllSeconds: 0,
 					},
 					levelId: '',
-					imageUrl: '',
+					imageUrl: 'https://i.ibb.co/fDZxHTp/Vector-1.png',
 					enableImage: false
 				},
 			],
