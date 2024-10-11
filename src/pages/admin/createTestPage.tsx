@@ -150,6 +150,8 @@ export const CreateAssessment = () => {
 				localStorage.setItem(levelId, JSON.stringify(questionsArray));
 
 				setPreviewData([...questionsArray]);
+
+				setDeleteQuestionIndex(0);
 			} else {
 				console.error('Invalid index provided for deletion.');
 			}
@@ -185,7 +187,6 @@ export const CreateAssessment = () => {
 				const findEditLevel = storeAssessment.levels.find(
 					(level) => level.id === levelId,
 				);
-				// const findQues = findEditLevel?.questions?.[deleteQuestionIndex - 1];
 
 				localStorage.setItem(levelId, JSON.stringify(findEditLevel?.questions));
 
@@ -253,9 +254,6 @@ export const CreateAssessment = () => {
 								onSubmit={handleFormSubmit}
 								editQuestionIndex={currentQuestionIndex as number}
 								resetEditIndex={setCurrentQuestionIndex}
-								// onSubmit={edit ? handleUpdateQuestion : handleFormSubmit}
-								// edit={edit}
-								// defaultValues={formValues}
 							/>
 						</div>
 					) : null}
@@ -273,11 +271,8 @@ export const CreateAssessment = () => {
 				<div className="hidden w-full lg:w-[40%] h-full lg:flex">
 					<QuestionsPreviewPart
 						setDeleteQuestionIndex={setDeleteQuestionIndex}
-						// setDeleteQuestionIndex={handleDeleteQuestion}
 						previewData={previewData}
 						setEditQuestionIndex={setCurrentQuestionIndex}
-						// setEdit={setEdit}
-						// setFormValues={setFormValues}
 					/>
 				</div>
 			) : null}

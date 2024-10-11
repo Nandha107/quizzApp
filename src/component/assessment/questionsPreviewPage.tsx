@@ -16,10 +16,7 @@ type createQuestionPayload = AssessmentsStoreTypes.Questions;
 // Omit specific keys from the type
 type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
 type props = {
-	// setFormValues: (value: OmittedCreateQuestionPayload) => void;
-
-	// setEdit: (value: boolean) => void;
-
+	
 	previewData: OmittedCreateQuestionPayload[];
 
 	setEditQuestionIndex: (value: number) => void;
@@ -30,8 +27,6 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 	previewData,
 	setDeleteQuestionIndex,
 	setEditQuestionIndex,
-	// setEdit,
-	// setFormValues,
 }) => {
 	const { levels, levelsCount, resetAssessmentStore } = assessmentStore();
 
@@ -146,7 +141,6 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 				<p className="text-2xl font-semibold">Preview</p>
 			</div>
 			<div className="flex flex-col h-[86%] items-center gap-3 px-5 py-8 overflow-y-scroll border border-gray-300 rounded-lg bg-gray-300/15">
-				{/* <div className="flex flex-col h-[91.5%] items-center gap-3 px-16 py-8 overflow-y-scroll border border-gray-300 rounded-lg bg-gray-300/15"> */}
 				<div className="flex flex-col w-full gap-5">
 					{previewData?.length ? (
 						previewData.map(
@@ -235,6 +229,7 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 												open={openPopConfirmBasedOnIndex === index + 1}
 												onConfirm={() => {
 													setDeleteQuestionIndex(index + 1);
+													setOpenPopConfirmBasedOnIndex(0);
 												}}
 												okButtonProps={{ htmlType: 'button' }}
 												cancelButtonProps={{ htmlType: 'button' }}
