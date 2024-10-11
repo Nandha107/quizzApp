@@ -69,8 +69,6 @@ export const CreateAssessment = () => {
 	const dataIsLoading =
 		getAssessment.isFetching || getAssessment.isLoading || getAssessment.isRefetching;
 
-	console.log({ deleteQuestionIndex });
-
 	useEffect(() => {
 		if (element) {
 			element.scrollIntoView({ behavior: 'smooth', block: 'start' });
