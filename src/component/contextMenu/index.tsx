@@ -79,13 +79,13 @@ const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
 				{list === 'list' ? <BsThreeDotsVertical /> : <FiSettings />}
 			</div> */}
 			<div
-                ref={setMenuButtonRef}
+				ref={setMenuButtonRef}
 				className={`${open ? 'bg-teal-600/75' : 'bg-teal-600/30'} border border-primary p-2 rounded-md cursor-pointer`}
 				onClick={(e) => {
-                    e.stopPropagation();
+					e.stopPropagation();
 					onClickIcon;
 					handleOpen();
-                }}
+				}}
 			>
 				<FaEllipsisV className="text-teal-600" />
 			</div>

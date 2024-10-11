@@ -130,7 +130,7 @@ export const useAssessments = ({
 		},
 
 		onSuccess: () => {
-			console.log('image uploaded successfully...')
+			console.log('image uploaded successfully...');
 			// queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
 		},
 		onError: (error) => {
@@ -154,7 +154,7 @@ export const useAssessments = ({
 		},
 
 		onSuccess: () => {
-			console.log('uploaded image updated successfully...')
+			console.log('uploaded image updated successfully...');
 			// queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
 		},
 		onError: (error) => {
@@ -174,7 +174,7 @@ export const useAssessments = ({
 		},
 
 		onSuccess: () => {
-			console.log('uploaded deleted successfully...')
+			console.log('uploaded deleted successfully...');
 			// queryClient.invalidateQueries({ queryKey: ['getAssessment'] });
 		},
 		onError: (error) => {

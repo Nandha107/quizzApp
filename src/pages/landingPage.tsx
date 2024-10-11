@@ -33,7 +33,7 @@ const LandingPage = () => {
 
 			{/* Main Content */}
 			<div className="min-h-[88vh] border-b border-gradient-to-r from-teal-800 to-teal-800 relative flex flex-col lg:flex-row">
-			{/* <div className="min-h-[88vh] border-b border-gradient-to-r from-emerald-100 to-emerald-50 relative flex flex-col lg:flex-row"> */}
+				{/* <div className="min-h-[88vh] border-b border-gradient-to-r from-emerald-100 to-emerald-50 relative flex flex-col lg:flex-row"> */}
 				{/* Left Section */}
 				<div className="h-[279vh] w-[1px] ml-20 bg-gray-300 absolute -top-0"></div>
 				<div className="h-[88vh] w-[1px] ml-20 bg-gray-200 absolute left-48 "></div>
@@ -41,7 +41,7 @@ const LandingPage = () => {
 				<div className="h-[10vh] w-[1px] ml-20 bg-emerald-500 absolute -left-10 top-20"></div>
 
 				<div className="bg-gradient-to-r from-teal-600/40 to-teal-600/20 w-full rounded-tr-[150px] lg:rounded-tr-[407px] lg:w-[80%] flex flex-col justify-center pl-6 md:pl-12 lg:pl-28 py-8 lg:py-0">
-				{/* <div className="bg-gradient-to-r from-emerald-100 to-emerald-50 w-full rounded-tr-[150px] lg:rounded-tr-[407px] lg:w-[70%] flex flex-col justify-center pl-6 md:pl-12 lg:pl-28 py-8 lg:py-0"> */}
+					{/* <div className="bg-gradient-to-r from-emerald-100 to-emerald-50 w-full rounded-tr-[150px] lg:rounded-tr-[407px] lg:w-[70%] flex flex-col justify-center pl-6 md:pl-12 lg:pl-28 py-8 lg:py-0"> */}
 					<div className="w-[80%] lg:w-[63%]">
 						<h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-emerald-800 to-teal-500 bg-clip-text text-transparent mb-4">
 							Welcome to Assessment

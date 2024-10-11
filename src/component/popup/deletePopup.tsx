@@ -20,7 +20,7 @@ const DeletePopup: React.FC<DeletePopupProps> = ({
 	loader,
 }) => {
 	return (
-		<Popup className='flex justify-center items-center w-full p-5' onClose={onClose}>
+		<Popup className="flex justify-center items-center w-full p-5" onClose={onClose}>
 			<div className={`flex flex-col gap-10`}>
 				<div className="flex-col flex  gap-2">
 					<div className="font-bold text-xl ">Are you sure ?</div>

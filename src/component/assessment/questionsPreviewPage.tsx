@@ -16,7 +16,6 @@ type createQuestionPayload = AssessmentsStoreTypes.Questions;
 // Omit specific keys from the type
 type OmittedCreateQuestionPayload = Omit<createQuestionPayload, 'id' | 'levelId'>;
 type props = {
-	
 	previewData: OmittedCreateQuestionPayload[];
 
 	setEditQuestionIndex: (value: number) => void;
