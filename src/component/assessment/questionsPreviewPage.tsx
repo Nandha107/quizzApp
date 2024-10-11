@@ -8,6 +8,7 @@ import { assessmentStore } from '../../store/staff/assessments';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { Popconfirm as PopConfirm } from 'antd';
 
 // Assuming `AssessmentsStoreTypes.AssessmentData` has certain keys
 type createQuestionPayload = AssessmentsStoreTypes.Questions;
@@ -23,11 +24,11 @@ type props = {
 
 	setEditQuestionIndex: (value: number) => void;
 
-	handleDelete: (value: number) => void;
+	setDeleteQuestionIndex: (value: number) => void;
 };
 export const QuestionsPreviewPart: React.FC<props> = ({
 	previewData,
-	// handleDelete,
+	setDeleteQuestionIndex,
 	setEditQuestionIndex,
 	// setEdit,
 	// setFormValues,
@@ -44,6 +45,8 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	const [btnText, setBtnText] = useState('Save');
+
+	const [openPopConfirmBasedOnIndex, setOpenPopConfirmBasedOnIndex] = useState(0);
 
 	const assessmentId = searchParams.get('assessmentId') as string;
 
@@ -224,13 +227,36 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 											>
 												<FaEdit className="text-lg text-gray-600" />
 											</div>
-											<div
-												title="Delete"
-												className="border border-gray-500 bg-red-600/20 rounded-lg flex justify-center items-center p-2 hover:cursor-pointer"
-												onClick={() => {}}
+
+											<PopConfirm
+												title="Title"
+												description="Open PopConfirm with async logic"
+												placement="left"
+												open={openPopConfirmBasedOnIndex === index + 1}
+												onConfirm={() => {
+													setDeleteQuestionIndex(index + 1);
+												}}
+												okButtonProps={{ htmlType: 'button' }}
+												cancelButtonProps={{ htmlType: 'button' }}
+												onCancel={() => {
+													setOpenPopConfirmBasedOnIndex(0);
+												}}
+												getPopupContainer={(trigger) =>
+													trigger.parentElement || document.body
+												} // Ensure it stays within the scrollable container
 											>
-												<FaTrashAlt className="text-lg text-red-600" />
-											</div>
+												<div
+													title="Delete"
+													className="border border-gray-500 bg-red-600/20 rounded-lg flex justify-center items-center p-2 hover:cursor-pointer"
+													onClick={() => {
+														setOpenPopConfirmBasedOnIndex(
+															index + 1,
+														);
+													}}
+												>
+													<FaTrashAlt className="text-lg text-red-600" />
+												</div>
+											</PopConfirm>
 										</div>
 									</div>
 								);

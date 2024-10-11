@@ -50,6 +50,8 @@ export const CreateAssessment = () => {
 
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
+	const [deleteQuestionIndex, setDeleteQuestionIndex] = useState<number>(0);
+
 	const assessmentId = searchParams.get('assessmentId') as string;
 
 	const levelId = searchParams.get('levelId') as string;
@@ -66,6 +68,8 @@ export const CreateAssessment = () => {
 
 	const dataIsLoading =
 		getAssessment.isFetching || getAssessment.isLoading || getAssessment.isRefetching;
+
+	console.log({ deleteQuestionIndex });
 
 	useEffect(() => {
 		if (element) {
@@ -134,10 +138,11 @@ export const CreateAssessment = () => {
 	};
 
 	const handleDeleteQuestion = (index: number) => {
-		const questionsData = localStorage.getItem(levelId);
+		const questionsInLocalStore = localStorage.getItem(levelId);
 
-		if (questionsData) {
-			let questionsArray: OmittedCreateQuestionPayload[] = JSON.parse(questionsData);
+		if (questionsInLocalStore) {
+			const questionsArray: OmittedCreateQuestionPayload[] =
+				JSON.parse(questionsInLocalStore);
 
 			if (index >= 0 && index < questionsArray.length) {
 				questionsArray.splice(index, 1);
@@ -170,6 +175,27 @@ export const CreateAssessment = () => {
 		} finally {
 		}
 	};
+
+	useEffect(() => {
+		if (deleteQuestionIndex) {
+			const localStoredQues = JSON.parse(
+				localStorage.getItem(levelId) as string,
+			) as OmittedCreateQuestionPayload[];
+			if (!localStoredQues) {
+				const findEditLevel = storeAssessment.levels.find(
+					(level) => level.id === levelId,
+				);
+				// const findQues = findEditLevel?.questions?.[deleteQuestionIndex - 1];
+
+				localStorage.setItem(levelId, JSON.stringify(findEditLevel?.questions));
+
+				handleDeleteQuestion(deleteQuestionIndex - 1);
+			} else {
+				handleDeleteQuestion(deleteQuestionIndex - 1);
+			}
+		}
+	}, [deleteQuestionIndex]);
+
 	return (
 		<div className="relative flex w-full h-full bg-white">
 			<div
@@ -236,7 +262,7 @@ export const CreateAssessment = () => {
 				</div>
 			</div>
 			{dataIsLoading ? (
-				<div className="absolute bg-gray-600/70 w-full h-full flex justify-center items-center">
+				<div className="absolute bg-gray-600/70 w-full z-[10000] h-full flex justify-center items-center">
 					<LoadingSpinner
 						text="Fetching assessment data..."
 						className="text-white font-bold"
@@ -246,7 +272,8 @@ export const CreateAssessment = () => {
 			{assessmentId ? (
 				<div className="hidden w-full lg:w-[40%] h-full lg:flex">
 					<QuestionsPreviewPart
-						handleDelete={handleDeleteQuestion}
+						setDeleteQuestionIndex={setDeleteQuestionIndex}
+						// setDeleteQuestionIndex={handleDeleteQuestion}
 						previewData={previewData}
 						setEditQuestionIndex={setCurrentQuestionIndex}
 						// setEdit={setEdit}
