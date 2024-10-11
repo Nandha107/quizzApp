@@ -150,6 +150,7 @@ const QuestionPage = () => {
 	useEffect(() => {
 		handleNext();
 	}, [triggerSubmit, !Test.data?.completed]);
+
 	useEffect(() => {
 		const handleVisibilityChange = () => {
 			if (document.visibilityState === 'visible') {
@@ -170,6 +171,7 @@ const QuestionPage = () => {
 			document.removeEventListener('visibilitychange', handleVisibilityChange);
 		};
 	}, [showResult != true, instruction != true, tabSwitchCount]);
+
 	useEffect(() => {
 		if (!showResult && !instruction && !isTabFocused && tabSwitchCount < 3) {
 			setShowPopup(true);
@@ -560,6 +562,15 @@ const QuestionPage = () => {
 							<h2 className="mb-2 text-lg font-bold">
 								{currentQuestionIndex + 1}. {currentQuestion.question}
 							</h2>
+							{currentQuestion.imageUrl ? (
+								<div className="relative w-[100%] h-[250px] bg-gray-600/10 rounded-lg border border-gray-300">
+									<img
+										src={currentQuestion.imageUrl}
+										alt="Preview"
+										className={`absolute inset-0 w-full h-full object-contain rounded`}
+									/>
+								</div>
+							) : null}
 							{currentQuestion.questionType === 'TEXTAREA' ? (
 								<textarea
 									className={`border transition-all duration-200 resize-none min-h-[200px] max-h-[200px] w-full px-3 py-4 rounded-lg outline-none focus:border-primary`}
