@@ -59,23 +59,32 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 					</div>
 					<div className="flex justify-center gap-2 mt-2">
 						<button
-							type='button'
+							type="button"
+							disabled={loading}
 							onClick={handleRemoveImage}
-							className="bg-red-600 text-white py-1 px-3 rounded flex items-center gap-1"
+							className="bg-red-600 text-white py-1 px-3 rounded flex items-center gap-1 disabled:bg-red-600/60"
 						>
 							<BsX className="h-5 w-5" /> Remove Image
 						</button>
-						<label className="bg-teal-600 text-white py-2 px-7 rounded cursor-pointer inline-block">
-							<span className="flex items-center gap-2">
-								<BsLink className="h-5 w-5" /> update image
-							</span>
-							<input
-								type="file"
-								className="hidden"
-								accept=".png, .jpeg, .jpg"
-								onChange={handleUpdateImage}
-							/>
-						</label>
+						{!loading ? (
+							<label className="bg-teal-600 text-white py-2 px-7 rounded cursor-pointer inline-block">
+								<span className="flex items-center gap-2">
+									<BsLink className="h-5 w-5" /> update image
+								</span>
+								<input
+									type="file"
+									className="hidden"
+									accept=".png, .jpeg, .jpg"
+									onChange={handleUpdateImage}
+								/>
+							</label>
+						) : (
+							<label className="bg-teal-600/60 text-white py-2 px-7 rounded cursor-not-allowed inline-block">
+								<span className="flex items-center gap-2">
+									<BsLink className="h-5 w-5" /> update image
+								</span>
+							</label>
+						)}
 					</div>
 				</div>
 			) : (
@@ -87,17 +96,25 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
 			{uploaded ? null : (
 				<div>
-					<label className="bg-teal-600 text-white py-2 px-7 rounded cursor-pointer inline-block">
-						<span className="flex items-center gap-2">
-							<BsLink className="h-5 w-5" /> Choose file
-						</span>
-						<input
-							type="file"
-							className="hidden"
-							accept=".png, .jpeg, .jpg"
-							onChange={handleImageChange}
-						/>
-					</label>
+					{!loading ? (
+						<label className="bg-teal-600 text-white py-2 px-7 rounded cursor-pointer inline-block">
+							<span className="flex items-center gap-2">
+								<BsLink className="h-5 w-5" /> Choose file
+							</span>
+							<input
+								type="file"
+								className="hidden"
+								accept=".png, .jpeg, .jpg"
+								onChange={handleImageChange}
+							/>
+						</label>
+					) : (
+						<label className="bg-teal-600/60 text-white py-2 px-7 rounded cursor-not-allowed inline-block">
+							<span className="flex items-center gap-2">
+								<BsLink className="h-5 w-5" /> Choose file
+							</span>
+						</label>
+					)}
 				</div>
 			)}
 

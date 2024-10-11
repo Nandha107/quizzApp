@@ -99,7 +99,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 			options: [{ value: '' }],
 			answer: '',
 			enableImage: false,
-			imageUrl: "https://i.ibb.co/fDZxHTp/Vector-1.png",
+			imageUrl: 'https://i.ibb.co/fDZxHTp/Vector-1.png',
 		},
 	});
 
@@ -129,7 +129,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 
 			const reader = new FileReader();
 			reader.onloadend = async () => {
-				setValue('imageUrl', reader.result as string);
+				setValue('imageUrl', reader.result as string, { shouldDirty: true });
 
 				const formData = new FormData();
 
@@ -138,8 +138,8 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 				formData.append('file', FormattedFile);
 
 				await uploadImage.mutateAsync({ file: formData }).then((res) => {
-					setValue('imageUrl', res.url);
-					setValue('enableImage', true);
+					setValue('imageUrl', res.url, { shouldDirty: true });
+					setValue('enableImage', true, { shouldDirty: true });
 				});
 
 				setError(null);
@@ -159,7 +159,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 
 			const reader = new FileReader();
 			reader.onloadend = async () => {
-				setValue('imageUrl', reader.result as string);
+				setValue('imageUrl', reader.result as string, { shouldDirty: true });
 
 				const formData = new FormData();
 
@@ -173,8 +173,8 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 						oldKey: watch('imageUrl').split('/').pop() as any,
 					})
 					.then((res) => {
-						setValue('imageUrl', res.url);
-						setValue('enableImage', true);
+						setValue('imageUrl', res.url, { shouldDirty: true });
+						setValue('enableImage', true, { shouldDirty: true });
 					});
 
 				setError(null);
@@ -187,8 +187,10 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 		await deleteImage
 			.mutateAsync({ fileKey: watch('imageUrl').split('/').pop() as any })
 			.then(() => {
-				setValue('enableImage', false);
-				setValue('imageUrl', 'https://i.ibb.co/fDZxHTp/Vector-1.png');
+				setValue('enableImage', false, { shouldDirty: true });
+				setValue('imageUrl', 'https://i.ibb.co/fDZxHTp/Vector-1.png', {
+					shouldDirty: true,
+				});
 			});
 	};
 	const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -207,8 +209,8 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 				formData.append('file', FormattedFile);
 
 				await uploadImage.mutateAsync({ file: formData }).then((res) => {
-					setValue('imageUrl', res.url);
-					setValue('enableImage', true);
+					setValue('imageUrl', res.url, { shouldDirty: true });
+					setValue('enableImage', true, { shouldDirty: true });
 				});
 			};
 			reader.readAsDataURL(file);
@@ -250,6 +252,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 				localStorage.setItem(currentLevelId, JSON.stringify(findEditLevel?.questions));
 
 				reset(findQues);
+				console.log({ sssss: isDirty });
 			} else {
 				const findEditQues = localStoredQues?.[editQuestionIndex - 1];
 				reset(findEditQues);
@@ -301,7 +304,11 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 							handleDragOver={handleDragOver}
 							handleDragLeave={handleDragLeave}
 							dragging={dragging}
-							loading={uploadImage.isPending}
+							loading={
+								uploadImage.isPending ||
+								deleteImage.isPending ||
+								updateImage.isPending
+							}
 						/>
 						{error && <p>{error}</p>}
 					</div>
