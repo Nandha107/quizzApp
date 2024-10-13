@@ -94,7 +94,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 			timer: {
 				hours: 0,
 				minutes: 1,
-				overAllSeconds: 60000,
+				overAllSeconds: 60,
 			},
 			questionType: 'CHOICE',
 			options: [{ value: '' }],
@@ -264,7 +264,7 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 				timer: {
 					hours: 0,
 					minutes: 1,
-					overAllSeconds: 60000,
+					overAllSeconds: 60,
 				},
 				questionType: 'CHOICE',
 				options: [{ value: '' }],
