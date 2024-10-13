@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { CgClose } from 'react-icons/cg';
 import { PrimaryButton } from '../buttons/primaryButton';
+import { departmentTopics } from '../../utils/departmentTopics';
+import { useParams } from 'react-router-dom';
 
 type handleGenerateProps = {
 	topic: string;
@@ -31,26 +33,10 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 	const [answerTypeTextArea, setAnswerTypeTextArea] = useState<boolean>(true);
 	const [timeDurationType, setTimeDurationType] = useState<string>('single');
 	const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+	const { dept } = useParams() as any;
 
 	// Suggested topics
-	const suggestedTopics = [
-		'Structural Analysis',
-		'Fluid Mechanics',
-		'Geotechnical Engineering',
-		'Transportation Engineering',
-		'Environmental Engineering',
-		'Construction Management',
-		'Material Science',
-		'Soil Mechanics',
-		'Hydraulics',
-		'Surveying',
-		'Reinforced Concrete Design',
-		'Steel Structures',
-		'Urban Planning',
-		'Project Management',
-		'Sustainable Construction Practices',
-	];
-
+	
 	// State for error messages
 	const [errors, setErrors] = useState<{
 		topic?: string;
@@ -126,7 +112,6 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 		};
 	}, [suggestionRef]);
 	if (!isOpen) return null;
-
 	return (
 		<div className="flex items-center justify-center min-h-screen fixed inset-0 bg-black bg-opacity-50 z-50 rounded-lg">
 			<div className="bg-white rounded-lg shadow-lg md:w-[50%] w-[90%] lg:w-[50%] xl:w-[38%] relative">
@@ -159,7 +144,7 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 							className={`w-full mt-1 p-3 border rounded-xl focus:outline-none focus:ring-2 ${
 								errors.topic
 									? 'border-red-500 focus:ring-red-500'
-									: 'focus:ring-green-500'
+									: 'focus:ring-teal-500'
 							}`}
 						/>
 						{errors.topic && (
@@ -173,10 +158,10 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 								style={{ maxHeight: '150px', overflowY: 'auto' }}
 							>
 								<div className="flex flex-wrap p-2">
-									{suggestedTopics.map((suggestion, index) => (
+									{departmentTopics[dept]?.map((suggestion:any, index:number) => (
 										<button
 											key={index}
-											className="flex-1 m-1 p-2 bg-teal-50 text-teal-600 font-semibold rounded hover:bg-teal-100"
+											className="flex-1 m-1 p-2 bg-teal-50 text-teal-600 border hover:border-teal-500  font-semibold rounded hover:bg-teal-100"
 											onClick={() => handleTopicSelection(suggestion)}
 										>
 											{suggestion}
@@ -264,7 +249,7 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 								<input
 									type="radio"
 									name="time"
-									className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-teal-600 checked:border-transparent focus:outline-none"
+									className=" w-6 h-6 border border-gray-300 rounded-full checked:bg-teal-600 checked:border-transparent focus:outline-none"
 									value="overall"
 									checked={timeDurationType === 'overall'}
 									onChange={() => setTimeDurationType('overall')}
