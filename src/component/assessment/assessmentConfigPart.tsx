@@ -4,7 +4,7 @@ import TimeDurationSelect from '../inputs/timePicker';
 import { assessmentStore } from '../../store/staff/assessments';
 import { PrimaryOutlineButton } from '../buttons/primaryOutlineButton';
 import { PrimaryButton } from '../buttons/primaryButton';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useState } from 'react';
 import { useAssessments } from '../../hooks/useAssessment';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -21,6 +21,12 @@ export const AssessmentConfigPart = () => {
 	const { createAssessment } = useAssessments({ course: dept?.toUpperCase() });
 
 	const [_, setSearchParams] = useSearchParams();
+
+	const [isEditAssessmentConfig, setIsEditAssessmentConfig] = useState(false);
+
+	const { getAssessment, updateAssessmentConfig } = useAssessments({
+		assessmentId: _.get('assessmentId') as string,
+	});
 
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -68,6 +74,25 @@ export const AssessmentConfigPart = () => {
 		}
 	};
 
+	const onDateRangeConvert = (startTime: number, endTime: number) => {
+		// console.log({ startTime, endTime });
+		// Ensure that startTime and endTime are in milliseconds
+		const convertedStartDate = dayjs(startTime); // Automatically handles if it's in milliseconds
+		const convertedEndDate = dayjs(endTime);
+
+		// Formatting the converted dates
+		// console.log('Converted Start Date:', convertedStartDate.format('YYYY-MM-DD'));
+		// console.log('Converted End Date:', convertedEndDate.format('YYYY-MM-DD'));
+
+		// Create an array with the new Dayjs objects
+		const newDateRange: Dayjs[] = [convertedStartDate, convertedEndDate];
+
+		// Log the new date range array for verification
+		// console.log('New Date Range:', newDateRange);
+
+		return newDateRange; // Return the new date range array
+	};
+
 	const handleCreateAssessment = async (event: React.FormEvent) => {
 		event.preventDefault(); // Prevent default form submission
 		try {
@@ -86,7 +111,10 @@ export const AssessmentConfigPart = () => {
 				.then((res) => {
 					setIsLoading(false);
 					// console.log({ newAssessment: res });
-					setSearchParams({ assessmentId: res.id, levelId: res.levels?.[0]?.id });
+					setSearchParams(
+						{ assessmentId: res.id, levelId: res.levels?.[0]?.id },
+						{ replace: true },
+					);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -116,10 +144,66 @@ export const AssessmentConfigPart = () => {
 		}
 	};
 
+	const handleUpdateAssessmentConfig = async (event: React.FormEvent) => {
+		event.preventDefault(); // Prevent default form submission
+		try {
+			setIsLoading(true); // Show loading spinner while creating assessment
+			const updateAssessment = updateAssessmentConfig
+				.mutateAsync({
+					assessmentId: getAssessment?.data?.id as string,
+					body: {
+						name: storeAssessment.name,
+						timerForWholeTest: storeAssessment.timerForWholeTest as boolean,
+						duration: storeAssessment.duration,
+						startTime: storeAssessment.dateRange.startTime as number,
+						endTime: storeAssessment.dateRange.endTime as number,
+						instructions: {
+							heading: storeAssessment.instructions.heading as string,
+							description: storeAssessment.instructions.description as string,
+						},
+						category: dept?.toUpperCase() as string,
+						levelsCount: storeAssessment.levelsCount as number,
+					},
+				})
+				.then(() => {
+					setIsLoading(false);
+					// console.log({ newAssessment: res });
+					setIsEditAssessmentConfig((old) => !old);
+				})
+				.catch((err) => {
+					console.log(err);
+					setIsLoading(false);
+				});
+
+			toast.promise(
+				updateAssessment,
+				{
+					loading: 'Assessment Config Updating...',
+					success: 'Assessment Config Updated Successfully',
+					error: () =>
+						updateAssessmentConfig.isError
+							? (createAssessment.error as any).message
+							: 'Sorry! failed to update Assessment Config, please try again later',
+				},
+
+				{ id: 'Toast' },
+			);
+
+			await updateAssessment;
+			// const res = await createNewAssessment;
+
+			// console.log({ createAssessment: res });
+		} catch (err) {
+			console.log('Cannot Create Assessment ====> ', err);
+		}
+	};
+
 	return (
 		<form
 			className="flex flex-col w-full h-full gap-5 p-3"
-			onSubmit={handleCreateAssessment}
+			onSubmit={
+				storeAssessment.id ? handleUpdateAssessmentConfig : handleCreateAssessment
+			}
 		>
 			<div className="md:grid md:grid-cols-2 md:gap-3">
 				{/* Assessment Name Input */}
@@ -220,6 +304,7 @@ export const AssessmentConfigPart = () => {
 							id="levelCount"
 							placeholder="Enter a Level Count"
 							keyboard={true}
+							disabled={!!storeAssessment.id}
 							changeOnWheel
 							className="w-full border-0 focus:ring-1 focus:ring-teal-600 focus:outline-none"
 							value={storeAssessment.levelsCount}
@@ -281,29 +366,77 @@ export const AssessmentConfigPart = () => {
 					</div>
 				</div>
 			</div>
-			<div className="flex items-center justify-end gap-3">
-				<PrimaryOutlineButton
-					type="button"
-					text="Clear"
-					disabled={isLoading}
-					onClick={() => {
-						storeAssessment.resetAssessmentStore();
-					}}
-				/>
-				<PrimaryButton
-					type="submit"
-					className="disabled:bg-teal-600/200"
-					icon={
-						isLoading ? (
-							<LoadingSpinner
-								text="Creating..."
-								className="font-semibold text-white"
-							/>
-						) : null
-					}
-					text={isLoading ? '' : 'Create Assessment'}
-				/>
-			</div>
+			{isEditAssessmentConfig ? (
+				<div className="flex items-center justify-end gap-3">
+					<PrimaryOutlineButton
+						type="button"
+						text={storeAssessment.id ? 'Cancel' : 'Clear'}
+						disabled={isLoading}
+						onClick={() => {
+							if (storeAssessment.id) {
+								storeAssessment.setCreateAssessment({
+									...storeAssessment,
+									id: getAssessment.data?.id as string,
+									name: getAssessment.data?.name as string,
+									timerForWholeTest: getAssessment.data
+										?.timerForWholeTest as boolean,
+									dateRange: {
+										range: onDateRangeConvert(
+											(getAssessment.data?.startTime as number) * 1000,
+											(getAssessment.data?.endTime as number) * 1000,
+										) as [Dayjs, Dayjs], // Call the function to convert epoch to Dayjs
+										startTime: getAssessment.data?.startTime as number,
+										endTime: getAssessment.data?.endTime as number,
+									},
+									levelsCount: getAssessment.data?.levelsCount as number,
+									instructions: {
+										heading: getAssessment.data?.instructions
+											.heading as string,
+										description: getAssessment.data?.instructions
+											.description as string,
+									},
+								});
+								setIsEditAssessmentConfig((old) => !old);
+							} else {
+								storeAssessment.resetAssessmentStore();
+							}
+						}}
+					/>
+					<PrimaryButton
+						type="submit"
+						className="disabled:bg-teal-600/200"
+						icon={
+							isLoading ? (
+								<LoadingSpinner
+									text="Updating..."
+									className="font-semibold text-white"
+								/>
+							) : null
+						}
+						text={
+							isLoading
+								? ''
+								: storeAssessment.id
+									? 'Update Assessment'
+									: 'Create Assessment'
+						}
+					/>
+				</div>
+			) : null}
+			{!isEditAssessmentConfig ? (
+				<div className="absolute top-0 left-0 w-full h-full rounded-lg bg-gray-500/25">
+					<div className="flex justify-end p-5">
+						<button
+							className="border border-gray-300 w-[10%] bg-white rounded-lg py-2 shadow-md"
+							onClick={() => {
+								setIsEditAssessmentConfig((old) => !old);
+							}}
+						>
+							Edit
+						</button>
+					</div>
+				</div>
+			) : null}
 		</form>
 	);
 };

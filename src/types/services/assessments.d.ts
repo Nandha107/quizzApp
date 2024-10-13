@@ -139,12 +139,18 @@ declare module Assessments {
 
 	export interface updateAssessmentConfig {
 		name?: string;
-		timerForWholeTest?: string;
+		timerForWholeTest?: boolean;
 		duration?: {
 			hours: number;
 			minutes: number;
 			overAllSeconds: number;
 		};
+		instructions?: {
+			heading: string;
+			description: string;
+		};
+		startTime?: number;
+		endTime?: number;
 		publish?: boolean;
 		category?: string;
 		levelsCount?: number;

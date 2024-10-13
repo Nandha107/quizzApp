@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 import { PrimaryButton } from '../buttons/primaryButton';
 import { PlusIcon } from '../../assets/svg/plus';
 import { useClickOutside } from '../../hooks/useClickOutSide';
+import { assessmentStore } from '../../store/staff/assessments';
 
 const Header: React.FC = () => {
 	const navigate = useNavigate();
@@ -15,6 +16,8 @@ const Header: React.FC = () => {
 	const { dept } = useParams();
 
 	const [searchParams, _] = useSearchParams();
+
+	const storeAssessment = assessmentStore();
 
 	const assessmentId = searchParams.get('assessmentId');
 
@@ -71,7 +74,10 @@ const Header: React.FC = () => {
 							text="Create Assessment"
 							icon={<PlusIcon />}
 							// onClick={() => navigate(`/staff-dashboard/${getDept}/create-assessment`)}
-							onClick={() => navigate(`/create-assessment/${dept}`)}
+							onClick={() => {
+								storeAssessment.resetAssessmentStore();
+								navigate(`/create-assessment/${dept}`);
+							}}
 						/>
 					</div>
 				) : null}

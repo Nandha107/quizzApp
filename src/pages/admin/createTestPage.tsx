@@ -40,6 +40,8 @@ export const CreateAssessment = () => {
 
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+	// const [isEditAssessmentConfig, setIsEditAssessmentConfig] = useState(false);
+
 	const openAiPopup = () => {
 		setIsPopupOpen(true);
 	};
@@ -234,15 +236,20 @@ export const CreateAssessment = () => {
 					<div className="relative flex flex-col gap-2 px-5 pt-4 border border-gray-400 rounded-lg">
 						<p className="font-semibold">Test Configuration</p>
 						<AssessmentConfigPart />
-						{assessmentId ? (
+						{/* {!isEditAssessmentConfig ? (
 							<div className="absolute top-0 left-0 w-full h-full rounded-lg bg-gray-500/25">
 								<div className="flex justify-end p-5">
-									<button className="border border-gray-300 w-[10%] bg-white rounded-lg py-2 shadow-md">
+									<button
+										className="border border-gray-300 w-[10%] bg-white rounded-lg py-2 shadow-md"
+										onClick={() => {
+											setIsEditAssessmentConfig((old) => !old);
+										}}
+									>
 										Edit
 									</button>
 								</div>
 							</div>
-						) : null}
+						) : null} */}
 					</div>
 					{!dataIsLoading && getAssessment.data?.levels.length ? (
 						<div
