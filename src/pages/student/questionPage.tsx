@@ -305,7 +305,9 @@ const QuestionPage = () => {
 				if (res.create) {
 					alert('successfully submitted the responses');
 					toast.success('successfully submitted the responses');
-					setShowResult(true);
+					currentLevelLength === currentLevelIndex + 1
+						? setSubmitted(true)
+						: setShowResult(true);
 				}
 				localStorage.removeItem(`test-${testId}-level-${currentLevelIndex}-responses`);
 				if (
@@ -468,36 +470,7 @@ const QuestionPage = () => {
 
 	if (Test.data.completedLevelIndexes.includes(currentLevelIndex) || showResult) {
 		return (
-			// <div className="justify-center flex flex-col h-[80vh] items-center text-center">
-			// 	<h2 className="mb-4 text-2xl font-bold">
-			// 		Level {currentLevelIndex + 1} Results
-			// 	</h2>
-			// 	<p className="text-lg">You mark is {levelResult.data?.score} .</p>
-			// 	<span>
-			// 		{levelResult.data?.level.Response.map((res) => {
-			// 			return (
-			// 				<div
-			// 					className={`bg-${res.isCorrect ? 'green-300' : 'bg-red-300'}`}
-			// 				>
-			// 					<span className="flex gap-7">
-			// 						your Answer:
-			// 						{res.selectedOption}
-			// 					</span>
-			// 					<span className="flex gap-2">
-			// 						correctAnswer {res.question.answer}
-			// 					</span>
-			// 				</div>
-			// 			);
-			// 		})}
-			// 	</span>
-			// 	<button
-			// 		className="px-6 py-2 mt-4 bg-blue-500 rounded-lg"
-			// 		onClick={handleNextLevel}
-			// 		disabled={currentLevelIndex >= currentLevelLength - 1}
-			// 	>
-			// 		{currentLevelIndex < currentLevelLength - 1 ? 'Next Level' : 'Finish'}
-			// 	</button>
-			// </div>
+			
 			<LevelsScorePage
 				isLoading={levelResult.isLoading}
 				onClick={handleNextLevel}
@@ -543,6 +516,7 @@ const QuestionPage = () => {
 								className={`flex items-center justify-center gap-2 font-bold 
 								${questionTimeRemaining <= 10 ? 'text-red-500' : questionTimeRemaining <= 50 ? 'text-yellow-500' : 'text-green-500'}`}
 							>
+								
 								Time Remaining (Question):{formatTimeMS(questionTimeRemaining)}
 								{/* {String(Math.floor(questionTimeRemaining / 60)).padStart(
 									2,
@@ -554,15 +528,17 @@ const QuestionPage = () => {
 					</span>
 				</div>
 				<div className="flex items-center w-full gap-5 px-5 py-4 bg-teal-600/30 md:gap-10 lg:px-24 lg:gap-24">
-					<span className="items-start text-lg font-bold ">
+					<span className="items-start text-lg font-bold w-[20%]">
 						{currentLevelIndex + 1}. {currentLevel?.levelName}
 					</span>
 					{currentLevelIndex + 1 === Test.data.levels.length ? null : (
-						<LevelBar
-							totalLevels={Test.data.levels.length}
-							activeLevel={currentLevelIndex}
-							completedLevels={Test.data.completedLevelIndexes}
-						/>
+						<div className="w-[80%]">
+							<LevelBar
+								totalLevels={Test.data.levels.length}
+								activeLevel={currentLevelIndex}
+								completedLevels={Test.data.completedLevelIndexes}
+							/>
+						</div>
 					)}
 				</div>
 				{currentQuestion && (
