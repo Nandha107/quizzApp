@@ -14,6 +14,7 @@ import LevelsScorePage from '../../component/pageComponents/student/levelScorePa
 import { PrimaryButton } from '../../component/buttons/primaryButton';
 import { BackArrow } from '../../assets/svg/backArrow';
 import { LoadingSpinner } from '../../component/spinner/loadingSpinner';
+import ErrorPopup from '../../component/popup/errorPopup';
 const formatTime = (seconds: number): string => {
 	const minutes = Math.floor(seconds / 60);
 	const remainingSeconds = seconds % 60;
@@ -65,6 +66,8 @@ const QuestionPage = () => {
 	const [termsAccepted, setTermsAccepted] = useState(false);
 	const [submittedPage, setSubmitted] = useState(false);
 	const [textarea, setTextAreaValue] = useState('');
+	const [error, setError] = useState<{ message: string } | null>(null);
+
 
 	const navigate = useNavigate();
 
@@ -315,8 +318,11 @@ const QuestionPage = () => {
 					setSubmitted(true);
 					// navigate(`/result/${res.updatedUserMarks.id}`);
 				}
-			} catch (error) {
+			} catch (error:any) {
 				setTrigger(false);
+				if (error.response.data.statusCode === 403) {
+					setError({ message: error.response.data.message });
+				  }
 				console.error('Error submitting responses:', error);
 			}
 		}
@@ -647,6 +653,7 @@ const QuestionPage = () => {
 					onClick={handleNext}
 				/>
 			</div>
+			{error && <ErrorPopup  heading='Something wrong!' navigateTo='/student-dashboard?tab=assessments' message={error.message} />}
 			<QuizReminderPopup showPopup={showPopup} onClose={handleClosePopup} />
 		</div>
 	);
