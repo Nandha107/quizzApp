@@ -36,7 +36,7 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 	const { dept } = useParams() as any;
 
 	// Suggested topics
-	
+
 	// State for error messages
 	const [errors, setErrors] = useState<{
 		topic?: string;
@@ -158,15 +158,19 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 								style={{ maxHeight: '150px', overflowY: 'auto' }}
 							>
 								<div className="flex flex-wrap p-2">
-									{departmentTopics[dept]?.map((suggestion:any, index:number) => (
-										<button
-											key={index}
-											className="flex-1 m-1 p-2 bg-teal-50 text-teal-600 border hover:border-teal-500  font-semibold rounded hover:bg-teal-100"
-											onClick={() => handleTopicSelection(suggestion)}
-										>
-											{suggestion}
-										</button>
-									))}
+									{departmentTopics[dept]?.map(
+										(suggestion: any, index: number) => (
+											<button
+												key={index}
+												className="flex-1 m-1 p-2 bg-teal-50 text-teal-600 border hover:border-teal-500  font-semibold rounded hover:bg-teal-100"
+												onClick={() =>
+													handleTopicSelection(suggestion)
+												}
+											>
+												{suggestion}
+											</button>
+										),
+									)}
 								</div>
 							</div>
 						)}

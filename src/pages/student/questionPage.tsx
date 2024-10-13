@@ -68,7 +68,6 @@ const QuestionPage = () => {
 	const [textarea, setTextAreaValue] = useState('');
 	const [error, setError] = useState<{ message: string } | null>(null);
 
-
 	const navigate = useNavigate();
 
 	const currentLevel = Test.data?.levels[currentLevelIndex];
@@ -318,11 +317,11 @@ const QuestionPage = () => {
 					setSubmitted(true);
 					// navigate(`/result/${res.updatedUserMarks.id}`);
 				}
-			} catch (error:any) {
+			} catch (error: any) {
 				setTrigger(false);
 				if (error.response.data.statusCode === 403) {
 					setError({ message: error.response.data.message });
-				  }
+				}
 				console.error('Error submitting responses:', error);
 			}
 		}
@@ -540,8 +539,10 @@ const QuestionPage = () => {
 						)}
 
 						{timerType === false && questionTimeRemaining !== null && (
-							<div className={`flex items-center justify-center gap-2 font-bold 
-								${questionTimeRemaining <= 10 ? 'text-red-500' : questionTimeRemaining <= 50 ? 'text-yellow-500' : 'text-green-500'}`}>
+							<div
+								className={`flex items-center justify-center gap-2 font-bold 
+								${questionTimeRemaining <= 10 ? 'text-red-500' : questionTimeRemaining <= 50 ? 'text-yellow-500' : 'text-green-500'}`}
+							>
 								Time Remaining (Question):{formatTimeMS(questionTimeRemaining)}
 								{/* {String(Math.floor(questionTimeRemaining / 60)).padStart(
 									2,
@@ -556,14 +557,13 @@ const QuestionPage = () => {
 					<span className="items-start text-lg font-bold ">
 						{currentLevelIndex + 1}. {currentLevel?.levelName}
 					</span>
-					{
-						currentLevelIndex+1===Test.data.levels.length?null:	<LevelBar
-						totalLevels={Test.data.levels.length}
-						activeLevel={currentLevelIndex}
-						completedLevels={Test.data.completedLevelIndexes}
-					/>
-					}
-				
+					{currentLevelIndex + 1 === Test.data.levels.length ? null : (
+						<LevelBar
+							totalLevels={Test.data.levels.length}
+							activeLevel={currentLevelIndex}
+							completedLevels={Test.data.completedLevelIndexes}
+						/>
+					)}
 				</div>
 				{currentQuestion && (
 					<div className="flex items-center justify-center w-full h-full p-5">
@@ -653,7 +653,13 @@ const QuestionPage = () => {
 					onClick={handleNext}
 				/>
 			</div>
-			{error && <ErrorPopup  heading='Something wrong!' navigateTo='/student-dashboard?tab=assessments' message={error.message} />}
+			{error && (
+				<ErrorPopup
+					heading="Something wrong!"
+					navigateTo="/student-dashboard?tab=assessments"
+					message={error.message}
+				/>
+			)}
 			<QuizReminderPopup showPopup={showPopup} onClose={handleClosePopup} />
 		</div>
 	);
