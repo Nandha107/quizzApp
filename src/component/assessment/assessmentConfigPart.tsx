@@ -30,7 +30,8 @@ export const AssessmentConfigPart = () => {
 
 		// console.log('Selected Time:', hours, 'Hours', minutes, 'Minutes');
 
-		const overAllSeconds = hours * 60 * 60 * 1000 + minutes * 60 * 1000;
+		const overAllSeconds = hours * 60 * 60 + minutes * 60;
+		// const overAllSeconds = hours * 60 * 60 * 1000 + minutes * 60 * 1000;
 
 		// console.log({ overAllSeconds });
 

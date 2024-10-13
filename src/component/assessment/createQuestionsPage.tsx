@@ -69,7 +69,8 @@ export const AssessmentQuestionsPart: React.FC<Props> = ({
 	const onTimeChange = (data: { hours: string; minutes: string }) => {
 		const hours = Number(data.hours);
 		const minutes = Number(data.minutes);
-		const overAllSeconds = hours * 60 * 60 * 1000 + minutes * 60 * 1000;
+		const overAllSeconds = hours * 60 * 60 + minutes * 60;
+		// const overAllSeconds = hours * 60 * 60 * 1000 + minutes * 60 * 1000;
 
 		setValue('timer', {
 			hours,
