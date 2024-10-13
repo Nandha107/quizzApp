@@ -2,7 +2,7 @@ import React from 'react';
 import { useStudents } from '../../../hooks/user/students/useStudents';
 import { jwtDecode } from 'jwt-decode';
 import { Config } from '../../../config';
-import { Pie, Line } from 'react-chartjs-2';
+import { Pie } from 'react-chartjs-2';
 import {
 	Chart as ChartJS,
 	ArcElement,
@@ -50,20 +50,6 @@ const StudentAnalyticPage: React.FC = () => {
 				],
 				backgroundColor: ['#2dd4bf', '#f87171'],
 				borderWidth: 1,
-			},
-		],
-	};
-
-	// Line chart data for rank over time
-	const rankChartData = {
-		labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-		datasets: [
-			{
-				label: 'Rank Over Time',
-				data: [5, 4, 3, studentDetailsData?.data?.rank || 0], // Example data
-				fill: false,
-				borderColor: '#2dd4bf',
-				tension: 0.1,
 			},
 		],
 	};
