@@ -18,7 +18,9 @@ const Header: React.FC = () => {
 
 	const assessmentId = searchParams.get('assessmentId');
 
-	const showNavBtn = location.pathname === '/create-assessment/mech';
+	const showNavBtn =
+		location.pathname === `/create-assessment/${dept}` ||
+		location.pathname === `/staff-dashboard/courses`;
 
 	const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 

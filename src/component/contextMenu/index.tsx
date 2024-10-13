@@ -18,8 +18,9 @@ type DropDownOption = {
 interface SettingsDropdownProps {
 	DropDownObjects: any;
 	onOptionSelect: (option: DropDownOption) => void;
-	onChange: () => void;
+	onChange: (e: any) => void;
 	onClickIcon?: () => void;
+	isLoading?: boolean;
 	toggle: boolean;
 	toggleChecked?: boolean;
 	width?: string;
@@ -45,6 +46,7 @@ const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
 	onChange,
 	onClickIcon,
 	toggle = true,
+	isLoading,
 	toggleChecked = true,
 	width = 'w-40',
 	margin = 'mt-2 -ml-20 ',
@@ -107,8 +109,9 @@ const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
 								<span>Publish</span>
 								<Switch
 									className="bg-gray-300"
-									onChange={onChange}
+									onChange={(e) => onChange(e)}
 									defaultChecked={toggleChecked}
+									disabled={isLoading}
 								/>
 							</label>
 						) : null}

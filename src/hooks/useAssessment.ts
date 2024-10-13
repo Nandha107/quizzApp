@@ -86,6 +86,25 @@ export const useAssessments = ({
 		},
 	});
 
+	const updateAssessmentConfig = useMutation({
+		mutationFn: (payload: {
+			assessmentId: string;
+			body: Assessments.updateAssessmentConfig;
+		}) => AssessmentClient.updateAssessmentConfig(payload.assessmentId, payload.body),
+		onSuccess: () => {
+			toast.success('Assessment has successfully updated...');
+			// queryClient.invalidateQueries({ queryKey: ['getAssessment', assessmentId!] });
+			queryClient.invalidateQueries({
+				queryKey: ['allAssessments', course],
+			});
+		},
+		onError: (error) => {
+			toast.error(
+				error.message ?? 'Sorry, Failed to Update a Assessment, please try again',
+			);
+		},
+	});
+
 	const deleteAssessment = useMutation({
 		mutationFn: (assessmentId: string) => AssessmentClient.deleteAssessment(assessmentId),
 		onSuccess: () => {
@@ -218,6 +237,7 @@ export const useAssessments = ({
 		getAssessmentAnalytics,
 		createAssessment,
 		updateAssessment,
+		updateAssessmentConfig,
 		deleteAssessment,
 		getAssessmentLevel,
 		uploadImage,

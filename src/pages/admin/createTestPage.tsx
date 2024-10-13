@@ -206,7 +206,7 @@ export const CreateAssessment = () => {
 							className="px-2 py-2 border border-gray-500 rounded-lg hover:cursor-pointer hover:bg-gray-300"
 							onClick={() => {
 								storeAssessment.resetAssessmentStore();
-								navigate(`/staff-dashboard/${dept}?tab=assessments`);
+								navigate(`/staff-dashboard/${dept}?tab=assessments`, {replace: true});
 							}}
 						>
 							<BackArrow />
@@ -228,7 +228,7 @@ export const CreateAssessment = () => {
 						/>
 					)}
 				</div>
-				<div className="flex flex-col gap-5 px-5 py-3 overflow-auto bg-white">
+				<div className="flex flex-col gap-5 px-5 py-3 overflow-y-auto bg-white">
 					<div className="relative flex flex-col gap-2 px-5 pt-4 border border-gray-400 rounded-lg">
 						<p className="font-semibold">Test Configuration</p>
 						<AssessmentConfigPart />

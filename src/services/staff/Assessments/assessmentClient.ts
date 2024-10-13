@@ -55,6 +55,25 @@ export class AssessmentClient {
 		}
 	}
 
+	static async updateAssessmentConfig(
+		testId: string,
+		body: Assessments.updateAssessmentConfig,
+	) {
+		try {
+			const res = await axios.put<Assessments.GetAssessmentResponse>(
+				`/tests/update/${testId}`,
+				body,
+			);
+			// console.log({ ApiCreateTest: res });
+			return res.data;
+		} catch (error) {
+			console.log('original error while creating assessment', error);
+			console.log({ ApiCreateTest: error });
+
+			throw error;
+		}
+	}
+
 	static async deleteAssessment(assessmentId: string) {
 		try {
 			const res = await axios.delete<Assessments.GetAssessmentResponse>(

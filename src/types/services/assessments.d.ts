@@ -137,6 +137,19 @@ declare module Assessments {
 		};
 	}
 
+	export interface updateAssessmentConfig {
+		name?: string;
+		timerForWholeTest?: string;
+		duration?: {
+			hours: number;
+			minutes: number;
+			overAllSeconds: number;
+		};
+		publish?: boolean;
+		category?: string;
+		levelsCount?: number;
+	}
+
 	// interface CreateAssessmentResponse {
 	// 	id: string;
 	// 	name: string;

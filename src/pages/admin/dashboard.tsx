@@ -16,7 +16,7 @@ type Align = 'assessment' | 'completed' | 'report';
 const StaffDashboard = () => {
 	const { dept } = useParams<{ dept: string }>();
 
-	const { getAllAssessments, deleteAssessment } = useAssessments({
+	const { getAllAssessments, deleteAssessment, updateAssessmentConfig } = useAssessments({
 		course: dept!?.toUpperCase(),
 	});
 
@@ -58,6 +58,24 @@ const StaffDashboard = () => {
 				deleteAssessment.isError
 					? (deleteAssessment.error as any).message
 					: 'Sorry! failed to Delete, please try again later',
+		});
+	};
+
+	const HandleActive = (assessmentId: string, isPublish: boolean) => {
+		const UpdateRequest = updateAssessmentConfig.mutateAsync({
+			assessmentId: assessmentId,
+			body: {
+				publish: isPublish,
+			},
+		});
+
+		toast.promise(UpdateRequest, {
+			loading: `loading`,
+			success: `${isPublish ? 'Assessment is Published' : 'Assessment is Unpublished'}`,
+			error: () =>
+				updateAssessmentConfig.isError
+					? (updateAssessmentConfig.error as any).message
+					: 'Sorry! failed to Published or Unpublished event, please try again later',
 		});
 	};
 
@@ -151,40 +169,49 @@ const StaffDashboard = () => {
 																</p>
 															</div>
 															{/* Assessment Menu */}
-															<SettingsDropdown
-																DropDownObjects={undefined}
-																onOptionSelect={(option) => {
-																	option.label === 'Delete'
-																		? setDeleteAssessmentId(
-																				{
-																					isOpen: true,
-																					assessmentId:
-																						assessment.id,
-																				},
-																			)
-																		: null;
+															<div className=" z-[1] bg-white rounded-lg hover:cursor-pointer">
+																<SettingsDropdown
+																	DropDownObjects={undefined}
+																	onOptionSelect={(
+																		option,
+																	) => {
+																		option.label ===
+																		'Delete'
+																			? setDeleteAssessmentId(
+																					{
+																						isOpen: true,
+																						assessmentId:
+																							assessment.id,
+																					},
+																				)
+																			: null;
 
-																	option.label === 'View'
-																		? routeChangeToEdit(
-																				assessment.id,
-																				assessment
-																					.levels?.[0]
-																					?.id,
-																			)
-																		: null;
-																}}
-																onChange={() => {
-																	// HandleActive();
-																}}
-																toggleChecked={false}
-																toggle={true}
-															/>
-															{/* <div 
-																className="border border-primary p-2 rounded-md cursor-pointer"
-																onClick={()=>{}}
-															>
-																<FaEllipsisV className="text-teal-600" />
-															</div> */}
+																		option.label === 'View'
+																			? routeChangeToEdit(
+																					assessment.id,
+																					assessment
+																						.levels?.[0]
+																						?.id,
+																				)
+																			: null;
+																	}}
+																	onChange={(
+																		isPublished,
+																	) => {
+																		HandleActive(
+																			assessment.id,
+																			isPublished,
+																		);
+																	}}
+																	isLoading={
+																		updateAssessmentConfig.isPending
+																	}
+																	toggleChecked={
+																		assessment.publish
+																	}
+																	toggle={true}
+																/>
+															</div>
 														</div>
 														<p className="text-xs font-semibold text-[#64748B]">
 															Total Students:{' '}
@@ -222,6 +249,9 @@ const StaffDashboard = () => {
 												/>
 											</div>
 										</div>
+										{!assessment.publish ? (
+											<div className="absolute top-0 h-full w-full bg-black/25 rounded-lg"></div>
+										) : null}
 									</div>
 								);
 							})
