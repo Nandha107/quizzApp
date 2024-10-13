@@ -27,16 +27,13 @@ const formatTimeMS = (seconds: number): string => {
 	const remainingSeconds = seconds % 60;
 	return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
-const formatTimeHMS = (seconds: number): string => {
-	const hours = Math.floor(seconds / 3600);
-	const minutes = Math.floor((seconds % 3600) / 60);
-	const remainingSeconds = seconds % 60;
+const formatTimeHMS = (timeRemaining: number): string => {
+	const hours = Math.floor((timeRemaining as any) / 3600);
+	const minutes = Math.floor(((timeRemaining as any) % 3600) / 60);
+	const seconds = (timeRemaining as any) % 60;
 
-	return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+	return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 };
-
-// Example usage
-// Output: "01:31:40"
 
 const QuestionPage = () => {
 	const { testId } = useParams() as { testId: string };
@@ -78,7 +75,7 @@ const QuestionPage = () => {
 
 	const timerType = Test.data?.timerForWholeTest;
 	const totalTestTime = Test.data?.duration.overAllSeconds;
-	const questionTime = 10;
+	const questionTime = currentQuestion?.timer.overAllSeconds;
 	const levelResult = getResultByLevel(
 		(currentLevel as any)?.id,
 		studentId,
@@ -148,8 +145,10 @@ const QuestionPage = () => {
 	]);
 
 	useEffect(() => {
-		handleNext();
-	}, [triggerSubmit, !Test.data?.completed]);
+		if (triggerSubmit && !Test.data?.completed) {
+			handleNext();
+		}
+	}, [triggerSubmit, Test.data?.completed]);
 
 	useEffect(() => {
 		const handleVisibilityChange = () => {
@@ -525,17 +524,18 @@ const QuestionPage = () => {
 					</span>
 					<span className="flex items-center gap-2">
 						{timerType === true && timeRemaining !== null && (
-							<div className="flex items-center justify-center gap-2 font-bold ">
+							<div
+								className={`flex items-center justify-center gap-2 font-bold 
+            ${timeRemaining <= 60 ? 'text-red-500' : timeRemaining <= 300 ? 'text-yellow-500' : 'text-green-500'}`}
+							>
 								<BsClockHistory className="w-6 h-6" />
-								Time Remaining (Test):{formatTimeHMS(timeRemaining)}
-								{/* {Math.floor(timeRemaining / 60)}:
-								{timeRemaining % 60 < 10 ? '0' : ''}
-								{timeRemaining % 60} */}
+								Time Remaining (Test): {formatTimeHMS(timeRemaining)}
 							</div>
 						)}
 
 						{timerType === false && questionTimeRemaining !== null && (
-							<div className="font-bold">
+							<div className={`flex items-center justify-center gap-2 font-bold 
+								${questionTimeRemaining <= 10 ? 'text-red-500' : questionTimeRemaining <= 50 ? 'text-yellow-500' : 'text-green-500'}`}>
 								Time Remaining (Question):{formatTimeMS(questionTimeRemaining)}
 								{/* {String(Math.floor(questionTimeRemaining / 60)).padStart(
 									2,
@@ -550,11 +550,14 @@ const QuestionPage = () => {
 					<span className="items-start text-lg font-bold ">
 						{currentLevelIndex + 1}. {currentLevel?.levelName}
 					</span>
-					<LevelBar
+					{
+						currentLevelIndex+1===Test.data.levels.length?null:	<LevelBar
 						totalLevels={Test.data.levels.length}
 						activeLevel={currentLevelIndex}
 						completedLevels={Test.data.completedLevelIndexes}
 					/>
+					}
+				
 				</div>
 				{currentQuestion && (
 					<div className="flex items-center justify-center w-full h-full p-5">
