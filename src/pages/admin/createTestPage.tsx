@@ -206,7 +206,9 @@ export const CreateAssessment = () => {
 							className="px-2 py-2 border border-gray-500 rounded-lg hover:cursor-pointer hover:bg-gray-300"
 							onClick={() => {
 								storeAssessment.resetAssessmentStore();
-								navigate(`/staff-dashboard/${dept}?tab=assessments`, {replace: true});
+								navigate(`/staff-dashboard/${dept}?tab=assessments`, {
+									replace: true,
+								});
 							}}
 						>
 							<BackArrow />
