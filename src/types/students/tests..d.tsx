@@ -151,16 +151,26 @@ export type ResponseAllLevelType = {
 	selectedOption: string;
 	levelId: string;
 };
-export type StudentTestData = {
+type RankingEntry = {
+	rank: number;
+	studentName: string;
+	registrationNumber: number;
+	totalScore: number;
+	isCurrentUser: boolean;
+};
+
+// Type for student analytics data
+export type StudentAnalytics = {
 	studentName: string;
 	registrationNumber: number;
 	department: string;
 	collegeName: string;
 	totalTests: number;
-	bendingTests: number;
+	pendingTests: number;
 	totalTestsTaken: number;
 	passedTests: number;
 	failedTests: number;
 	totalScore: number;
 	rank: number;
+	rankingList: RankingEntry[];
 };
