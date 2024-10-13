@@ -7,7 +7,7 @@ import {
 	CreateAllLevelResponseType,
 	UserMarks,
 	StudentResult,
-	StudentTestData,
+	StudentAnalytics,
 } from '../../../types/students/tests..d';
 export function useStudents() {
 	const queryClient = useQueryClient();
@@ -157,7 +157,7 @@ export function useStudents() {
 					const response = await axios.get(
 						`/responses/student/details/${studentId}`,
 					);
-					return response.data as StudentTestData;
+					return response.data as StudentAnalytics;
 				} catch (error) {
 					console.error('Error fetching tests for student:', error);
 					throw error;
