@@ -20,12 +20,14 @@ export const AssessmentConfigPart = () => {
 
 	const { createAssessment } = useAssessments({ course: dept?.toUpperCase() });
 
-	const [_, setSearchParams] = useSearchParams();
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const assessmentId = searchParams.get('assessmentId') as string;
 
 	const [isEditAssessmentConfig, setIsEditAssessmentConfig] = useState(false);
 
 	const { getAssessment, updateAssessmentConfig } = useAssessments({
-		assessmentId: _.get('assessmentId') as string,
+		assessmentId: assessmentId,
 	});
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -239,6 +241,7 @@ export const AssessmentConfigPart = () => {
 			<div className="flex flex-col gap-2 selection:select-none">
 				<Checkbox
 					checked={storeAssessment.timerForWholeTest}
+					className="custom-checkbox"
 					onChange={(e) => {
 						storeAssessment.setCreateAssessment({
 							...storeAssessment,
@@ -274,11 +277,11 @@ export const AssessmentConfigPart = () => {
 						Assessment Available Duration Period{' '}
 						<span className="text-xl text-danger">*</span>
 					</label>
-					<div className="w-full px-2 border border-gray-300 rounded-full md:py-2">
+					<div className="w-full px-2 border border-gray-300 rounded-full md:py-2 focus-within:ring-1 focus-within:ring-teal-600">
 						<RangePicker
 							id={'dateDuration'}
 							size="large"
-							className="w-full"
+							className="w-full focus:outline-none"
 							placeholder={['start-date', 'end-date']}
 							value={storeAssessment.dateRange.range}
 							variant="borderless"
@@ -297,16 +300,17 @@ export const AssessmentConfigPart = () => {
 					>
 						Total Level Count <span className="text-xl text-danger">*</span>
 					</label>
-					<div className="w-full px-2 py-1 border border-gray-300 rounded-full md:py-3">
+					<div className="w-full px-2 py-1 border border-gray-300 rounded-full md:py-3 focus-within:ring-1 focus-within:ring-teal-600">
 						<InputNumber
 							min={1}
 							max={10}
 							id="levelCount"
 							placeholder="Enter a Level Count"
 							keyboard={true}
+							variant='borderless'
 							disabled={!!storeAssessment.id}
 							changeOnWheel
-							className="w-full border-0 focus:ring-1 focus:ring-teal-600 focus:outline-none"
+							className="w-full focus:outline-none"
 							value={storeAssessment.levelsCount}
 							defaultValue={1}
 							onChange={(e) => {
@@ -351,7 +355,7 @@ export const AssessmentConfigPart = () => {
 						</label>
 						<textarea
 							id="ins_description"
-							className="w-full border border-gray-300 p-3 min-h-[180px] max-h-[180px] rounded-xl"
+							className="w-full border border-gray-300 p-3 min-h-[180px] max-h-[180px] rounded-xl resize-none focus-within:ring-1 focus-within:ring-teal-600"
 							value={storeAssessment.instructions.description}
 							onChange={(e) =>
 								storeAssessment.setCreateAssessment({
@@ -366,7 +370,7 @@ export const AssessmentConfigPart = () => {
 					</div>
 				</div>
 			</div>
-			{isEditAssessmentConfig ? (
+			{(!isEditAssessmentConfig && !assessmentId) || isEditAssessmentConfig ? (
 				<div className="flex items-center justify-end gap-3">
 					<PrimaryOutlineButton
 						type="button"
@@ -423,7 +427,7 @@ export const AssessmentConfigPart = () => {
 					/>
 				</div>
 			) : null}
-			{!isEditAssessmentConfig ? (
+			{!isEditAssessmentConfig && assessmentId ? (
 				<div className="absolute top-0 left-0 w-full h-full rounded-lg bg-gray-500/25">
 					<div className="flex justify-end p-5">
 						<button

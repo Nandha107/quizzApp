@@ -177,6 +177,41 @@ body {
 	}
 }
 
+/*Checkbox customization antd*/
+/* Customize checked checkbox background color */
+.custom-checkbox .ant-checkbox-checked .ant-checkbox-inner {
+	background-color: teal; /* Background color when checked */
+	border-color: teal; /* Border color when checked */
+}
+
+/* Customize checkmark color */
+.custom-checkbox .ant-checkbox-checked::after {
+	border-color: white; /* Checkmark color when checked */
+}
+
+/* Customize unchecked state */
+.custom-checkbox .ant-checkbox-inner {
+	border-color: gray; /* Border color when unchecked */
+}
+
+/* Customize hover state for checked checkbox */
+.custom-checkbox .ant-checkbox-checked:hover .ant-checkbox-inner {
+	background-color: darkcyan !important; /* Change background on hover when checked */
+	border-color: darkcyan !important; /* Change border on hover when checked */
+}
+
+/* Customize hover state for unchecked checkbox */
+.custom-checkbox:hover .ant-checkbox-inner {
+	background-color: #76baba !important; /* Change background color on hover when unchecked */
+	border-color: teal !important; /* Border color when hovering over unchecked checkbox */
+}
+
+/* Change text hover color */
+.custom-checkbox:hover .ant-checkbox-wrapper,
+.custom-checkbox:hover .ant-checkbox + span {
+	color: teal !important; /* Text color on hover */
+}
+
 /*Tabs customization antd*/
 /* .custom-tabs .ant-tabs-tab {
 	font-size: 16px; Customize tab text size
