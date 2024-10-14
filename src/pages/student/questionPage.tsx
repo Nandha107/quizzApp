@@ -547,7 +547,7 @@ const QuestionPage = () => {
 							<h2 className="mb-2 text-lg font-bold">
 								{currentQuestionIndex + 1}. {currentQuestion.question}
 							</h2>
-							{currentQuestion.imageUrl ? (
+							{currentQuestion.enableImage ? (
 								<div className="relative w-[100%] h-[250px] bg-gray-600/10 rounded-lg border border-gray-300">
 									<img
 										src={currentQuestion.imageUrl}
