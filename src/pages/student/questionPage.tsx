@@ -266,7 +266,6 @@ const QuestionPage = () => {
 					testId: testId,
 					selectedOption: response.selectedOption,
 				}));
-				console.log(triggerSubmit, 'totaltimer');
 				const res = triggerSubmitForTotalTimer
 					? await CreateAllLevelResponse.mutateAsync({
 							studentId: studentId,
@@ -290,14 +289,11 @@ const QuestionPage = () => {
 							timeTaken: timeTakenInSeconds,
 						});
 
-				console.log(res);
 
 				Test.refetch();
-				// if(!res.create){
-				//   console.log(1)
-				//   alert(res.message)
-				//   toast.error(res.message)
-				// }
+
+				localStorage.removeItem(`test-${testId}-level-${currentLevelIndex}-responses`);
+
 				setTrigger(false);
 				if (!res.create) {
 					setShowResult(true);
@@ -309,7 +305,6 @@ const QuestionPage = () => {
 						? setSubmitted(true)
 						: setShowResult(true);
 				}
-				localStorage.removeItem(`test-${testId}-level-${currentLevelIndex}-responses`);
 				if (
 					res.update &&
 					currentLevelIndex === (Test as any).data?.levels?.length - 1
@@ -382,7 +377,6 @@ const QuestionPage = () => {
 	if (submittedPage || (Test as any).data?.completed) {
 		return (
 			<ResultSubmittedPage
-				// onClick={() => navigate(`/result/${(Test as any).data?.userMarks[0].id}`)}
 				onClick={() => {
 					window.open(
 						`${Config.environment.APP_URL}/result/${(Test as any).data?.userMarks[0].id}`,
@@ -460,17 +454,11 @@ const QuestionPage = () => {
 				</div>
 			</div>
 
-			// <div className="justify-center flex flex-col h-[80vh] items-center text-center">
-			//   {Test.data.instructions}{' '}
-			//   <button className="px-6 py-2 bg-blue-500 rounded-lg" onClick={() => setInstruction(false)}>
-			//     Start
-			//   </button>
-			// </div>
+	
 		);
 
 	if (Test.data.completedLevelIndexes.includes(currentLevelIndex) || showResult) {
 		return (
-			
 			<LevelsScorePage
 				isLoading={levelResult.isLoading}
 				onClick={handleNextLevel}
@@ -516,7 +504,6 @@ const QuestionPage = () => {
 								className={`flex items-center justify-center gap-2 font-bold 
 								${questionTimeRemaining <= 10 ? 'text-red-500' : questionTimeRemaining <= 50 ? 'text-yellow-500' : 'text-green-500'}`}
 							>
-								
 								Time Remaining (Question):{formatTimeMS(questionTimeRemaining)}
 								{/* {String(Math.floor(questionTimeRemaining / 60)).padStart(
 									2,
@@ -615,6 +602,7 @@ const QuestionPage = () => {
 			</div>
 			<div className="w-full h-[10%] flex justify-end items-center px-5 bg-teal-600/30">
 				<PrimaryButton
+				disabled={selectedOption===null||CreateResponse.isPending}
 					text={
 						currentQuestionIndex === (questions as any)?.length - 1
 							? 'Finish Level'

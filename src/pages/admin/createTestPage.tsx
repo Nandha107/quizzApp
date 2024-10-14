@@ -27,16 +27,28 @@ type handleGenerateProps = {
 	numberOfQuestions: number;
 	answerTypeOptions: boolean;
 	answerTypeTextArea: boolean;
-	timeDurationType: string;
+	// timeDurationType: string;
+	questionDifficulty: string;
+	customTimeDurationPerQuestion?: 	{hours:number,
+		minutes:number,
+		overAllSeconds:number
+	};
 };
 export const CreateAssessment = () => {
+
+
 	const navigate = useNavigate();
 
 	const { dept } = useParams();
 
+
+
 	const [searchParams, _] = useSearchParams();
 
+   
+
 	const storeAssessment = assessmentStore();
+
 
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
@@ -161,13 +173,15 @@ export const CreateAssessment = () => {
 	};
 
 	const handleGenerate = async (data: handleGenerateProps) => {
-		const prompt = `create ${dept} ${data.topic} questions count ${data.numberOfQuestions} and ${data.answerTypeOptions && data.answerTypeTextArea == false ? 'only choice questions' : ''}  ${data.answerTypeTextArea && data.answerTypeOptions == false ? 'only choice textarea' : ''} ${data.generateImage ? '' : 'Could not add any image url and could not enableImage'} ${data.timeDurationType == 'single' ? 'add timer for every questions' : ''}`;
+		console.log(data.customTimeDurationPerQuestion)
+		const prompt = `create ${dept} ${data.topic} questions count ${data.numberOfQuestions} and ${data.answerTypeOptions && data.answerTypeTextArea == false ? 'only choice questions' : ''}  ${data.answerTypeTextArea && data.answerTypeOptions == false ? 'only choice textarea' : ''} ${data.generateImage ? '' : 'Could not add any image url and could not enableImage'} and defficulty type is ${data.questionDifficulty} and add time for every questions ${data.customTimeDurationPerQuestion?.overAllSeconds} seconds`;
 		try {
 			generateAiQuestions.mutateAsync({ prompt: prompt }).then((res) => {
 				const data = extractCodeFromResponse(res as any) as [];
 				const ParsedData = JSON.parse(
 					(data as any)[0],
 				) as OmittedCreateQuestionPayload[];
+				console.log(ParsedData)
 				localStorage.setItem(levelId, JSON.stringify(ParsedData));
 				setPreviewData([...ParsedData]);
 				setIsPopupOpen(false);
@@ -286,6 +300,7 @@ export const CreateAssessment = () => {
 
 			{/* AI Generate Question Popup */}
 			<AiGenerateQuestionPopup
+			isQusetionTimerEnable={getAssessment?.data?.timerForWholeTest??true}
 				loading={generateAiQuestions.isPending}
 				handleGenerate={handleGenerate}
 				isOpen={isPopupOpen}

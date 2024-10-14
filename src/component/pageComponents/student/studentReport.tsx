@@ -23,7 +23,7 @@ ChartJS.register(
 	CategoryScale,
 	LinearScale,
 	PointElement,
-	LineElement
+	LineElement,
 );
 
 const StudentAnalyticPage: React.FC = () => {
@@ -115,12 +115,12 @@ const StudentAnalyticPage: React.FC = () => {
 					</div>
 				</div>
 
-
 				{/* Pie Chart for Pass/Fail */}
 				<div className="border lg:bg-white rounded-lg lg:shadow-md flex w-full gap-5">
-
-					<div className='w-full'>
-						<RankingList  rankingList={studentDetailsData.data?.rankingList??[]}/>
+					<div className="w-full">
+						<RankingList
+							rankingList={studentDetailsData.data?.rankingList ?? []}
+						/>
 					</div>
 					<div className="flex flex-col justify-center w-full">
 						<p className="text-base font-medium text-center">Pass/Fail Overview</p>
@@ -128,8 +128,6 @@ const StudentAnalyticPage: React.FC = () => {
 							<Pie data={pieData} />
 						</div>
 					</div>
-
-				
 				</div>
 			</div>
 		</div>

@@ -307,7 +307,7 @@ export const AssessmentConfigPart = () => {
 							id="levelCount"
 							placeholder="Enter a Level Count"
 							keyboard={true}
-							variant='borderless'
+							variant="borderless"
 							disabled={!!storeAssessment.id}
 							changeOnWheel
 							className="w-full focus:outline-none"

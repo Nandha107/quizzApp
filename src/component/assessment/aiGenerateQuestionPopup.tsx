@@ -3,6 +3,8 @@ import { CgClose } from 'react-icons/cg';
 import { PrimaryButton } from '../buttons/primaryButton';
 import { departmentTopics } from '../../utils/departmentTopics';
 import { useParams } from 'react-router-dom';
+import TimeDurationSelect from '../inputs/timePicker';
+import { FaFire, FaLeaf, FaMountain } from 'react-icons/fa';
 
 type handleGenerateProps = {
 	topic: string;
@@ -10,11 +12,13 @@ type handleGenerateProps = {
 	numberOfQuestions: number;
 	answerTypeOptions: boolean;
 	answerTypeTextArea: boolean;
-	timeDurationType: string;
+	questionDifficulty: string;
+	customTimeDurationPerQuestion?: { hours: number; minutes: number; overAllSeconds: number };
 };
 
 interface PopupProps {
 	isOpen: boolean;
+	isQusetionTimerEnable: boolean;
 	loading: boolean;
 	onClose: () => void;
 	handleGenerate: (value: handleGenerateProps) => void;
@@ -25,17 +29,25 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 	onClose,
 	handleGenerate,
 	loading: loding,
+	isQusetionTimerEnable,
 }) => {
 	const [topic, setTopic] = useState<string>('');
 	const [generateImage, setGenerateImage] = useState<boolean>(false);
 	const [numberOfQuestions, setNumberOfQuestions] = useState<number>(5);
 	const [answerTypeOptions, setAnswerTypeOptions] = useState<boolean>(false);
 	const [answerTypeTextArea, setAnswerTypeTextArea] = useState<boolean>(true);
-	const [timeDurationType, setTimeDurationType] = useState<string>('single');
+	const [questionDifficulty, setQuestionDifficulty] = useState<string>('basic');
+	const [customTimeDurationPerQuestion, setCustomTimeDurationPerQuestion] = useState<{
+		hours: number;
+		minutes: number;
+		overAllSeconds: number;
+	}>({
+		hours: 0,
+		minutes: 1,
+		overAllSeconds: 60,
+	});
 	const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 	const { dept } = useParams() as any;
-
-	// Suggested topics
 
 	// State for error messages
 	const [errors, setErrors] = useState<{
@@ -66,15 +78,12 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 
 		setErrors(newErrors);
 
-		// If no errors, return true
 		return Object.keys(newErrors).length === 0;
 	};
 
 	// Handle form submission
 	const handleSubmit = () => {
-		if (!validate()) {
-			return;
-		}
+		if (!validate()) return;
 
 		const formData = {
 			topic,
@@ -82,15 +91,22 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 			numberOfQuestions,
 			answerTypeOptions,
 			answerTypeTextArea,
-			timeDurationType,
+			// timeDurationType,
+			questionDifficulty,
+			customTimeDurationPerQuestion,
 		};
-		handleGenerate({ ...formData });
+		handleGenerate(formData);
+
+		setTopic('');
+		setNumberOfQuestions(5);
+		setQuestionDifficulty('basic');
 	};
 
 	const handleTopicSelection = (selectedTopic: string) => {
 		setTopic(selectedTopic);
 		setShowSuggestions(false);
 	};
+
 	const suggestionRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
@@ -98,7 +114,7 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 			if (
 				!loding &&
 				suggestionRef.current &&
-				!suggestionRef.current?.contains(event.target as Node)
+				!suggestionRef.current.contains(event.target as Node)
 			) {
 				setShowSuggestions(false);
 			}
@@ -107,18 +123,57 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 		document.addEventListener('mousedown', handleClickOutside);
 
 		return () => {
-			// Unbind the event listener on cleanup
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, [suggestionRef]);
+
+	const toggleDifficulty = (difficulty: string) => {
+		setQuestionDifficulty(difficulty);
+	};
+
+	const onTimeChange = (data: { hours: string; minutes: string }) => {
+		const hours = Number(data.hours);
+		const minutes = Number(data.minutes);
+		const overAllSeconds = hours * 60 * 60 + minutes * 60;
+		// const overAllSeconds = hours * 60 * 60 * 1000 + minutes * 60 * 1000;
+
+		setCustomTimeDurationPerQuestion({
+			hours,
+			minutes,
+			overAllSeconds,
+		});
+	};
 	if (!isOpen) return null;
+	const difficultyLevels = [
+		{
+			label: 'Basic',
+			value: 'basic',
+			color: 'bg-teal-500',
+			textColor: 'text-white',
+			icon: FaLeaf,
+		},
+		{
+			label: 'Intermediate',
+			value: 'intermediate',
+			color: 'bg-yellow-500',
+			textColor: 'text-white',
+			icon: FaMountain,
+		},
+		{
+			label: 'Harder',
+			value: 'harder',
+			color: 'bg-red-500',
+			textColor: 'text-white',
+			icon: FaFire,
+		},
+	];
 	return (
-		<div className="flex items-center justify-center min-h-screen fixed inset-0 bg-black bg-opacity-50 z-50 rounded-lg">
-			<div className="bg-white rounded-lg shadow-lg md:w-[50%] w-[90%] lg:w-[50%] xl:w-[38%] relative">
+		<div className="fixed inset-0 z-50 flex items-center  justify-center bg-black bg-opacity-50">
+			<div className="bg-white lg:mt-10 rounded-lg shadow-lg md:w-[50%] w-[90%] lg:w-[50%] xl:w-[38%] relative">
 				{/* Header */}
 				<div className="flex justify-between py-3 rounded-t-lg px-5 border shadow-md">
 					<div className="flex items-center w-full justify-between">
-						<h1 className="text-xl font-semibold">AI Test Creator</h1>
+						<h1 className="text-xl font-semibold"> AI Test Creator</h1>
 						<p
 							className="hover:bg-slate-200 p-2 border border-slate-800 rounded-full cursor-pointer"
 							onClick={onClose}
@@ -126,16 +181,14 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 							<CgClose className="h-5 w-5" />
 						</p>
 					</div>
-					<button className="text-gray-400 hover:text-gray-600" onClick={onClose}>
-						<i className="fas fa-times"></i>
-					</button>
 				</div>
 
-				<div className="p-10 flex flex-col gap-4">
+				<div className="px-10 py-2 flex flex-col gap-4">
 					{/* Topic Input */}
 					<div className="relative" ref={suggestionRef}>
 						<label className="block text-gray-700">Topic</label>
 						<input
+							disabled={loding}
 							type="text"
 							placeholder="Enter Topic"
 							value={topic}
@@ -162,7 +215,7 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 										(suggestion: any, index: number) => (
 											<button
 												key={index}
-												className="flex-1 m-1 p-2 bg-teal-50 text-teal-600 border hover:border-teal-500  font-semibold rounded hover:bg-teal-100"
+												className="flex-1 m-1 p-2 bg-teal-50 text-teal-600 border hover:border-teal-500 font-semibold rounded hover:bg-teal-100"
 												onClick={() =>
 													handleTopicSelection(suggestion)
 												}
@@ -174,6 +227,28 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 								</div>
 							</div>
 						)}
+					</div>
+
+					{/* Difficulty Level with Like Buttons */}
+					<div className="flex gap-4">
+						{difficultyLevels.map((level) => {
+							const Icon = level.icon; // Referencing the icon component
+							return (
+								<button
+									disabled={loding}
+									key={level.value}
+									className={`p-2 flex items-center justify-center gap-2 rounded flex-1 ${
+										questionDifficulty === level.value
+											? `${level.color} ${level.textColor}`
+											: 'bg-gray-200 text-gray-600'
+									}`}
+									onClick={() => toggleDifficulty(level.value)}
+								>
+									<Icon className="w-5 h-5" />
+									{level.label}
+								</button>
+							);
+						})}
 					</div>
 
 					{/* Image Generation Toggle */}
@@ -198,6 +273,7 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 					<div className="mb-4">
 						<label className="block text-gray-700">Number of Questions</label>
 						<input
+							disabled={loding}
 							type="number"
 							value={numberOfQuestions}
 							onChange={(e) => setNumberOfQuestions(parseInt(e.target.value))}
@@ -243,50 +319,20 @@ const AiGenerateQuestionPopup: React.FC<PopupProps> = ({
 					</div>
 
 					{/* Time Duration Selection */}
-					<div className="flex flex-col gap-4">
-						<label className="block text-gray-700">
-							Choose time duration type for test{' '}
-							<span className="text-red-500">*</span>
-						</label>
-						<div className="flex items-center  gap-2">
-							<div className="flex items-center gap-1">
-								<input
-									type="radio"
-									name="time"
-									className=" w-6 h-6 border border-gray-300 rounded-full checked:bg-teal-600 checked:border-transparent focus:outline-none"
-									value="overall"
-									checked={timeDurationType === 'overall'}
-									onChange={() => setTimeDurationType('overall')}
-								/>
-								<label className="text-gray-700">Set overall time</label>
-							</div>
-							<div className="flex items-center gap-1">
-								<input
-									type="radio"
-									name="time"
-									className="w-6 h-6 border border-gray-300 rounded-full checked:bg-teal-600 checked:border-transparent focus:outline-none"
-									value="single"
-									checked={timeDurationType === 'single'}
-									onChange={() => setTimeDurationType('single')}
-								/>
-								<label className="text-gray-700">
-									Set time for single question
-								</label>
-							</div>
+					{!isQusetionTimerEnable ? (
+						<div className="flex flex-col gap-4">
+							<label className="block text-gray-700">
+								Choose time duration for every Question{' '}
+								<span className="text-red-500">*</span>
+							</label>
+							<TimeDurationSelect onDataChange={onTimeChange} />
 						</div>
-					</div>
-
+					) : null}
 					{/* Generate Button */}
 					<div className="flex justify-end">
-						{/* <button
-          className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-          onClick={handleSubmit}
-        >
-          Generate
-        </button> */}
-
 						<PrimaryButton
-							text={loding ? 'loading...' : 'Generate'}
+							disabled={loding}
+							text={loding ? 'Loading...' : 'Generate'}
 							onClick={handleSubmit}
 						/>
 					</div>
