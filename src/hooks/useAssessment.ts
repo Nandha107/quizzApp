@@ -93,10 +93,10 @@ export const useAssessments = ({
 		}) => AssessmentClient.updateAssessmentConfig(payload.assessmentId, payload.body),
 		onSuccess: () => {
 			toast.success('Assessment has successfully updated...');
-			queryClient.invalidateQueries({ queryKey: ['getAssessment', assessmentId!] });
 			queryClient.invalidateQueries({
 				queryKey: ['allAssessments', course],
 			});
+			queryClient.invalidateQueries({ queryKey: ['getAssessment', assessmentId!] });
 		},
 		onError: (error) => {
 			toast.error(

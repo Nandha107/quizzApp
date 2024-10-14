@@ -122,7 +122,7 @@ const StaffDashboard = () => {
 								</div>
 							))
 						) : !getAllAssessments.data?.length ? (
-							<div className="absolute flex items-center justify-center w-full h-full z-[1000]">
+							<div className="absolute flex items-center justify-center w-full h-full z-[100]">
 								<p className=" text-gray-900">No tests available.</p>
 							</div>
 						) : (
