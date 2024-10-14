@@ -274,7 +274,7 @@ const QuestionPage = () => {
 							timeTaken: timeTakenInSeconds,
 							responses: allLevelResponses as any,
 						}).then(() => {
-							alert('successfully submitted the responses');
+							// alert('successfully submitted the responses');
 							setSubmitted(true);
 							toast.success('successfully submitted the responses');
 							// navigate(`/result/${res.userMarksId}`);
@@ -303,7 +303,7 @@ const QuestionPage = () => {
 					setShowResult(true);
 				}
 				if (res.create) {
-					alert('successfully submitted the responses');
+					// alert('successfully submitted the responses');
 					toast.success('successfully submitted the responses');
 					currentLevelLength === currentLevelIndex + 1
 						? setSubmitted(true)
@@ -314,7 +314,7 @@ const QuestionPage = () => {
 					res.update &&
 					currentLevelIndex === (Test as any).data?.levels?.length - 1
 				) {
-					alert('successfully submitted the responses');
+					// alert('successfully submitted the responses');
 					toast.success('successfully submitted the responses');
 					setSubmitted(true);
 					// navigate(`/result/${res.updatedUserMarks.id}`);
