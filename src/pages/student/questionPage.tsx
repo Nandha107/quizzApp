@@ -289,7 +289,6 @@ const QuestionPage = () => {
 							timeTaken: timeTakenInSeconds,
 						});
 
-
 				Test.refetch();
 
 				localStorage.removeItem(`test-${testId}-level-${currentLevelIndex}-responses`);
@@ -453,8 +452,6 @@ const QuestionPage = () => {
 					</div>
 				</div>
 			</div>
-
-	
 		);
 
 	if (Test.data.completedLevelIndexes.includes(currentLevelIndex) || showResult) {
@@ -602,7 +599,7 @@ const QuestionPage = () => {
 			</div>
 			<div className="w-full h-[10%] flex justify-end items-center px-5 bg-teal-600/30">
 				<PrimaryButton
-				disabled={selectedOption===null||CreateResponse.isPending}
+					disabled={selectedOption === null || CreateResponse.isPending}
 					text={
 						currentQuestionIndex === (questions as any)?.length - 1
 							? 'Finish Level'

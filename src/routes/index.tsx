@@ -9,6 +9,7 @@ import QuestionPage from '../pages/student/questionPage';
 import ResultPage from '../pages/student/ResultPage';
 import { insecureRoutes } from './insecureRoutes';
 import { CreateAssessment } from '../pages/admin/createTestPage';
+import { Playground } from '../pages/playground';
 
 export const router = createBrowserRouter([
 	{
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
 					{
 						path: '/result/:userMarksId',
 						element: <ResultPage />,
+					},
+					{
+						path: '/playground',
+						element: <Playground />,
 					},
 				],
 			},
