@@ -1,4 +1,5 @@
 import { FaMedal } from 'react-icons/fa';
+
 type RankingEntry = {
 	rank: number;
 	studentName: string;
@@ -8,6 +9,13 @@ type RankingEntry = {
 };
 
 const RankingList = ({ rankingList }: { rankingList: RankingEntry[] }) => {
+	// Sort the ranking list to show the current user first
+	const sortedRankingList = [...rankingList].sort((a, b) => {
+		if (a.isCurrentUser) return -1; // Move the current user to the top
+		if (b.isCurrentUser) return 1;
+		return a.rank - b.rank; // Keep the ranking order for the rest
+	});
+
 	const getRowStyle = (student: RankingEntry) => {
 		return student.isCurrentUser ? 'bg-yellow-100' : 'bg-white';
 	};
@@ -26,10 +34,10 @@ const RankingList = ({ rankingList }: { rankingList: RankingEntry[] }) => {
 	};
 
 	return (
-		<div className="lg:p-5 lg:bg-white rounded-lg lg:shadow-md mt-6">
+		<div className="lg:p-5 lg:bg-white rounded-lg">
 			<p className="text-lg font-semibold mb-3">Ranking List</p>
 			<div className="w-full space-y-4">
-				{rankingList.map((student, index) => (
+				{sortedRankingList.map((student, index) => (
 					<div
 						key={index}
 						className={`flex items-center p-4 rounded-lg shadow-md ${getRowStyle(student)}`}

@@ -171,7 +171,7 @@ const QuestionPage = () => {
 		return () => {
 			document.removeEventListener('visibilitychange', handleVisibilityChange);
 		};
-	}, [showResult != true, instruction != true, tabSwitchCount]);
+	}, [showResult != true, submittedPage!=true, instruction != true, tabSwitchCount]);
 
 	useEffect(() => {
 		if (!showResult && !instruction && !isTabFocused && tabSwitchCount < 3) {
@@ -191,13 +191,27 @@ const QuestionPage = () => {
 	};
 
 	const handleNext = () => {
-		setTextAreaValue('');
 		if (questions && currentQuestionIndex < questions.length - 1) {
+
+			console.log(selectedOption)
 			setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+
+			if(selectedOption===null){
+				console.log(111)
+				currentQuestion?.questionType==='CHOICE'?
+				handleOptionSelect("",(currentQuestion as any)?.id):handleTextareaChange("",(currentQuestion as any)?.id)
+			}
 		} else {
+			if(selectedOption===null){
+				console.log(111)
+				currentQuestion?.questionType==='CHOICE'?
+				handleOptionSelect("",(currentQuestion as any)?.id):handleTextareaChange("",(currentQuestion as any)?.id)
+			}
 			handleSubmitResponse();
 		}
+		setTrigger(false)
 		setSelectedOption(null);
+		setTextAreaValue('');
 	};
 	const handleNextLevel = () => {
 		if (currentLevelIndex < currentLevelLength - 1) {
@@ -263,7 +277,7 @@ const QuestionPage = () => {
 			try {
 				const processedResponses = uniqueResponses.map((response: any) => ({
 					questionId: response.questionId,
-					testId: testId,
+					// testId: testId,
 					selectedOption: response.selectedOption,
 				}));
 				const res = triggerSubmitForTotalTimer
@@ -343,28 +357,39 @@ const QuestionPage = () => {
 		localStorage.setItem(levelKey, JSON.stringify(responses));
 		setSelectedOption(value);
 	};
-
 	const handleOptionSelect = (option: string, questionId: string) => {
 		setSelectedOption(option);
-		setTimeout(handleNext, 500);
-
+	
 		const levelKey = `test-${testId}-level-${currentLevelIndex}-responses`;
 		const responses = JSON.parse(localStorage.getItem(levelKey) || '[]');
-
+	
 		const existingResponseIndex = responses.findIndex(
-			(response: { questionId: string }) => response.questionId === questionId,
+			(response: { questionId: string }) => response.questionId === questionId
 		);
-
+	
+		// Check if the option is the same as the existing one
 		if (existingResponseIndex !== -1) {
-			// Update existing response
-			responses[existingResponseIndex].selectedOption = option;
+			// If the current question is the last one, update only if the option has changed
+			// if (currentQuestionIndex === ((currentLevel as any)?.questions.length) - 1) {
+			// 	// Only update if the selected option is different
+			// 	if (responses[existingResponseIndex].selectedOption !== option) {
+			// 		console.log(44444); // Log for debugging
+			// 		responses[existingResponseIndex].selectedOption = option;
+			// 	}
+			// }
 		} else {
 			// Add new response if it doesn't exist
 			responses.push({ questionId: questionId, selectedOption: option });
 		}
-
+	
 		localStorage.setItem(levelKey, JSON.stringify(responses));
 	};
+	
+	const handleOptionSelectWithAutoNext = (option: string, questionId: string) => {
+				option===""?null:setTimeout(handleNext, 500);
+  				handleOptionSelect(option,questionId)
+	};
+	
 
 	if (!Test.data)
 		return (
@@ -492,7 +517,7 @@ const QuestionPage = () => {
             ${timeRemaining <= 60 ? 'text-red-500' : timeRemaining <= 300 ? 'text-yellow-500' : 'text-green-500'}`}
 							>
 								<BsClockHistory className="w-6 h-6" />
-								Time Remaining (Test): {formatTimeHMS(timeRemaining)}
+								Time Remaining (Whole Test): {formatTimeHMS(timeRemaining)}
 							</div>
 						)}
 
@@ -513,7 +538,7 @@ const QuestionPage = () => {
 				</div>
 				<div className="flex items-center w-full gap-5 px-5 py-4 bg-teal-600/30 md:gap-10 lg:px-24 lg:gap-24">
 					<span className="items-start text-lg font-bold w-[20%]">
-						{currentLevelIndex + 1}. {currentLevel?.levelName}
+						 {currentLevel?.levelName}
 					</span>
 					{currentLevelIndex + 1 === Test.data.levels.length ? null : (
 						<div className="w-[80%]">
@@ -574,7 +599,7 @@ const QuestionPage = () => {
 															selectedOption === option.value
 														}
 														onChange={() =>
-															handleOptionSelect(
+															handleOptionSelectWithAutoNext(
 																option.value,
 																currentQuestion.id,
 															)
@@ -599,7 +624,7 @@ const QuestionPage = () => {
 			</div>
 			<div className="w-full h-[10%] flex justify-end items-center px-5 bg-teal-600/30">
 				<PrimaryButton
-					disabled={selectedOption === null || CreateResponse.isPending}
+					disabled={selectedOption === null||textarea===null || CreateResponse.isPending}
 					text={
 						currentQuestionIndex === (questions as any)?.length - 1
 							? 'Finish Level'
