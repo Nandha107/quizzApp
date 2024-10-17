@@ -8,7 +8,12 @@ import Skeleton from 'react-loading-skeleton';
 import { PrimaryButton } from '../../component/buttons/primaryButton';
 import StudentAnalyticPage from '../../component/pageComponents/student/studentReport';
 import { convertMillisecondsToTimeOnly } from '../../utils/timeConverter';
-import { FaArrowAltCircleRight, FaCheckCircle, FaClipboardList, FaHourglassHalf } from 'react-icons/fa';
+import {
+	FaArrowAltCircleRight,
+	FaCheckCircle,
+	FaClipboardList,
+	FaHourglassHalf,
+} from 'react-icons/fa';
 // import { FaCalendar } from 'react-icons/fa';
 
 export interface user {
@@ -142,6 +147,9 @@ const StudentDashboard = () => {
 								const startDate = new Date(test.startTime * 1000);
 								const endDate = new Date(test.endTime * 1000);
 								const createdAt = new Date(test.createdAt);
+								const submittedAt = test.userMarks.length
+									? new Date(test.userMarks?.[0]?.createdAt)
+									: new Date(0);
 								const monthNames = [
 									'Jan',
 									'Feb',
@@ -159,6 +167,7 @@ const StudentDashboard = () => {
 								const formattedStartDate = `${startDate.getDate()} ${monthNames[startDate.getMonth()]}, ${startDate.getFullYear()}`;
 								const formattedEndDate = `${endDate.getDate()} ${monthNames[endDate.getMonth()]}, ${endDate.getFullYear()}`;
 								const formattedCreatedDate = `${createdAt.getDate()} ${monthNames[createdAt.getMonth()]}, ${createdAt.getFullYear()}`;
+								const formattedSubmittedDate = `${submittedAt.getDate()} ${monthNames[submittedAt.getMonth()]}, ${submittedAt.getFullYear()}`;
 								return (
 									<div
 										key={index}
@@ -184,11 +193,11 @@ const StudentDashboard = () => {
 												</div>
 												<p className="text-xs font-semibold w-full flex gap-3 text-[#64748B] items-center">
 													<span>Available in : </span>
-													<span className="bg-white text-black py-1 px-2 rounded-lg">
+													<span className="bg-white text-black py-2 px-2 rounded-lg">
 														{formattedStartDate}
 													</span>{' '}
 													to{' '}
-													<span className="bg-white text-black py-1 px-2 rounded-lg">
+													<span className="bg-white text-black py-2 px-2 rounded-lg">
 														{formattedEndDate}
 													</span>
 												</p>
@@ -234,28 +243,41 @@ const StudentDashboard = () => {
 															</p>
 														) : null}
 													</div>
-													<div className="">
+													<div className="flex flex-col gap-2">
 														<p className="text-xs text-[#64748B] font-medium">
 															Created Assessment :{' '}
 															<span className="text-teal-950">
 																{formattedCreatedDate}
 															</span>
 														</p>
-														{/* <p className='text-xs text-[#64748B] font-medium'>
-															Started Assessment :{' '}
-															<span className='text-teal-950'>{formattedCreatedDate}</span>
-														</p> */}
+														{test.completed ? (
+															<p className="text-xs text-[#64748B] font-medium">
+																Submitted Assessment :{' '}
+																<span className="text-teal-950">
+																	{formattedSubmittedDate}
+																</span>
+															</p>
+														) : null}
 													</div>
 													{test.completed ? (
-														<div className='flex items-center gap-2 px-4 py-2 shadow-md bg-btn-gradient rounded-lg border border-teal-700 absolute bottom-3 right-4 z-[1001] hover:cursor-pointer'>
-															<p className='text-white text-sm'>Results</p>
-															<FaArrowAltCircleRight className='text-sm text-white'/>
+														<div
+															className="flex items-center gap-2 px-4 py-2 shadow-md bg-btn-gradient rounded-lg border border-teal-700 absolute bottom-3 right-4 z-[1001] hover:cursor-pointer"
+															onClick={() => {
+																window.open(
+																	`${Config.environment.APP_URL}/result/${test.userMarks?.[0].id}`,
+																);
+															}}
+														>
+															<p className="text-white text-sm">
+																Results
+															</p>
+															<FaArrowAltCircleRight className="text-sm text-white" />
 														</div>
-														// <PrimaryButton
-														// 	text="Show results"
-														// 	className="absolute bottom-3 right-4 z-[1001]"
-														// />
-													) : null}
+													) : // <PrimaryButton
+													// 	text="Show results"
+													// 	className="absolute bottom-3 right-4 z-[1001]"
+													// />
+													null}
 												</div>
 												{/* <div className="flex flex-col gap-5 md:gap-8 w-full">
 													<div className="flex justify-center items-center">

@@ -4,6 +4,15 @@ export interface UseStudentsParams {
 }
 export type UserMark = {
 	id: string; // Unique identifier for the user mark
+	userId: any;
+	studentId: string;
+	testId: string;
+	marks: number;
+	pass: boolean;
+	timeTaken: number;
+	createdAt: string;
+	updatedAt: string;
+	deletedAt: string | null;
 };
 export type Test = {
 	id: string;
