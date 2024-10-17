@@ -48,7 +48,7 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 
 	const storedQuestions = localStorage.getItem(levelId);
 
-	const { updateAssessment } = useAssessments({ assessmentId });
+	const { updateAssessment,queryClient } = useAssessments({ assessmentId });
 
 	const nextLevel = levels[currentLevelIndex];
 
@@ -80,6 +80,7 @@ export const QuestionsPreviewPart: React.FC<props> = ({
 						setSearchParams(updatedParams);
 					} else {
 						if (levelsCount === currentLevelIndex) {
+							queryClient.invalidateQueries(['allAssessments',dept] as any);		
 							resetAssessmentStore();
 							navigate(`/staff-dashboard/${dept}?tab=assessments`);
 						}
