@@ -186,10 +186,10 @@ const StudentDashboard = () => {
 															{test.name}
 														</p>
 													</div>
-													<p className="text-xs font-semibold text-[#64748B]">
+													{/* <p className="text-xs font-semibold text-[#64748B]">
 														Total Students:{' '}
 														{test.totalParticipants}
-													</p>
+													</p> */}
 												</div>
 												<p className="text-xs font-semibold w-full flex gap-3 text-[#64748B] items-center">
 													<span>Available in : </span>
