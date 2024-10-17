@@ -70,11 +70,10 @@ const StudentLogin: React.FC = () => {
 					navigate('/student-dashboard?tab=assessments');
 				})
 				.catch((err) => toast.error(err));
-		} catch (error) {
+		} catch (error: any) {
 			setError('Login failed. Please check your credentials and try again.');
-			console.error('Login error:', error);
-		} finally {
 			setLoading(false);
+			console.error('Login error:', error?.message);
 		}
 	};
 

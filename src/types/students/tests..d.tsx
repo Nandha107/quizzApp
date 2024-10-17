@@ -26,9 +26,11 @@ export type Test = {
 	deletedAt: string | null;
 	totalParticipants: number;
 	levels: Level[];
+	pass: boolean;
 	totalQuestions: number;
 	completed: boolean;
 	totalMarksObtained: number;
+	totalPossibleMarks: number;
 	enableResponseReceiving: boolean;
 	completedLevelIndexes: number[];
 };
