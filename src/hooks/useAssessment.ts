@@ -244,5 +244,6 @@ export const useAssessments = ({
 		updateImage,
 		deleteImage,
 		generateAiQuestions,
+		queryClient
 	};
 };
