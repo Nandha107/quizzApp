@@ -208,10 +208,10 @@ const StudentDashboard = () => {
 															{test.totalQuestions}
 														</p>
 														{test.completed ? (
-															<p className="text-lg font-semibold text-[#64748B]">
+															<p className="text-sm font-extrabold text-[#64748B]">
 																Status:{' '}
 																{test.pass ? (
-																	<span className="text-success">
+																	<span className="text-green-600">
 																		PASS
 																	</span>
 																) : (
@@ -233,17 +233,17 @@ const StudentDashboard = () => {
 															</p>
 														)}
 														{test.completed ? (
-															<p className="text-lg text-[#64748B] font-medium">
+															<p className="text-sm text-[#64748B] font-extrabold">
 																Mark:{' '}
 																<span
-																	className={`${test.pass ? 'text-success' : 'text-error'} font-bold`}
+																	className={`${test.pass ? 'text-success' : 'text-error'}`}
 																>
 																	{test.totalMarksObtained}
 																</span>
 															</p>
 														) : null}
 													</div>
-													<div className="flex flex-col gap-2">
+													<div className="flex flex-col gap-1">
 														<p className="text-xs text-[#64748B] font-medium">
 															Created Assessment :{' '}
 															<span className="text-teal-950">
